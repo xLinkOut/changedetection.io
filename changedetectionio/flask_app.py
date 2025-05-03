@@ -498,52 +498,60 @@ def check_for_new_version():
         app.config.exit.wait(86400)
 
 
-def notification_runner():
-    global notification_debug_log
-    from datetime import datetime
+def notification_runner() -> None:
     import json
+    from datetime import datetime
+
+    from changedetectionio.notification.handler import process_notification
+
+    global notification_debug_log
+
     while not app.config.exit.is_set():
         try:
             # At the moment only one thread runs (single runner)
-            n_object = notification_q.get(block=False)
+            n_object: dict = notification_q.get(block=False)
         except queue.Empty:
             time.sleep(1)
 
         else:
-
-            now = datetime.now()
-            sent_obj = None
+            sent_notification: dict | None = None
 
             try:
-                from changedetectionio.notification.handler import process_notification
+                app_settings: dict = datastore.data['settings']['application']
 
-                # Fallback to system config if not set
-                if not n_object.get('notification_body') and datastore.data['settings']['application'].get('notification_body'):
-                    n_object['notification_body'] = datastore.data['settings']['application'].get('notification_body')
+                if not n_object.get('notification_body') and app_settings.get('notification_body'):
+                    n_object['notification_body'] = app_settings.get('notification_body')
 
-                if not n_object.get('notification_title') and datastore.data['settings']['application'].get('notification_title'):
-                    n_object['notification_title'] = datastore.data['settings']['application'].get('notification_title')
+                if not n_object.get('notification_title') and app_settings.get('notification_title'):
+                    n_object['notification_title'] = app_settings.get('notification_title')
 
-                if not n_object.get('notification_format') and datastore.data['settings']['application'].get('notification_format'):
-                    n_object['notification_format'] = datastore.data['settings']['application'].get('notification_format')
+                if not n_object.get('notification_format') and app_settings.get('notification_format'):
+                    n_object['notification_format'] = app_settings.get('notification_format')
+
                 if n_object.get('notification_urls', {}):
-                    sent_obj = process_notification(n_object, datastore)
+                    sent_notification = process_notification(n_object, datastore)
 
             except Exception as e:
                 logger.error(f"Watch URL: {n_object['watch_url']}  Error {str(e)}")
 
                 # UUID wont be present when we submit a 'test' from the global settings
                 if 'uuid' in n_object:
-                    datastore.update_watch(uuid=n_object['uuid'],
-                                           update_obj={'last_notification_error': "Notification error detected, goto notification log."})
+                    datastore.update_watch(
+                        uuid=n_object['uuid'],
+                        update_obj={
+                            'last_notification_error': "Notification error detected, goto notification log."
+                        }
+                    )
 
-                log_lines = str(e).splitlines()
-                notification_debug_log += log_lines
+                notification_debug_log += str(e).splitlines()
 
-            # Process notifications
-            notification_debug_log+= ["{} - SENDING - {}".format(now.strftime("%Y/%m/%d %H:%M:%S,000"), json.dumps(sent_obj))]
-            # Trim the log length
-            notification_debug_log = notification_debug_log[-100:]
+            notification_debug_log.append(
+                f"{datetime.now().strftime('%Y/%m/%d %H:%M:%S,000')} - SENDING - {json.dumps(n_object)}"
+            )
+
+            if len(notification_debug_log) > 100:
+                notification_debug_log = notification_debug_log[-100:]
+
 
 # Threaded runner, look for new watches to feed into the Queue.
 def ticker_thread_check_time_launch_checks():
