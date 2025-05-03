@@ -509,9 +509,9 @@ def notification_runner() -> None:
     while not app.config.exit.is_set():
         try:
             # At the moment only one thread runs (single runner)
-            n_object: dict = notification_q.get(block=False)
+            n_object: dict = notification_q.get(block=True, timeout=1)
         except queue.Empty:
-            time.sleep(1)
+            pass
 
         else:
             sent_notification: dict | None = None
