@@ -508,49 +508,47 @@ def notification_runner() -> None:
 
     while not app.config.exit.is_set():
         try:
-            # At the moment only one thread runs (single runner)
             n_object: dict = notification_q.get(block=True, timeout=1)
         except queue.Empty:
-            pass
+            continue
 
-        else:
-            sent_notification: dict | None = None
+        sent_notification: dict | None = None
 
-            try:
-                app_settings: dict = datastore.data['settings']['application']
+        try:
+            app_settings: dict = datastore.data['settings']['application']
 
-                if not n_object.get('notification_body') and app_settings.get('notification_body'):
-                    n_object['notification_body'] = app_settings.get('notification_body')
+            if not n_object.get('notification_body') and app_settings.get('notification_body'):
+                n_object['notification_body'] = app_settings.get('notification_body')
 
-                if not n_object.get('notification_title') and app_settings.get('notification_title'):
-                    n_object['notification_title'] = app_settings.get('notification_title')
+            if not n_object.get('notification_title') and app_settings.get('notification_title'):
+                n_object['notification_title'] = app_settings.get('notification_title')
 
-                if not n_object.get('notification_format') and app_settings.get('notification_format'):
-                    n_object['notification_format'] = app_settings.get('notification_format')
+            if not n_object.get('notification_format') and app_settings.get('notification_format'):
+                n_object['notification_format'] = app_settings.get('notification_format')
 
-                if n_object.get('notification_urls', {}):
-                    sent_notification = process_notification(n_object, datastore)
+            if n_object.get('notification_urls', {}):
+                sent_notification = process_notification(n_object, datastore)
 
-            except Exception as e:
-                logger.error(f"Watch URL: {n_object['watch_url']}  Error {str(e)}")
+        except Exception as e:
+            logger.error(f"Watch URL: {n_object['watch_url']}  Error {str(e)}")
 
-                # UUID wont be present when we submit a 'test' from the global settings
-                if 'uuid' in n_object:
-                    datastore.update_watch(
-                        uuid=n_object['uuid'],
-                        update_obj={
-                            'last_notification_error': "Notification error detected, goto notification log."
-                        }
-                    )
+            # UUID wont be present when we submit a 'test' from the global settings
+            if 'uuid' in n_object:
+                datastore.update_watch(
+                    uuid=n_object['uuid'],
+                    update_obj={
+                        'last_notification_error': "Notification error detected, goto notification log."
+                    }
+                )
 
-                notification_debug_log += str(e).splitlines()
+            notification_debug_log += str(e).splitlines()
 
-            notification_debug_log.append(
-                f"{datetime.now().strftime('%Y/%m/%d %H:%M:%S,000')} - SENDING - {json.dumps(n_object)}"
-            )
+        notification_debug_log.append(
+            f"{datetime.now().strftime('%Y/%m/%d %H:%M:%S,000')} - SENDING - {json.dumps(n_object)}"
+        )
 
-            if len(notification_debug_log) > 100:
-                notification_debug_log = notification_debug_log[-100:]
+        if len(notification_debug_log) > 100:
+            notification_debug_log = notification_debug_log[-100:]
 
 
 # Threaded runner, look for new watches to feed into the Queue.
