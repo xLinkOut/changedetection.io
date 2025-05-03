@@ -513,30 +513,30 @@ def notification_runner() -> None:
             continue
 
         try:
-            app_settings: dict = datastore.data['settings']['application']
+            app_settings: dict = datastore.data["settings"]["application"]
 
-            if not n_object.get('notification_body') and app_settings.get('notification_body'):
-                n_object['notification_body'] = app_settings.get('notification_body')
+            if not n_object.get("notification_body") and app_settings.get("notification_body"):
+                n_object["notification_body"] = app_settings.get("notification_body")
 
-            if not n_object.get('notification_title') and app_settings.get('notification_title'):
-                n_object['notification_title'] = app_settings.get('notification_title')
+            if not n_object.get("notification_title") and app_settings.get("notification_title"):
+                n_object["notification_title"] = app_settings.get("notification_title")
 
-            if not n_object.get('notification_format') and app_settings.get('notification_format'):
-                n_object['notification_format'] = app_settings.get('notification_format')
+            if not n_object.get("notification_format") and app_settings.get("notification_format"):
+                n_object["notification_format"] = app_settings.get("notification_format")
 
-            if n_object.get('notification_urls', {}):
+            if n_object.get("notification_urls", {}):
                 process_notification(n_object, datastore)
 
         except Exception as e:
             logger.error(f"Watch URL: {n_object['watch_url']}  Error {str(e)}")
 
             # UUID wont be present when we submit a 'test' from the global settings
-            if 'uuid' in n_object:
+            if "uuid" in n_object:
                 datastore.update_watch(
-                    uuid=n_object['uuid'],
+                    uuid=n_object["uuid"],
                     update_obj={
-                        'last_notification_error': "Notification error detected, goto notification log."
-                    }
+                        "last_notification_error": "Notification error detected, goto notification log."
+                    },
                 )
 
             notification_debug_log += str(e).splitlines()
