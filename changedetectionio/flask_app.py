@@ -512,8 +512,6 @@ def notification_runner() -> None:
         except queue.Empty:
             continue
 
-        sent_notification: dict | None = None
-
         try:
             app_settings: dict = datastore.data['settings']['application']
 
@@ -527,7 +525,7 @@ def notification_runner() -> None:
                 n_object['notification_format'] = app_settings.get('notification_format')
 
             if n_object.get('notification_urls', {}):
-                sent_notification = process_notification(n_object, datastore)
+                process_notification(n_object, datastore)
 
         except Exception as e:
             logger.error(f"Watch URL: {n_object['watch_url']}  Error {str(e)}")
