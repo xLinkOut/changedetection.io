@@ -483,6 +483,14 @@ def _get_html_head_extras():
     return collect_html_head_extras()
 
 
+# fork-ui: overlay theme (changedetectionio/theme/README.md); CDIO_CLASSIC_UI=1 gives the stock UI.
+# Must stay below _configure_plugin_templates() and the get_html_head_extras global it wraps.
+if not os.getenv('CDIO_CLASSIC_UI'):
+    from changedetectionio import theme as _fork_ui_theme
+
+    _fork_ui_theme.install(app)
+
+
 @app.template_filter('format_price')
 def _jinja2_filter_format_price(value: float, currency: str = '') -> str:
     """A price in the visitor's language with the currency's own decimal places (ISO 4217, #4615),
