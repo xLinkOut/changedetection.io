@@ -86,11 +86,9 @@ def _mobile_chrome(script_url):
         if ep.startswith(prefix):
             title, root = gettext(msgid), is_root
             break
-    tags = sorted(t.get('title', '') for t in datastore.data['settings']['application'].get('tags', {}).values())
     html = render_template(
         '_cd_mobile.html',
         cd_ep=ep, cd_title=title, cd_root=root,
-        cd_tags=[t for t in tags if t],
         cd_processors=processors.available_processors(),
         cd_default_processor=processors.get_default_processor(),
     )

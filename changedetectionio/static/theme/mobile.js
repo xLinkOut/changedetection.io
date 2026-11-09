@@ -128,6 +128,11 @@
     (function () {
         var sheet = qs('#cd-add-sheet'), form = qs('#cd-add-form'), url = qs('#cd-add-url');
         var paste = qs('.cd-paste', form);
+        // group suggestions: the pills of the watch list (no tag names in every page's HTML)
+        var dl = qs('#cd-add-tag-list');
+        qsa('#tag-lister a.button-tag:not(#tag-all)').forEach(function (a) {
+            var o = document.createElement('option'); o.value = a.textContent.trim(); dl.appendChild(o);
+        });
         sheet.addEventListener('toggle', function () { /* no-op: keeps Safari from caching state */ });
         new MutationObserver(function () {
             if (sheet.open) setTimeout(function () { url.focus(); }, 60);
@@ -301,7 +306,7 @@
                 if (!others.length) return;
                 var next = document.createElement('a');
                 next.className = 'pure-button pure-button-primary';
-                next.href = topbar.getAttribute('data-diff-url').replace(topbar.getAttribute('data-zero-uuid'), others[0]);
+                next.href = location.pathname.replace(uuid, others[0]);   // same page type, same URL prefix
                 next.textContent = topbar.getAttribute('data-l-next') + ' (' + others.length + ')';
                 bar.appendChild(next);
             }).catch(function () {});
