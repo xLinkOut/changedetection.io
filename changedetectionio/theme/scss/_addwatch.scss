@@ -1,0 +1,195 @@
+@use "mixins" as *;
+
+// Add-watch page (visual selector workspace): URL on top, preview left, options right.
+body.blueprint-add_watch_ui {
+  .content-main {
+    --cd-content-max: 1280px;
+  }
+  #add-watch-ui {
+    width: 100%;
+    padding: var(--cd-s5);
+    border-radius: var(--cd-r-lg);
+  }
+  #add-watch-ui #add-watch-legend {
+    margin: 0 0 var(--cd-s4);
+    font-size: var(--cd-fs-xl);
+  }
+  #add-watch-ui #add-watch-url-row {
+    display: flex;
+    gap: var(--cd-s2);
+    align-items: stretch;
+    margin-bottom: var(--cd-s4);
+    > span,
+    > div {
+      flex: 1;
+      min-width: 0;
+    }
+    #url {
+      width: 100%;
+      min-height: 48px;
+      font-size: var(--cd-fs-md);
+    }
+    #add-watch-go {
+      min-height: 48px;
+      padding-inline: var(--cd-s6);
+    }
+  }
+  #add-watch-ui #add-watch-panes {
+    gap: var(--cd-s4);
+    align-items: flex-start;
+  }
+  #add-watch-ui #add-watch-selector-pane {
+    flex: 1 1 62%;
+    min-height: 420px;
+    border: 1px dashed var(--cd-border-strong);
+    border-radius: var(--cd-r-lg);
+    background: var(--cd-surface-2);
+    color: var(--cd-text);
+    #add-watch-empty-state {
+      color: var(--cd-text-muted);
+      opacity: 1;
+      strong {
+        color: var(--cd-text);
+      }
+      svg {
+        color: var(--cd-accent);
+        opacity: 0.9;
+      }
+    }
+    #add-watch-error {
+      color: var(--cd-danger);
+    }
+    #add-watch-spinner .fetching-update-notice {
+      color: var(--cd-text-muted);
+    }
+  }
+  #add-watch-ui #add-watch-options-pane {
+    flex: 1 1 34%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cd-s3);
+    .add-watch-option-group {
+      padding: var(--cd-s3) var(--cd-s4);
+      border: 1px solid var(--cd-border);
+      border-radius: var(--cd-r-md);
+      background: var(--cd-surface);
+      label,
+      span.label {
+        display: block;
+        margin: 0 0 var(--cd-s2);
+        font-weight: 650;
+        font-size: var(--cd-fs-sm);
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        li {
+          display: flex;
+          align-items: flex-start;
+          gap: var(--cd-s2);
+          padding: var(--cd-s1) 0;
+          font-size: var(--cd-fs-sm);
+          &.unusable {
+            opacity: 0.55;
+          }
+          label {
+            margin: 0;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+    #by-element-toggle-group:not(:has(input)) {
+      display: none; // only a hidden "clear selection" link inside: no empty box
+    }
+    #watch-group-tag {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: left;
+      > div:first-child,
+      label {
+        display: block;
+      }
+      input,
+      input.transparent-field {
+        // upstream paints this field white-on-translucent with !important (it sat on the gradient)
+        background-color: var(--cd-surface) !important;
+        color: var(--cd-text) !important;
+        border: 1px solid var(--cd-border-strong) !important;
+        width: 100% !important;
+        box-sizing: border-box;
+        &::placeholder {
+          color: var(--cd-text-faint) !important;
+          opacity: 1 !important;
+        }
+      }
+      label,
+      > div:first-child {
+        color: var(--cd-text);
+      }
+    }
+    #add-watch-submit-row {
+      display: flex;
+      gap: var(--cd-s2);
+      padding: 0;
+      border: 0;
+      background: none;
+      input,
+      button,
+      .pure-button {
+        flex: 1;
+        min-height: 48px;
+      }
+      > * {
+        flex: 1;
+        min-width: 0;
+        input {
+          width: 100%;
+        }
+      }
+      // the second one is the "edit first" variant
+      > :nth-child(2) input,
+      > :nth-child(2) .pure-button {
+        background: var(--cd-surface);
+        color: var(--cd-text);
+        border-color: var(--cd-border-strong);
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    #add-watch-ui {
+      padding: var(--cd-s3);
+    }
+    #add-watch-ui #add-watch-legend {
+      font-size: var(--cd-fs-lg);
+    }
+    #add-watch-ui #add-watch-panes {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    #add-watch-ui #add-watch-selector-pane {
+      min-height: 220px;
+      flex-basis: auto;
+    }
+    #add-watch-ui #add-watch-options-pane {
+      min-width: 0;
+    }
+    #add-watch-url-row #add-watch-go {
+      padding-inline: var(--cd-s4);
+    }
+    // submit buttons stay reachable above the tab bar while the options scroll
+    #add-watch-ui #add-watch-options-pane #add-watch-submit-row {
+      position: sticky;
+      bottom: var(--cd-bottom-chrome);
+      z-index: 20;
+      margin: 0 calc(var(--cd-s3) * -1) calc(var(--cd-s3) * -1);
+      padding: var(--cd-s3);
+      border-top: 1px solid var(--cd-border);
+      background: var(--cd-surface);
+    }
+  }
+}
