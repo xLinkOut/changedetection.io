@@ -22,6 +22,13 @@ def test_theme_is_linked_and_overrides_blueprint_template(client, live_server, m
     _, filename, _ = app.jinja_env.loader.get_source(app.jinja_env, 'watch-overview.html')
     assert os.path.join('theme', 'templates') in filename
 
+    # mobile shell: inert template in <head> (cloned by static/theme/mobile.js), More sheet carries the nav targets
+    assert b'<template id="cd-mobile-tpl">' in res.data
+    assert b'viewport-fit=cover' in res.data
+    assert url_for('settings.settings_page').encode() in res.data
+    assert b'id="cd-add-form"' in res.data and b'name="watch_submit_button"' in res.data
+    assert client.get(url_for('static_content', group='theme', filename='mobile.js')).status_code == 200
+
     css = client.get(url_for('static_content', group='theme', filename='theme.css'))
     assert css.status_code == 200
     assert b'--cd-accent' in css.data

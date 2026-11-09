@@ -10,13 +10,17 @@ A restyle of the stock UI that lives entirely in new files, so `git rebase upstr
 - `scss/` - sources. `_tokens.scss` defines `--cd-*` tokens (light + dark via upstream's `data-darkmode`) and remaps
   upstream's ~400 `--color-*` variables onto them; the other partials are component rules layered on `styles.css`.
 - `templates/` - overrides, same filename as the upstream template. Each one is listed in `overrides.txt`.
+  `_cd_mobile.html` is the exception: a new file (no upstream twin, so no drift) holding the mobile shell
+  (top bar, bottom tab bar, add / more / row-action sheets). It is rendered into an inert `<template>` in `<head>`
+  by `install()` and cloned into the page by `../static/theme/mobile.js`, so `base.html` is not overridden.
+  Plugin sidebar items show up in its More sheet.
 - `../static/theme/theme.css` - compiled output, committed (like upstream's `styles.css`).
 
 ## Build the CSS
 
     npx sass@1 changedetectionio/theme/scss/theme.scss changedetectionio/static/theme/theme.css --style=compressed --no-source-map
 
-(any sass >= 1.77, e.g. `changedetectionio/static/styles/node_modules/.bin/sass`)
+(any sass >= 1.77 works)
 
 ## Syncing with upstream
 
@@ -33,6 +37,15 @@ Upstream renames of CSS classes/ids silently un-style things (no drift signal fo
 ## Compare with the original UI
 
     CDIO_CLASSIC_UI=1 python changedetection.py -d ./datastore
+
+## Mobile notes
+
+- Below 980px (upstream's hamburger breakpoint) the rail/header give way to the shell; below 767px rows become dense
+  single-line rows (tap = diff/history, trailing button = action sheet that clicks upstream's own row buttons).
+- Sheets are native `<dialog>`s: focus trap, Esc and the Android back gesture come for free.
+- New UI strings go through `_()` but are not in the `.pot` yet (they fall back to English); regenerate the catalog
+  when you want them translated.
+- `viewport-fit=cover` + `env(safe-area-inset-*)` are untested on a real notched iPhone (only emulated).
 
 ## Rules of thumb
 
