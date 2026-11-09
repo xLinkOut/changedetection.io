@@ -104,7 +104,7 @@ body.blueprint-watchlist {
   a.pure-button.button-tag {
     display: inline-flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 32px;
     margin: 0;
     padding: 0 var(--cd-s3);
     border: 1px solid transparent;
@@ -333,8 +333,8 @@ body.watch-selection-active .cdio-table-clip {
     background: var(--cd-row-selected);
   }
   input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     accent-color: var(--cd-accent-solid);
     margin: 0;
     cursor: pointer;
@@ -581,7 +581,7 @@ body.watch-selection-active .cdio-table-clip {
       }
     }
     .cdio-btn {
-      min-height: 30px;
+      min-height: 32px;
       padding: 0 var(--cd-s3);
       font-size: var(--cd-fs-sm);
       background: transparent;
