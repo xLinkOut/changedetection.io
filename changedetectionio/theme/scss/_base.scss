@@ -1,0 +1,99 @@
+@use "mixins" as *;
+
+// Page canvas: calm flat surface instead of the upstream atmosphere gradient.
+body {
+  font-family: var(--cd-font);
+  font-size: var(--cd-fs-md);
+  line-height: 1.5;
+  background: var(--cd-bg);
+  color: var(--cd-text);
+  -webkit-font-smoothing: antialiased;
+}
+body::before,
+body::after {
+  display: none;
+}
+
+:where(h1, h2, h3, h4, h5) {
+  color: var(--cd-text);
+  line-height: 1.25;
+  font-weight: 650;
+}
+:where(h1) { font-size: var(--cd-fs-xl); }
+:where(h2) { font-size: var(--cd-fs-lg); }
+:where(h3, h4) { font-size: var(--cd-fs-md); }
+
+:where(a) {
+  color: var(--cd-accent);
+}
+:where(a:hover) {
+  text-decoration: underline;
+}
+:where(hr) {
+  border: 0;
+  border-top: 1px solid var(--cd-border);
+}
+:where(code, pre, kbd, samp) {
+  font-family: var(--cd-mono);
+  font-size: 0.92em;
+}
+code {
+  background: var(--cd-surface-2);
+  border-radius: var(--cd-r-sm);
+  padding: 0.1em 0.35em;
+}
+::selection {
+  background: var(--cd-accent-soft);
+  color: var(--cd-text);
+}
+
+// Keyboard focus, everywhere, one look.
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--cd-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+:where(input, select, textarea):focus-visible {
+  outline-offset: 0;
+}
+
+// Flash messages -> inline banners, not white text on a gradient
+ul.messages {
+  list-style: none;
+  margin: 0 0 var(--cd-s4);
+  padding: 0;
+  width: 100%;
+  max-width: 1100px;
+  li {
+    margin: 0 0 var(--cd-s2);
+    padding: var(--cd-s3) var(--cd-s4);
+    border: 1px solid var(--cd-border);
+    border-left-width: 4px;
+    border-radius: var(--cd-r-md);
+    background: var(--cd-surface);
+    color: var(--cd-text);
+    box-shadow: var(--cd-shadow-sm);
+    &.error {
+      border-left-color: var(--cd-danger-solid);
+      background: var(--cd-danger-soft);
+    }
+    &.notice,
+    &.message {
+      border-left-color: var(--cd-accent-solid);
+    }
+    &.success {
+      border-left-color: var(--cd-success);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important; // beats upstream inline/!important animations
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

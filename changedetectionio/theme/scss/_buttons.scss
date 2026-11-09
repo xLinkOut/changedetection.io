@@ -1,0 +1,201 @@
+@use "mixins" as *;
+
+// One button system for .pure-button (+ the .button-* colour modifiers) and .cdio-btn.
+.pure-button,
+.cdio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cd-s2);
+  min-height: 36px;
+  padding: 0 var(--cd-s4);
+  border: 1px solid var(--cd-border-strong);
+  border-radius: var(--cd-r-md);
+  background: var(--cd-surface);
+  background-image: none;
+  color: var(--cd-text);
+  font-family: inherit;
+  font-size: var(--cd-fs-sm);
+  font-weight: 550;
+  line-height: 1.2;
+  text-shadow: none;
+  text-decoration: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  &:hover,
+  &:focus {
+    background-color: var(--cd-surface-2);
+    background-image: none;
+    border-color: var(--cd-border-strong);
+    color: var(--cd-text);
+    text-decoration: none;
+  }
+  &:active {
+    box-shadow: none;
+    background-color: var(--cd-surface-3);
+  }
+  &[disabled],
+  &.pure-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  svg,
+  i svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    flex: none;
+  }
+}
+
+.pure-button-primary,
+.pure-button-selected,
+.cdio-btn--primary,
+.button-success {
+  background-color: var(--cd-accent-solid);
+  border-color: var(--cd-accent-solid);
+  color: var(--cd-on-accent);
+  &:hover,
+  &:focus {
+    background-color: var(--cd-accent-solid-hover);
+    border-color: var(--cd-accent-solid-hover);
+    color: var(--cd-on-accent);
+  }
+}
+.button-success {
+  background-color: #1a7f4b;
+  border-color: #1a7f4b;
+  &:hover {
+    background-color: #156a3f;
+    border-color: #156a3f;
+  }
+}
+.button-error,
+.button-warning {
+  background-color: var(--cd-surface);
+  border-color: var(--cd-danger);
+  color: var(--cd-danger);
+  &:hover,
+  &:focus {
+    background-color: var(--cd-danger-solid);
+    border-color: var(--cd-danger-solid);
+    color: #fff;
+  }
+}
+.button-secondary {
+  background-color: var(--cd-surface);
+  color: var(--cd-text);
+  text-shadow: none;
+  border-radius: var(--cd-r-md);
+}
+.button-cancel {
+  background-color: var(--cd-surface);
+  color: var(--cd-text-muted);
+}
+.button-small {
+  min-height: 32px;
+  font-size: var(--cd-fs-sm);
+}
+.button-xsmall {
+  min-height: 32px; // 32px hit target on desktop, bumped for touch below
+  padding: 0 var(--cd-s3);
+  font-size: var(--cd-fs-sm);
+}
+.cdio-btn--sm {
+  min-height: 30px;
+  padding: 0 var(--cd-s3);
+  font-size: var(--cd-fs-xs);
+}
+.cdio-btn--danger {
+  color: var(--cd-danger);
+  &:hover {
+    color: var(--cd-danger);
+    border-color: var(--cd-danger);
+  }
+}
+.cdio-btn--warning {
+  color: var(--cd-changed);
+  &:hover {
+    color: var(--cd-changed);
+    border-color: var(--cd-changed);
+  }
+}
+.bare-btn {
+  color: var(--cd-accent);
+}
+
+// Segmented control (watch list filters, etc.)
+.seg {
+  background: var(--cd-surface-2);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-r-md);
+  gap: 2px;
+  a,
+  button {
+    min-height: 30px;
+    color: var(--cd-text-muted);
+    font-weight: 550;
+    border-radius: var(--cd-r-sm);
+    &:hover {
+      background: transparent;
+      color: var(--cd-text);
+      box-shadow: none;
+      text-decoration: none;
+    }
+    &.active {
+      background: var(--cd-surface);
+      color: var(--cd-text);
+      box-shadow: var(--cd-shadow-sm), 0 0 0 1px var(--cd-border);
+    }
+  }
+  @include dark-nested {
+    a.active,
+    button.active {
+      background: var(--cd-surface-3);
+      box-shadow: 0 0 0 1px var(--cd-border-strong);
+    }
+  }
+}
+.seg-count {
+  background: var(--cd-surface-3);
+  color: var(--cd-text-muted);
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  &--unread {
+    background: var(--cd-accent-solid);
+    color: #fff;
+  }
+  &--error {
+    background: var(--cd-danger-solid);
+    color: #fff;
+  }
+  &--deal {
+    background: #1a7f4b;
+    color: #fff;
+  }
+}
+
+// Little pills used all over (state chips, tags, counts)
+.cd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: var(--cd-r-pill);
+  font-size: var(--cd-fs-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  background: var(--cd-surface-3);
+  color: var(--cd-text-muted);
+}
+
+@media (pointer: coarse) {
+  .pure-button,
+  .cdio-btn,
+  .button-xsmall,
+  .cdio-btn--sm {
+    min-height: 44px;
+  }
+}

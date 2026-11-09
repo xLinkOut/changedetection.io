@@ -1,0 +1,26 @@
+// Same selector pair upstream uses: data-darkmode="true" (cookie) or "auto" + OS preference.
+@mixin dark {
+  html[data-darkmode="true"] {
+    @content;
+  }
+  @media (prefers-color-scheme: dark) {
+    html[data-darkmode="auto"] {
+      @content;
+    }
+  }
+}
+
+// Nested variant: `.foo { @include dark-nested { color: red } }` -> html[...] .foo
+@mixin dark-nested {
+  @at-root html[data-darkmode="true"] & {
+    @content;
+  }
+  @media (prefers-color-scheme: dark) {
+    @at-root html[data-darkmode="auto"] & {
+      @content;
+    }
+  }
+}
+
+$mobile: 768px;
+$desktop-wide: 980px; // upstream's switch to the hamburger drawer

@@ -1,0 +1,130 @@
+@use "mixins" as *;
+
+// Edit / settings / diff tab strips: quiet underline tabs, the active one is accent-underlined.
+.content-main > .edit-form {
+  width: 100%;
+}
+.tabs {
+  ul {
+    gap: 0;
+    border-bottom: 1px solid var(--cd-border);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    li {
+      background: transparent;
+      border-radius: 0;
+      margin-bottom: -1px;
+      border-bottom: 2px solid transparent;
+      color: var(--cd-text-muted);
+      a {
+        padding: var(--cd-s3) var(--cd-s4);
+        color: var(--cd-text-muted);
+        font-weight: 500;
+        font-size: var(--cd-fs-md);
+        min-height: 44px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+      &:not(.active):hover {
+        background: var(--cd-surface-2);
+        border-radius: var(--cd-r-sm) var(--cd-r-sm) 0 0;
+        a {
+          color: var(--cd-text);
+          text-decoration: none;
+        }
+      }
+      &.active,
+      :target {
+        background: transparent;
+        border-bottom-color: var(--cd-accent);
+        a {
+          color: var(--cd-text);
+          font-weight: 650;
+        }
+      }
+    }
+  }
+}
+// JS (base.html) adds body.wrapped-tabs when the strip no longer fits: switch to wrapping pills
+body.wrapped-tabs .tabs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cd-s2);
+  border-bottom: 0;
+  overflow: visible;
+  li {
+    margin: 0;
+    border: 1px solid var(--cd-border);
+    border-radius: var(--cd-r-pill);
+    a {
+      min-height: 40px;
+      padding: var(--cd-s2) var(--cd-s4);
+      font-size: var(--cd-fs-sm);
+    }
+    &:not(.active):hover {
+      border-radius: var(--cd-r-pill);
+    }
+    &.active,
+    :target {
+      background: var(--cd-accent-soft);
+      border-color: var(--cd-accent);
+    }
+  }
+}
+
+.edit-form {
+  .box-wrap.inner,
+  .inner {
+    background: var(--cd-surface);
+    border: 1px solid var(--cd-border);
+    border-radius: var(--cd-r-lg);
+    padding: var(--cd-s5);
+    margin-top: var(--cd-s4);
+  }
+  .tab-pane-inner {
+    scroll-margin-top: 100px;
+  }
+  // Save bar pinned to the bottom of the viewport while the form is long
+  #actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin: var(--cd-s4) calc(var(--cd-s5) * -1) calc(var(--cd-s5) * -1);
+    padding: var(--cd-s3) var(--cd-s5);
+    background: var(--cd-surface);
+    border-top: 1px solid var(--cd-border);
+    border-radius: 0 0 var(--cd-r-lg) var(--cd-r-lg);
+    box-shadow: 0 -6px 12px -8px rgba(16, 24, 40, 0.18);
+    .pure-control-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--cd-s2);
+      padding: 0;
+      > * {
+        margin: 0;
+      }
+      // Save first and primary; destructive ones are outlined, not shouting red
+      .pure-button-primary {
+        order: -1;
+        min-width: 112px;
+      }
+    }
+    a img {
+      padding: 0 !important; // beats the inline style on the RSS icon
+    }
+  }
+}
+
+.settings-subtabs {
+  background: var(--cd-surface-2);
+  .settings-subtab {
+    color: var(--cd-text-muted);
+    &.active {
+      background: var(--cd-surface);
+      color: var(--cd-text);
+      box-shadow: var(--cd-shadow-sm), 0 0 0 1px var(--cd-border);
+    }
+  }
+}

@@ -1,0 +1,396 @@
+@use "mixins" as *;
+
+// Narrow, readable pages
+body.blueprint-imports .content-main,
+body.blueprint-backups .content-main,
+body.blueprint-tags .content-main,
+body.blueprint-settings-notification-logs .content-main {
+  --cd-content-max: 960px;
+}
+.blueprint-imports form .pure-button-primary,
+.blueprint-backups form .pure-button-primary {
+  width: auto;
+  min-width: 160px;
+}
+
+// ---------------------------------------------------------------------------
+// Queue page: upstream paints everything white-on-gradient. Re-point --color-white to the
+// text colour inside the page so every var(--color-white) in _queue.scss follows the theme,
+// then fix the literal rgba(255,255,255,x) values.
+// ---------------------------------------------------------------------------
+#queue-page {
+  --color-white: var(--cd-text);
+  color: var(--cd-text);
+  .queue-panel {
+    background: var(--cd-surface);
+    border: 1px solid var(--cd-border);
+    border-radius: var(--cd-r-lg);
+    padding: var(--cd-s4) var(--cd-s5);
+    box-shadow: var(--cd-shadow-sm);
+  }
+  .queue-stat {
+    .label {
+      color: var(--cd-text-muted);
+      opacity: 1;
+      font-weight: 600;
+    }
+    .value {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+  table.pure-table {
+    font-size: var(--cd-fs-sm);
+    thead th {
+      color: var(--cd-text-muted);
+      border-bottom: 1px solid var(--cd-border);
+      font-size: var(--cd-fs-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td {
+      border-color: var(--cd-border);
+    }
+    td.time-cell {
+      color: var(--cd-text-muted);
+    }
+    code {
+      background: var(--cd-surface-2);
+    }
+  }
+  table.pure-table-striped tr:nth-child(2n-1) td {
+    background: var(--cd-surface-2);
+  }
+  tbody[data-section="workers"] {
+    border-bottom-color: var(--cd-border);
+  }
+  tr.worker-slot td {
+    border-color: var(--cd-border);
+  }
+  tr.worker-idle td {
+    background: transparent;
+  }
+  .inline-tag {
+    background: var(--cd-surface-3);
+    color: var(--cd-text);
+  }
+  .inline-tag--running {
+    background: var(--cd-success-soft);
+    color: var(--cd-success);
+  }
+  .inline-tag--idle,
+  .inline-tag--done {
+    background: var(--cd-surface-2);
+    color: var(--cd-text-muted);
+  }
+  a.queue-cancel {
+    color: var(--cd-text-muted);
+    &:hover {
+      color: var(--cd-danger);
+    }
+  }
+  .queue-waiting {
+    color: var(--cd-text-muted);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Diff + preview
+// ---------------------------------------------------------------------------
+body.difference-page .header,
+#diff-header {
+  background: var(--cd-surface);
+}
+#diff-header {
+  margin-inline: 0;
+  border-bottom: 1px solid var(--cd-border);
+  #settings,
+  #diff-form {
+    background: transparent;
+  }
+  label {
+    color: var(--cd-text-muted);
+  }
+}
+#diff-form {
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border);
+  color: var(--cd-text);
+  border-radius: var(--cd-r-lg);
+  margin-bottom: var(--cd-s3);
+  #diff-header & {
+    background: transparent;
+    border: 0;
+    padding-block: var(--cd-s2);
+    margin-bottom: 0;
+  }
+  label.from-to-label#change-from,
+  label.from-to-label#change-to {
+    border-radius: var(--cd-r-pill);
+    padding: 2px var(--cd-s3);
+    font-size: var(--cd-fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  label.from-to-label#change-from {
+    background: var(--cd-diff-del-bg);
+    color: var(--cd-diff-del-fg);
+  }
+  label.from-to-label#change-to {
+    background: var(--cd-diff-add-bg);
+    color: var(--cd-diff-add-fg);
+  }
+  select {
+    font-size: var(--cd-fs-sm);
+    min-height: 36px;
+  }
+}
+#diff-ui {
+  box-sizing: border-box;
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-r-lg);
+  padding: var(--cd-s5);
+  margin-top: var(--cd-s3);
+  color: var(--cd-text);
+  #text {
+    font-size: var(--cd-fs-sm);
+  }
+  pre {
+    font-family: var(--cd-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    tab-size: 4;
+    color: var(--cd-text);
+  }
+  .tip {
+    color: var(--cd-text-muted);
+    font-size: var(--cd-fs-sm);
+    margin-top: var(--cd-s4);
+  }
+  #cell-diff-jump-visualiser {
+    background: var(--cd-surface);
+    > div.deletion {
+      background: var(--cd-diff-del-fg);
+    }
+    > div.insertion,
+    > div.note {
+      background: var(--cd-diff-add-fg);
+    }
+    > div.mixed {
+      background: linear-gradient(to right, var(--cd-diff-del-fg) 50%, var(--cd-diff-add-fg) 50%);
+    }
+  }
+  .triggered {
+    background-color: var(--cd-accent-solid);
+    color: #fff;
+  }
+  .ignored {
+    background-color: var(--cd-surface-3);
+    color: var(--cd-text-muted);
+    opacity: 1;
+  }
+}
+#text-diff-heading-area .snapshot-age {
+  background: var(--cd-surface-2);
+  color: var(--cd-text-muted);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-r-md);
+  padding: var(--cd-s2) var(--cd-s3);
+  font-weight: 600;
+  font-size: var(--cd-fs-sm);
+  a {
+    font-weight: 600;
+  }
+  &.error {
+    background: var(--cd-danger-soft);
+    color: var(--cd-danger);
+    border-color: var(--cd-danger);
+  }
+}
+// Diff colours are inline styles written by diff/__init__.py (they are shared with emails),
+// so the only way to theme them is attribute selectors + !important.
+#difference {
+  border-left: 0 !important;
+  padding: 0;
+  margin: 0;
+  span[style*="#fadad7"] {
+    background-color: var(--cd-diff-del-bg) !important;
+    color: var(--cd-diff-del-fg) !important;
+    border-radius: 2px;
+  }
+  span[style*="#eaf2c2"] {
+    background-color: var(--cd-diff-add-bg) !important;
+    color: var(--cd-diff-add-fg) !important;
+    border-radius: 2px;
+  }
+  // word-level highlights inside changed lines: stronger, still AA
+  span[style*="#ff867a"] {
+    background-color: var(--cd-diff-del-fg) !important;
+    color: var(--cd-diff-del-bg) !important;
+  }
+  span[style*="#b2e841"] {
+    background-color: var(--cd-diff-add-fg) !important;
+    color: var(--cd-diff-add-bg) !important;
+  }
+}
+// Preview page's selector bar (text on gradient upstream)
+#preview-header,
+body.preview-page #settings {
+  background: var(--cd-surface);
+}
+#keyboard-nav,
+#settings label,
+.keyboard-nav label {
+  color: var(--cd-text-muted);
+}
+
+// ---------------------------------------------------------------------------
+// Tag/group + watch edit extras
+// ---------------------------------------------------------------------------
+.group-overview-table {
+  td {
+    color: var(--cd-text);
+  }
+}
+.pure-form .tag-add-form,
+.blueprint-tags .box h2 {
+  font-size: var(--cd-fs-lg);
+}
+
+// Modals (confirm, language, search)
+.modal-dialog {
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-r-lg);
+  background: var(--cd-surface);
+  color: var(--cd-text);
+  box-shadow: var(--cd-shadow-md);
+  max-height: calc(100vh - 2 * var(--cd-s4));
+  overflow-y: auto;
+  &::backdrop {
+    background: rgba(10, 12, 16, 0.55);
+    backdrop-filter: none;
+  }
+  .modal-header {
+    border-bottom: 1px solid var(--cd-border);
+    .modal-title {
+      font-size: var(--cd-fs-lg);
+      font-weight: 650;
+    }
+    .modal-icon.warning {
+      color: var(--cd-changed);
+    }
+    .modal-icon.danger {
+      color: var(--cd-danger);
+    }
+  }
+  .modal-footer {
+    border-top: 1px solid var(--cd-border);
+    background: var(--cd-surface-2);
+    button {
+      min-height: 36px;
+      padding: 0 var(--cd-s4);
+      border-radius: var(--cd-r-md);
+      font-size: var(--cd-fs-sm);
+      font-weight: 600;
+      border: 1px solid var(--cd-border-strong);
+      background: var(--cd-surface);
+      color: var(--cd-text);
+      &:hover {
+        transform: none;
+        box-shadow: none;
+        background: var(--cd-surface-3);
+      }
+      &.modal-btn-confirm {
+        background: var(--cd-accent-solid);
+        border-color: var(--cd-accent-solid);
+        color: var(--cd-on-accent);
+        &:hover {
+          background: var(--cd-accent-solid-hover);
+          opacity: 1;
+        }
+      }
+      &.modal-btn-danger,
+      &.modal-btn-warning {
+        background: var(--cd-danger-solid);
+        border-color: var(--cd-danger-solid);
+        color: #fff;
+        &:hover {
+          background: var(--cd-danger);
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @include dark-nested {
+    .modal-footer {
+      background: var(--cd-surface-2);
+    }
+  }
+}
+.bulk-choice-list .bulk-choice-row {
+  border-radius: var(--cd-r-sm);
+  &:hover {
+    background: var(--cd-surface-2);
+  }
+}
+.language-option {
+  color: var(--cd-text);
+  background: transparent;
+  border-radius: var(--cd-r-md);
+  &:hover {
+    background: var(--cd-surface-2);
+  }
+}
+
+// Toasts
+.toast,
+.toast-container .toast {
+  border-radius: var(--cd-r-md);
+}
+
+// Login
+.login-form {
+  .inner {
+    border: 1px solid var(--cd-border);
+    border-radius: var(--cd-r-lg);
+    box-shadow: var(--cd-shadow-md);
+    padding: var(--cd-s6);
+    &:hover {
+      box-shadow: var(--cd-shadow-md);
+    }
+  }
+  input[type="password"] {
+    border: 1px solid var(--cd-border-strong);
+    transform: none !important; // upstream lifts the field 1px on focus
+  }
+  button[type="submit"] {
+    border-radius: var(--cd-r-md);
+    background: var(--cd-accent-solid);
+    box-shadow: none;
+    min-height: 44px;
+    &:hover {
+      background: var(--cd-accent-solid-hover);
+      box-shadow: none;
+    }
+  }
+}
+
+// Pagination
+.pagination a,
+.pagination span {
+  color: var(--cd-text-muted);
+}
+
+// Misc leftovers that assumed a dark gradient behind them
+.select-all-banner,
+#stats_row,
+#search-result-info,
+.pure-form legend {
+  color: var(--cd-text);
+}
+
+.language-option.active {
+  background-color: var(--cd-accent-solid);
+  color: var(--cd-on-accent);
+}

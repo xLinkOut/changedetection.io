@@ -1,0 +1,282 @@
+@use "mixins" as *;
+
+// Labels above fields, muted help, readable widths. All forms in the app are .pure-form.
+.pure-form {
+  label {
+    font-weight: 600;
+    font-size: var(--cd-fs-sm);
+    color: var(--cd-text);
+  }
+  &.pure-form-stacked label {
+    margin: var(--cd-s3) 0 var(--cd-s1);
+  }
+  legend {
+    color: var(--cd-text);
+    border-bottom: 1px solid var(--cd-border);
+    font-weight: 650;
+    margin-bottom: var(--cd-s3);
+    padding-bottom: var(--cd-s2);
+  }
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .pure-control-group,
+  .pure-group,
+  .pure-controls {
+    padding-bottom: var(--cd-s4);
+    margin-bottom: 0;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="url"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="week"],
+  input[type="number"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"],
+  input:not([type]),
+  select,
+  textarea {
+    box-sizing: border-box;
+    min-height: 38px;
+    padding: var(--cd-s2) var(--cd-s3);
+    border: 1px solid var(--cd-border-strong);
+    border-radius: var(--cd-r-md);
+    background: var(--cd-surface);
+    color: var(--cd-text);
+    font-family: inherit;
+    font-size: var(--cd-fs-md);
+    line-height: 1.4;
+    box-shadow: none;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    &::placeholder {
+      color: var(--cd-text-faint);
+      opacity: 1;
+      font-weight: 400;
+    }
+    &:hover {
+      border-color: var(--cd-text-faint);
+    }
+    &:focus,
+    &:focus-visible {
+      outline: none;
+      border-color: var(--cd-accent);
+      box-shadow: 0 0 0 3px var(--cd-accent-soft), 0 0 0 1px var(--cd-accent);
+    }
+    &[disabled],
+    &[readonly] {
+      background: var(--cd-surface-2);
+      color: var(--cd-text-muted);
+      cursor: not-allowed;
+    }
+  }
+  textarea {
+    min-height: 96px;
+    width: 100%;
+    max-width: 100%;
+  }
+  select {
+    padding-right: var(--cd-s6);
+    cursor: pointer;
+  }
+  input[type="text"],
+  input[type="url"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"] {
+    max-width: 100%;
+  }
+  // monospace where the content is code-ish
+  textarea,
+  input.m-d,
+  input[type="url"] {
+    font-family: var(--cd-mono);
+    font-size: var(--cd-fs-sm);
+  }
+  input[type="url"] {
+    font-size: var(--cd-fs-md);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--cd-accent-solid);
+    width: 16px;
+    height: 16px;
+    margin: 0 var(--cd-s2) 0 0;
+    vertical-align: middle;
+    flex: none;
+  }
+  .checkbox label,
+  .inline-radio label,
+  ul.radio-list label,
+  li label {
+    font-weight: 500;
+  }
+  .checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--cd-s2);
+    > * {
+      display: inline-flex;
+    }
+    > label {
+      padding-left: 0;
+      margin: 0;
+    }
+    ul.errors {
+      flex-basis: 100%;
+    }
+  }
+  .inline-radio ul {
+    padding: 0;
+    li {
+      gap: var(--cd-s2);
+      min-height: 32px;
+    }
+  }
+  span.label {
+    display: block;
+    font-weight: 600;
+    font-size: var(--cd-fs-sm);
+    margin: var(--cd-s3) 0 var(--cd-s1);
+  }
+  .pure-form-message,
+  .pure-form-message-inline {
+    display: block;
+    margin-top: var(--cd-s1);
+    font-size: var(--cd-fs-sm);
+    line-height: 1.45;
+    color: var(--cd-text-muted);
+    padding: 0;
+  }
+  .pure-form-message-inline a,
+  .pure-form-message a {
+    color: var(--cd-accent);
+  }
+
+  // validation
+  .error {
+    input,
+    select,
+    textarea {
+      border-color: var(--cd-danger);
+      background-color: var(--cd-danger-soft);
+    }
+    > label,
+    > span.label,
+    > div:first-child label {
+      color: var(--cd-danger);
+    }
+  }
+  ul.errors {
+    list-style: none;
+    margin: var(--cd-s2) 0 0;
+    padding: var(--cd-s2) var(--cd-s3);
+    border: 1px solid var(--cd-danger);
+    border-left-width: 4px;
+    border-radius: var(--cd-r-md);
+    background: var(--cd-danger-soft);
+    li {
+      margin: 0;
+      color: var(--cd-danger);
+      font-size: var(--cd-fs-sm);
+      font-weight: 500;
+    }
+  }
+}
+
+.pure-form .pure-input-1 {
+  width: 100%;
+}
+
+fieldset ul {
+  margin-top: 0;
+}
+// radios rendered as <ul> lists
+.pure-form ul[id] {
+  list-style: none;
+  padding-left: 0;
+  margin: var(--cd-s1) 0 0;
+}
+.pure-form ul[id] > li {
+  display: flex;
+  align-items: center;
+  gap: var(--cd-s1);
+  padding: 2px 0;
+}
+
+.grey-form-border {
+  border-color: var(--cd-border);
+  border-radius: var(--cd-r-md);
+  padding: var(--cd-s3);
+}
+
+// tables inside forms/settings
+.pure-table {
+  border-color: var(--cd-border);
+  thead {
+    background: var(--cd-surface-2);
+    color: var(--cd-text-muted);
+  }
+  td,
+  th {
+    border-color: var(--cd-border);
+  }
+  &-striped tr:nth-child(2n-1) td {
+    background: var(--cd-surface-2);
+  }
+}
+
+// Yes / No / Default segmented radios. `html[data-darkmode]` only matches upstream's dark-mode specificity.
+html[data-darkmode] .ternary-radio-group {
+  border: 1px solid var(--cd-border-strong);
+  border-radius: var(--cd-r-md);
+  background: var(--cd-surface);
+  .ternary-radio-option {
+    .ternary-radio-label {
+      background: var(--cd-surface);
+      border-right: 1px solid var(--cd-border);
+      color: var(--cd-text);
+      font-size: var(--cd-fs-sm);
+      font-weight: 500;
+      padding: var(--cd-s2) var(--cd-s4);
+      min-height: 20px;
+    }
+    &:hover .ternary-radio-label {
+      background: var(--cd-surface-2);
+    }
+    input:checked + .ternary-radio-label {
+      background: var(--cd-accent-solid);
+      color: var(--cd-on-accent);
+      &.ternary-default {
+        background: var(--cd-text-muted);
+        color: var(--cd-surface);
+      }
+      &:hover {
+        background: var(--cd-accent-solid-hover);
+        &.ternary-default {
+          background: var(--cd-text);
+        }
+      }
+    }
+    input:focus-visible + .ternary-radio-label {
+      outline: 2px solid var(--cd-accent);
+      outline-offset: -2px;
+    }
+  }
+}
+// beats upstream's `background: var(--color-link)` (which is light text-blue in dark mode)
+input[type="radio"].pure-radio:checked + label,
+input[type="radio"].pure-radio:checked {
+  background: var(--cd-accent-solid);
+  color: var(--cd-on-accent);
+}

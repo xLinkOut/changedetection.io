@@ -1,0 +1,200 @@
+@use "mixins" as *;
+
+// ---------------------------------------------------------------------------
+// 1. Fork token layer (--cd-*). Light first, dark overrides below.
+//    Text colours here are WCAG AA (4.5:1) against the surface they are used on.
+// ---------------------------------------------------------------------------
+:root {
+  --cd-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --cd-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  // 4px spacing scale
+  --cd-s1: 4px;
+  --cd-s2: 8px;
+  --cd-s3: 12px;
+  --cd-s4: 16px;
+  --cd-s5: 24px;
+  --cd-s6: 32px;
+  // type scale
+  --cd-fs-xs: 0.75rem;
+  --cd-fs-sm: 0.8125rem;
+  --cd-fs-md: 0.9375rem;
+  --cd-fs-lg: 1.125rem;
+  --cd-fs-xl: 1.375rem;
+  // radii
+  --cd-r-sm: 6px;
+  --cd-r-md: 8px;
+  --cd-r-lg: 12px;
+  --cd-r-pill: 999px;
+
+  --cd-bg: #f5f6f8;
+  --cd-surface: #ffffff;
+  --cd-surface-2: #f1f3f6;
+  --cd-surface-3: #e8ebf0;
+  --cd-border: #e2e5ea;
+  --cd-border-strong: #c5cbd3;
+  --cd-text: #14171c;
+  --cd-text-muted: #545e6b;
+  --cd-text-faint: #6b7583;
+
+  --cd-accent: #2b55d9;          // text/links/focus on surface
+  --cd-accent-solid: #2b55d9;    // solid fills with white text (5.9:1)
+  --cd-accent-solid-hover: #2247b8;
+  --cd-accent-soft: #e8eefe;
+  --cd-on-accent: #ffffff;
+
+  --cd-changed: #9a5200;
+  --cd-changed-soft: #fff1d6;
+  --cd-changed-solid: #e08a00;
+  --cd-danger: #b3261e;
+  --cd-danger-soft: #fdeceb;
+  --cd-danger-solid: #c9302c;
+  --cd-success: #0b6b3d;
+  --cd-success-soft: #dff5e8;
+  --cd-paused: #4a5361;
+  --cd-paused-soft: #e9ecf1;
+
+  --cd-row-hover: #f7f8fa;
+  --cd-row-selected: #e8eefe;
+  --cd-focus: 0 0 0 2px var(--cd-surface), 0 0 0 4px var(--cd-accent);
+  --cd-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --cd-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --cd-diff-add-bg: #d6f2df;
+  --cd-diff-add-fg: #0a4d2a;
+  --cd-diff-del-bg: #fddcdc;
+  --cd-diff-del-fg: #7a1410;
+  --cd-sidebar-w: 64px;
+}
+
+@include dark {
+  --cd-bg: #0e1013;
+  --cd-surface: #16191e;
+  --cd-surface-2: #1d2128;
+  --cd-surface-3: #262b34;
+  --cd-border: #2a2f38;
+  --cd-border-strong: #424956;
+  --cd-text: #e8eaed;
+  --cd-text-muted: #a0a9b6;
+  --cd-text-faint: #8a94a2;
+
+  --cd-accent: #8eabff;
+  --cd-accent-solid: #4a6df0;
+  --cd-accent-solid-hover: #6482f5;
+  --cd-accent-soft: #1d2848;
+  --cd-on-accent: #ffffff;
+
+  --cd-changed: #fbbf5a;
+  --cd-changed-soft: #3a2b0c;
+  --cd-changed-solid: #f2a516;
+  --cd-danger: #ff8a80;
+  --cd-danger-soft: #3b1816;
+  --cd-danger-solid: #d8453f;
+  --cd-success: #5fd991;
+  --cd-success-soft: #123322;
+  --cd-paused: #aab3c0;
+  --cd-paused-soft: #262b34;
+
+  --cd-row-hover: #1a1e24;
+  --cd-row-selected: #1d2848;
+  --cd-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --cd-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --cd-diff-add-bg: #12351f;
+  --cd-diff-add-fg: #9ee8b7;
+  --cd-diff-del-bg: #43191a;
+  --cd-diff-del-fg: #ffb4ae;
+}
+
+// ---------------------------------------------------------------------------
+// 2. Remap upstream tokens onto ours. `html[data-darkmode]` is required (not just :root):
+//    upstream re-declares many of these under html[data-darkmode=...] and we must beat it.
+//    var() resolves per element, so these follow the light/dark --cd-* values above.
+// ---------------------------------------------------------------------------
+:root,
+html[data-darkmode] {
+  --body-main-text-size: 0.875rem;
+  --common-round-border: var(--cd-r-md);
+
+  --color-background-page: var(--cd-bg);
+  --page-background-gradient: none;
+  // upstream's diff header etc. colour-mix these with the page colour: keep them flat
+  --color-background-gradient-first: var(--cd-bg);
+  --color-background-gradient-second: var(--cd-bg);
+  --color-background-gradient-third: var(--cd-bg);
+  --color-background: var(--cd-surface);
+  --color-text: var(--cd-text);
+  --color-link: var(--cd-accent);
+  --color-background-code: var(--cd-surface-2);
+  --color-error: var(--cd-danger);
+  --color-error-input: var(--cd-danger-soft);
+  --color-error-list: var(--cd-danger);
+  --color-table-background: var(--cd-surface);
+  --color-table-stripe: var(--cd-surface-2);
+  --watchlist-row-selected: var(--cd-row-selected);
+  --watchlist-row-hover: var(--cd-row-hover);
+
+  --color-text-tab: var(--cd-text-muted);
+  --color-background-tab: transparent;
+  --color-background-tab-hover: var(--cd-surface-2);
+  --color-text-tab-active: var(--cd-text);
+  --color-text-subtab: var(--cd-text-muted);
+  --color-background-subtabs: var(--cd-surface-2);
+  --color-background-subtab-hover: var(--cd-surface-3);
+
+  --color-background-button-primary: var(--cd-accent-solid);
+  --color-background-button-red: var(--cd-danger-solid);
+  --color-background-button-error: var(--cd-danger-solid);
+  --color-background-button-warning: var(--cd-danger-solid);
+  --color-background-button-success: #1a8a52;
+  --color-background-button-secondary: var(--cd-surface-2);
+  --color-background-button-cancel: var(--cd-surface-3);
+  --color-text-button: var(--cd-on-accent);
+  --color-background-button-tag: var(--cd-surface-3);
+  --color-background-button-tag-active: var(--cd-accent-solid);
+
+  --color-text-messages: var(--cd-text);
+  --color-background-messages-message: var(--cd-accent-soft);
+  --color-background-messages-error: var(--cd-danger-soft);
+  --color-background-messages-notice: var(--cd-surface-2);
+  --color-border-notification: var(--cd-border);
+  --color-text-notification-setup-error: var(--cd-danger);
+  --color-background-checkbox-operations: var(--cd-surface);
+  --color-text-legend: var(--cd-text);
+  --color-warning: var(--cd-danger);
+  --color-border-warning: var(--cd-danger);
+  --color-last-checked: var(--cd-text-muted);
+  --color-text-footer: var(--cd-text-muted);
+  --color-border-watch-table-cell: var(--cd-border);
+
+  --color-background-new-watch-form: var(--cd-surface);
+  --color-background-new-watch-input: var(--cd-surface);
+  --color-background-new-watch-input-transparent: var(--cd-surface);
+  --color-text-new-watch-input: var(--cd-text);
+
+  --color-border-input: var(--cd-border-strong);
+  --color-shadow-input: transparent;
+  --color-background-input: var(--cd-surface);
+  --color-text-input: var(--cd-text);
+  --color-text-input-description: var(--cd-text-muted);
+  --color-text-input-placeholder: var(--cd-text-faint);
+
+  --color-background-table-thead: var(--cd-surface-2);
+  --color-border-table-cell: var(--cd-border);
+  --color-table-line: var(--cd-border);
+
+  --color-text-menu-heading: var(--cd-text);
+  --color-text-menu-link: var(--cd-text-muted);
+  --color-background-menu-link-hover: var(--cd-surface-2);
+  --color-text-menu-link-hover: var(--cd-text);
+  --color-icon-github: var(--cd-text);
+  --color-menu-accent: var(--cd-accent);
+
+  --color-watch-table-error: var(--cd-danger);
+  --color-watch-table-row-text: var(--cd-text);
+  --color-text-watch-tag-list: var(--cd-surface-3);
+
+  --color-sidebar-bg: var(--cd-surface);
+  --color-sidebar-text: var(--cd-text);
+  --color-sidebar-shadow: var(--cd-shadow-md);
+  --color-sidebar-item-hover-bg: var(--cd-surface-2);
+  --color-sidebar-item-active-bg: var(--cd-accent-soft);
+}
