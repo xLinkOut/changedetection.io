@@ -1,0 +1,3 @@
+# upstream file  git-blob-sha-it-was-derived-from  (see README.md; maintained by check-drift.sh)
+changedetectionio/blueprint/watchlist/templates/watch-overview.html 2e363cad4deb1381271ff26e9e41f8c4c16b0d79
+changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html 3aa31e16c57bb7d4f4fb9ef74774ce03d74ad56f
