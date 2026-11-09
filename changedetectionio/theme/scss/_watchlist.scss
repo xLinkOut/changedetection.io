@@ -340,7 +340,8 @@ body.watch-selection-active .cdio-table-clip {
     cursor: pointer;
   }
 
-  // Row-state: unviewed change gets an accent edge + bold title; everything else stays calm
+  // Row-state: unread = amber edge + bold title + solid History button (three signals, no chip, no tinted time).
+  // Everything else stays calm.
   tbody tr {
     &.unviewed {
       font-weight: 400;
@@ -350,10 +351,6 @@ body.watch-selection-active .cdio-table-clip {
       }
       .watch-title-text {
         font-weight: 700;
-      }
-      td.last-changed {
-        color: var(--cd-changed);
-        font-weight: 650;
       }
     }
     &.paused:not(.unviewed) {
@@ -405,6 +402,46 @@ body.watch-selection-active .cdio-table-clip {
   }
   th#mute-pause a {
     color: var(--cd-text-muted);
+  }
+
+  // no row uses a non-default processor: drop the column entirely
+  &:not(:has(.processor-badge)) {
+    th:nth-child(3),
+    td.watch-processor {
+      display: none;
+    }
+  }
+  td.cd-more {
+    display: none;
+  }
+
+  // favicon with a monogram fallback: the monogram sits under the <img>; the img's data: placeholder
+  // (loading, error, no icon) is made transparent so the monogram shows. No empty circles.
+  .favicon a {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+  .cd-monogram {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: var(--cd-r-sm);
+    background: var(--cd-surface-3);
+    color: var(--cd-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  img.favicon {
+    position: relative;
+    background: var(--cd-surface);
+  }
+  img.favicon[src^="data:"] {
+    opacity: 0;
+    background: none;
   }
 
   // processor ("Text", "Restock") becomes a neutral label chip
@@ -474,6 +511,9 @@ body.watch-selection-active .cdio-table-clip {
       order: 2;
       display: contents;
     }
+    .watch-host {
+      display: none; // desktop shows the full URL line; the bare host is for phone rows
+    }
     .watch-tag-list {
       order: 3;
       margin: 0;
@@ -509,11 +549,6 @@ body.watch-selection-active .cdio-table-clip {
   .cd-chip {
     display: none;
     order: 2;
-  }
-  tr.unviewed .cd-chip--unread {
-    display: inline-flex;
-    background: var(--cd-changed-soft);
-    color: var(--cd-changed);
   }
   tr.has-error .cd-chip--error {
     display: inline-flex;

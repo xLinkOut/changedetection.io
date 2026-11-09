@@ -96,13 +96,14 @@
     max-width: 100%;
   }
   // monospace where the content is code-ish
-  textarea,
-  input.m-d,
-  input[type="url"] {
+  // only code-ish fields are monospace: textareas (selectors, regex) and URL fields. Titles etc. are prose.
+  textarea {
     font-family: var(--cd-mono);
     font-size: var(--cd-fs-sm);
   }
-  input[type="url"] {
+  input[type="url"],
+  input#url {
+    font-family: var(--cd-mono);
     font-size: var(--cd-fs-md);
   }
 
