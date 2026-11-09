@@ -1,0 +1,122 @@
+{#- fork-ui: mobile shell. Rendered into an inert <template> in <head> by theme/__init__.py; static/theme/mobile.js
+    clones it into the page. Shown only below the upstream hamburger breakpoint (theme.css). New file, no upstream
+    counterpart, so nothing to drift. All labels go through _(); plugin sidebar items land in the More sheet. -#}
+{%- set Z = '00000000-0000-0000-0000-000000000000' -%}
+{%- set ep = cd_ep or '' -%}
+<header class="cd-topbar" data-cd-root="{{ 1 if cd_root else 0 }}" data-cd-ep="{{ ep }}"
+        data-list-url="{{ url_for('watchlist.index') }}" data-uuids-url="{{ url_for('watchlist.uuids') }}"
+        data-diff-url="{{ url_for('ui.ui_diff.diff_history_page', uuid=Z) }}" data-zero-uuid="{{ Z }}"
+        data-l-list="{{ _('Page Watches') }}" data-l-compare="{{ _('Compare') }}" data-l-next="{{ _('Next') }} {{ _('Unread')|lower }}">
+    <a class="cd-icon-btn cd-back" href="{{ url_for('watchlist.index') }}" hidden aria-label="{{ _('Back') }}"><i data-feather="chevron-left"></i></a>
+    <h1 class="cd-title">{{ cd_title }}</h1>
+    <form class="cd-search" role="search" method="GET" action="{{ url_for('watchlist.index') }}" hidden>
+        <input type="search" name="q" placeholder="{{ _('Search') }}…" aria-label="{{ _('URL, title or error text') }}" autocomplete="off" enterkeyhint="search">
+    </form>
+    <button type="button" class="cd-icon-btn cd-search-toggle" aria-label="{{ _('Search') }}" aria-expanded="false"><i data-feather="search"></i></button>
+    <button type="button" class="cd-text-btn cd-select-toggle" hidden data-select="{{ _('Select') }}" data-done="{{ _('Done') }}">{{ _('Select') }}</button>
+</header>
+
+<nav class="cd-tabbar" aria-label="{{ _('Main navigation') }}">
+    <a href="{{ url_for('watchlist.index') }}" class="cd-tab {{ 'active' if ep == 'watchlist.index' or ep.startswith('ui.ui_views') or ep.startswith('ui.ui_edit') or ep.startswith('ui.ui_diff') or ep.startswith('ui.ui_preview') }}">
+        <span class="cd-tab-icon"><i data-feather="eye"></i><span class="cd-tab-badge js-unread-count" {% if not unread_changes_count %}style="display: none"{% endif %}>{{ unread_changes_count|default(0)|format_int_locale }}</span></span>
+        <span class="cd-tab-label">{{ _('Watches') }}</span>
+    </a>
+    <a href="{{ url_for('tags.tags_overview_page') }}" class="cd-tab {{ 'active' if ep.startswith('tags.') }}">
+        <span class="cd-tab-icon"><i data-feather="layers"></i></span>
+        <span class="cd-tab-label">{{ _('Groups') }}</span>
+    </a>
+    <button type="button" class="cd-tab cd-tab-add" data-cd-open="#cd-add-sheet" aria-haspopup="dialog">
+        <span class="cd-tab-icon"><i data-feather="plus"></i></span>
+        <span class="cd-tab-label">{{ _('Add') }}</span>
+    </button>
+    <a href="{{ url_for('ui.ui_queue.queue_page') }}" class="cd-tab {{ 'active' if ep.startswith('ui.ui_queue') }}">
+        <span class="cd-tab-icon"><i data-feather="list"></i><span class="cd-tab-badge cd-tab-badge--quiet queue-size-int" {% if not queue_size|default(0) %}hidden{% endif %}>{{ queue_size|default(0) }}</span></span>
+        <span class="cd-tab-label">{{ _('Queue') }}</span>
+    </a>
+    <button type="button" class="cd-tab {{ 'active' if ep.startswith('settings.') or ep.startswith('imports.') or ep.startswith('backups.') }}" data-cd-open="#cd-more-sheet" aria-haspopup="dialog">
+        <span class="cd-tab-icon"><i data-feather="menu"></i></span>
+        <span class="cd-tab-label">{{ _('More') }}</span>
+    </button>
+</nav>
+
+{#- Add a watch: same endpoint + field names as the quick-add form on the list (quickWatchForm) -#}
+<dialog id="cd-add-sheet" class="cd-sheet" aria-labelledby="cd-add-title">
+    <form method="POST" action="{{ url_for('ui.ui_views.form_quick_watch_add') }}" id="cd-add-form" class="cd-sheet-form" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="cd-sheet-head">
+            <h2 id="cd-add-title">{{ _('Add a page watch') }}</h2>
+            <button type="button" class="cd-icon-btn" data-cd-close aria-label="{{ _('Close') }}"><i data-feather="x"></i></button>
+        </div>
+        <label for="cd-add-url">{{ _('Web page URL') }}</label>
+        <div class="cd-field-row">
+            <input id="cd-add-url" name="url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" required placeholder="www.website.com/page.html">
+            <button type="button" class="cd-text-btn cd-paste" hidden>{{ _('Paste') }}</button>
+        </div>
+        <label for="cd-add-tags">{{ _('Group tag') }}</label>
+        <input id="cd-add-tags" name="tags" type="text" list="cd-add-tag-list" autocapitalize="off" autocomplete="off" placeholder="{{ _('Watch group / tag') }}">
+        <datalist id="cd-add-tag-list">{% for t in cd_tags %}<option value="{{ t }}">{% endfor %}</datalist>
+        {%- if cd_processors|length > 1 %}
+        <details class="cd-opts">
+            <summary>{{ _('Processor - What do you want to achieve?') }}</summary>
+            <fieldset class="cd-seg-radio">
+                <legend class="visually-hidden">{{ _('Processor') }}</legend>
+                {%- for key, label in cd_processors %}
+                <label><input type="radio" name="processor" value="{{ key }}" {{ 'checked' if key == cd_default_processor }}><span>{{ label }}</span></label>
+                {%- endfor %}
+            </fieldset>
+        </details>
+        {%- endif %}
+        <div class="cd-sheet-actions">
+            <button type="submit" class="pure-button pure-button-primary" name="watch_submit_button" value="{{ _('Watch') }}">{{ _('Watch') }}</button>
+            <button type="submit" class="pure-button" name="edit_and_watch_submit_button" value="{{ _('Edit > Watch') }}" formnovalidate>{{ _('Edit > Watch') }}</button>
+        </div>
+    </form>
+</dialog>
+
+{#- More: everything that does not fit the tab bar, incl. plugin sidebar items -#}
+<dialog id="cd-more-sheet" class="cd-sheet" aria-labelledby="cd-more-title">
+    <div class="cd-sheet-head">
+        <h2 id="cd-more-title">{{ _('More') }}</h2>
+        <button type="button" class="cd-icon-btn" data-cd-close aria-label="{{ _('Close') }}"><i data-feather="x"></i></button>
+    </div>
+    <ul class="cd-menu">
+        <li><a href="{{ url_for('settings.settings_page') }}"><i data-feather="settings"></i>{{ _('Settings') }}</a></li>
+        <li><a href="{{ url_for('imports.import_page') }}"><i data-feather="upload"></i>{{ _('Import') }}</a></li>
+        <li><a href="{{ url_for('backups.create') }}"><i data-feather="archive"></i>{{ _('Backups') }}</a></li>
+        <li><a href="{{ url_for('settings.notifications.apprise') }}"><i data-feather="bell"></i>{{ _('Notifications') }}</a></li>
+        <li><a href="{{ url_for('settings.notification_logs') }}"><i data-feather="file-text"></i>{{ _('Notification debug logs') }}</a></li>
+        {%- for item in plugin_sidebar_items|default([]) %}
+        <li><!-- blueprint:{{ item.source }} -->
+            {%- if item.disabled %}<a href="#" aria-disabled="true" class="is-disabled" tabindex="-1" title="{{ item.title }}">{% else %}<a href="{{ item.url }}" title="{{ item.title }}" {% if item.active %}class="active"{% endif %}>{% endif -%}
+            {%- if item.svg %}<span class="cd-menu-svg">{{ item.svg }}</span>{% else %}<i data-feather="{{ item.icon }}"></i>{% endif %}{{ item.label }}{% if item.badge %}<span class="cd-chip">{{ item.badge }}</span>{% endif %}</a></li>
+        {%- endfor %}
+    </ul>
+    <ul class="cd-menu cd-menu--prefs">
+        <li><button type="button" class="toggle-light-mode"><span class="icon-light"><i data-feather="sun"></i></span><span class="icon-dark"><i data-feather="moon"></i></span>{{ _('Toggle light/dark mode') }}</button></li>
+        {%- if not llm_features_disabled %}
+        <li><button type="button" class="toggle-ai-mode" data-llm-configured="{{ 'true' if llm_configured else 'false' }}" data-llm-settings-url="{{ url_for('settings.llm.llm_settings_page') }}"><i data-feather="zap"></i>{{ _('Toggle AI Mode') }}</button></li>
+        {%- endif %}
+        <li><button type="button" class="language-selector"><span class="{{ get_flag_for_locale(get_locale()) }}"></span>{{ _('Select Language') }}</button></li>
+        <li><form method="POST" action="{{ url_for('settings.toggle_all_paused') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="{{ 'is-on' if all_paused }}"><i data-feather="{{ 'play' if all_paused else 'pause' }}"></i>{% if all_paused %}{{ _('Resume automatic scheduling') }}{% else %}{{ _('Pause auto-queue scheduling of watches') }}{% endif %}</button></form></li>
+        <li><form method="POST" action="{{ url_for('settings.toggle_all_muted') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="{{ 'is-on' if all_muted }}"><i data-feather="{{ 'bell' if all_muted else 'bell-off' }}"></i>{% if all_muted %}{{ _('Unmute notifications') }}{% else %}{{ _('Mute notifications') }}{% endif %}</button></form></li>
+        {%- if current_user.is_authenticated %}
+        <li><form method="POST" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit"><i data-feather="log-out"></i>{{ _('Log out') }}</button></form></li>
+        {%- endif %}
+    </ul>
+    <p class="cd-sheet-foot">{{ right_sticky or '' }}{% if new_version_available %} &middot; <a href="https://changedetection.io">{{ _('A new version is available') }}</a>{% endif %}</p>
+</dialog>
+
+{#- Row actions: filled by mobile.js from the tapped row; only the delete URL needs templating -#}
+<dialog id="cd-row-sheet" class="cd-sheet" aria-labelledby="cd-row-sheet-title" data-delete-url="{{ url_for('ui.form_delete', uuid=Z) }}" data-zero-uuid="{{ Z }}"
+        data-confirm-title="{{ _('Delete Watch?') }}" data-confirm-lead="{{ _('Are you sure you want to delete the watch for:') }}"
+        data-confirm-tail="{{ _('This action cannot be undone.') }}" data-confirm-button="{{ _('Delete') }}"
+        data-l-delete="{{ _('Delete') }}" data-l-open="{{ _('Goto web page') }}">
+    <div class="cd-sheet-head">
+        <div class="cd-row-sheet-title"><h2 id="cd-row-sheet-title"></h2><p class="cd-row-sheet-host"></p></div>
+        <button type="button" class="cd-icon-btn" data-cd-close aria-label="{{ _('Close') }}"><i data-feather="x"></i></button>
+    </div>
+    <ul class="cd-menu cd-row-actions"></ul>
+</dialog>

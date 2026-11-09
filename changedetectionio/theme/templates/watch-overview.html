@@ -323,6 +323,33 @@ window.watchOverviewI18n = {
         {%- set table_classes = [
             'favicon-enabled' if 'favicons_enabled' not in ui_settings or ui_settings['favicons_enabled'] else 'favicon-not-enabled',
         ] -%}
+        {#- fork-ui: empty states. Onboarding for a brand new install, a way out when filters/search match nothing. CSS hides the (now redundant) table. -#}
+        {%- if not watches|length -%}
+        {%- set cd_filtered = search_q or active_tag_uuid or active_processor or request.args.get('unread') or request.args.get('with_errors') or request.args.get('deals') -%}
+        <div class="cd-empty {{ 'cd-empty--filtered' if cd_filtered else 'cd-empty--new' }}">
+            {%- if cd_filtered %}
+            <i data-feather="search" class="cd-empty-icon"></i>
+            <h2>{{ _('No watches match these filters.') }}</h2>
+            <p><a class="pure-button" href="{{ url_for('watchlist.index') }}">{{ _('Clear filters') }}</a></p>
+            {%- else %}
+            {%- set tbc = datastore.data['settings']['requests']['time_between_check'] -%}
+            {%- set cd_interval = [] -%}
+            {%- for unit, label in [('weeks', _('Weeks')), ('days', _('Days')), ('hours', _('Hours')), ('minutes', _('Minutes')), ('seconds', _('Seconds'))] -%}
+                {%- if tbc.get(unit) %}{% set _x = cd_interval.append((tbc.get(unit)|string) ~ ' ' ~ label|lower) %}{% endif -%}
+            {%- endfor %}
+            <i data-feather="eye" class="cd-empty-icon"></i>
+            <h2>{{ _('Watch any web page for changes') }}</h2>
+            <p>{{ _('Add a page and it is checked for you. When its text changes you get a notification, and it shows up here.') }}</p>
+            <p><button type="button" class="pure-button pure-button-primary js-add-watch">{{ _('Add your first page') }}</button></p>
+            <ol class="cd-empty-steps">
+                <li><strong>{{ _('Paste a link') }}</strong> {{ _('to any page: a price, a news feed, a status page.') }}</li>
+                <li><strong>{{ _('It is checked automatically') }}</strong>{% if cd_interval %} {{ _('about every') }} {{ cd_interval|join(', ') }}{% endif %}.</li>
+                <li><strong>{{ _('Unread') }}</strong> {{ _('means something changed: open it to see exactly what.') }}</li>
+            </ol>
+            <p class="cd-empty-alt">{{ _('Have a list?') }} <a href="{{ url_for('imports.import_page') }}">{{ _('import a list') }}</a></p>
+            {%- endif %}
+        </div>
+        {%- endif -%}
         <div class="cdio-table-clip">
         <table class="pure-table cdio-table watch-table {{ table_classes | reject('equalto', '') | join(' ') }}">
             <thead>

@@ -14,6 +14,8 @@
                 {#  Resolved once per row: each read re-validates the URL and, for a Jinja2 templated
                     URL, builds a fresh sandboxed environment - see validate_url.py #}
                 {%- set open_link = watch.open_link -%}
+                {#- fork-ui: bare host (no scheme/www) for the monogram letter and the muted mobile line -#}
+                {%- set cd_host = (watch.link or '')|replace('https://', '')|replace('http://', '')|replace('www.', '') -%}
                 {%- set error_texts = watch.compile_error_texts(has_proxies=has_proxies) -%}
                 {%- set system_use_url_watchlist = datastore.data['settings']['application']['ui'].get('use_page_title_in_list')  -%}
                 {%- set system_use_share = datastore.data['settings']['application']['ui'].get('use_share_watch')  -%}
@@ -48,7 +50,8 @@
                     </div>
                 </td>
                 <td class="watch-processor">
-                    {%- if watch['processor'] and watch['processor'] in processor_badge_texts -%}
+                    {#- fork-ui: the default text/html processor is the norm; only badge the others -#}
+                    {%- if watch['processor'] and watch['processor'] != 'text_json_diff' and watch['processor'] in processor_badge_texts -%}
                         <a href="{{ url_for('watchlist.index', tag=active_tag_uuid, processor=watch['processor']) }}"  class="processor-badge processor-badge-{{ watch['processor'] }}{{ ' active' if active_processor == watch['processor'] else '' }}"
                            title="{{ processor_descriptions.get(watch['processor'], watch['processor']) }}">{{ processor_badge_texts[watch['processor']] }}</a>
                     {%- endif -%}
@@ -58,6 +61,8 @@
                     {% if 'favicons_enabled' not in ui_settings or ui_settings['favicons_enabled'] %}
                         <div class="favicon">
                             <a target="_blank" rel="noopener" href="{{ open_link }}">
+                                {#- fork-ui: monogram shows whenever the icon is missing, still loading or failed (CSS hides the data: placeholder image) -#}
+                                <span class="cd-monogram" aria-hidden="true">{% if cd_host and cd_host[:1] not in '0123456789' %}{{ cd_host[:1]|upper }}{% else %}<svg viewBox="0 0 24 24" width="55%" height="55%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>{% endif %}</span>
                                 {# Intersection Observer lazy loading: store real URL in data-src, load only when visible in viewport #}
                                 <img alt="Favicon thumbnail"
                                      class="favicon lazy-favicon"
@@ -83,12 +88,12 @@
                             {#- fork-ui: state chips. All always rendered, shown purely by CSS from the row classes
                                 (realtime.js toggles those classes), so they stay live without JS changes. -#}
                             <span class="cd-chips">
-                                <span class="cd-chip cd-chip--unread">{{ _('Unread') }}</span>
                                 <span class="cd-chip cd-chip--error">{{ _('With errors') }}</span>
                                 <span class="cd-chip cd-chip--paused">{{ _('Paused') }}</span>
                                 <span class="cd-chip cd-chip--muted">{{ _('Muted') }}</span>
                             </span>
                             {%- if cd_title != watch.link %}<div class="watch-url" title="{{ watch.link }}">{{ watch.link }}</div>{% endif -%}
+                            <div class="watch-host">{{ cd_host.split('/')[0].split('?')[0] }}</div>
 
                             {%- for watch_tag_uuid, watch_tag in datastore.get_all_tags_for_watch(watch['uuid']).items() -%}
                               <a href="{{url_for('watchlist.index', tag=watch_tag_uuid) }}" class="watch-tag-list tag-{{ watch_tag.title|sanitize_tag_class }}">{{ watch_tag.title }}</a>
@@ -190,4 +195,6 @@
                     <a href="{{ url_for('ui.ui_preview.preview_page', uuid=watch.uuid)}}" {{target_attr}} class="cdio-btn cdio-btn--primary cdio-btn--sm preview-link" style="display: none;">{{ _('Preview') }}</a>
                     </div>
                 </td>
+                {#- fork-ui: trailing "more" button, only visible on phones (opens the row action sheet, mobile.js) -#}
+                <td class="cd-more"><button type="button" class="cd-more-btn" aria-haspopup="dialog" aria-label="{{ _('More') }}" title="{{ _('More') }}"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></td>
             </tr>
