@@ -195,9 +195,6 @@ body.blueprint-watchlist {
     align-items: center;
     gap: var(--cd-s3);
     order: -1;
-    &:not(:has(*:not([style*="display: none"]))) {
-      display: none;
-    }
   }
   .records-selected {
     font-size: var(--cd-fs-sm);
@@ -405,7 +402,7 @@ body.watch-selection-active .cdio-table-clip {
   }
 
   // no row uses a non-default processor: drop the column entirely
-  &:not(:has(.processor-badge)) {
+  &.cd-no-processor-col {
     th:nth-child(3),
     td.watch-processor {
       display: none;
@@ -677,148 +674,13 @@ ul.pagination {
   }
 }
 
-// ---- Mobile: rows become cards ---------------------------------------------
+// ---- Phones: bulk bar as one scrolling row (dense rows themselves live in _mobile.scss) ------
 @media (max-width: 767px) {
-  .cdio-table-clip {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    overflow: visible;
-  }
-  .watch-table {
-    thead {
-      background: transparent;
-      margin-bottom: var(--cd-s2);
-      tr {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--cd-s2) var(--cd-s3);
-        align-items: center;
-      }
-      th {
-        padding: 0 !important;
-        border: 0;
-        letter-spacing: 0.02em;
-        text-transform: none;
-        display: inline-flex;
-        align-items: center;
-        gap: var(--cd-s1);
-        &:nth-child(3),
-        &#th-webpage,
-        &#mute-pause {
-          display: none;
-        }
-      }
-    }
-    tbody {
-      display: block;
-      tr {
-        display: grid;
-        grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1fr) auto;
-        grid-template-areas:
-          "chk title   title   title"
-          ".   checked changed ctl"
-          ".   buttons buttons buttons";
-        gap: var(--cd-s2) var(--cd-s2);
-        align-items: center;
-        margin-bottom: var(--cd-s3);
-        padding: var(--cd-s3) var(--cd-s3) var(--cd-s3) var(--cd-s2);
-        background: var(--cd-surface);
-        border: 1px solid var(--cd-border);
-        border-radius: var(--cd-r-lg);
-        box-shadow: var(--cd-shadow-sm);
-        overflow: hidden;
-        position: relative;
-        &:hover > td {
-          background: transparent !important;
-        }
-        > td {
-          background: transparent;
-          border: 0;
-          padding: 0 !important;
-        }
-        > td.checkbox-uuid {
-          grid-area: chk;
-          align-self: start;
-          padding-top: 2px !important;
-          display: flex;
-          justify-content: center;
-        }
-        > td.watch-processor {
-          display: none;
-        }
-        > td.title-col {
-          grid-area: title;
-          .watch-title {
-            font-size: var(--cd-fs-md);
-          }
-        }
-        > td.last-checked {
-          grid-area: checked;
-        }
-        > td.last-changed {
-          grid-area: changed;
-        }
-        > td.last-checked::before,
-        > td.last-changed::before {
-          color: var(--cd-text-faint);
-          font-size: var(--cd-fs-xs);
-          display: block;
-          line-height: 1.2;
-        }
-        > td.buttons {
-          grid-area: buttons;
-          justify-content: flex-start;
-          text-align: left;
-          > div {
-            justify-content: flex-start;
-            flex-wrap: wrap;
-          }
-        }
-        > td.watch-controls {
-          grid-area: ctl;
-          justify-self: end;
-        }
-        > td.col-restock-price {
-          grid-column: 2 / -1;
-        }
-        &.unviewed {
-          box-shadow: inset 3px 0 0 var(--cd-changed-solid), var(--cd-shadow-sm);
-          td:first-child {
-            box-shadow: none;
-          }
-        }
-        &.has-error:not(.unviewed) {
-          box-shadow: inset 3px 0 0 var(--cd-danger-solid), var(--cd-shadow-sm);
-          td:first-child {
-            box-shadow: none;
-          }
-        }
-        &:has(input[name="uuids"]:checked) {
-          background: var(--cd-row-selected);
-          border-color: var(--cd-accent);
-        }
-        &:has(input[name="uuids"]:checked) > td {
-          background: transparent;
-        }
-      }
-    }
-    td.buttons .cdio-btn {
-      min-height: 40px;
-      padding-inline: var(--cd-s4);
-      border-color: var(--cd-border);
-    }
-    td.watch-controls .bare-btn {
-      width: 40px;
-      height: 40px;
-    }
-  }
   #checkbox-operations {
-    left: var(--cd-s3);
-    right: var(--cd-s3);
+    left: var(--cd-s2);
+    right: var(--cd-s2);
     width: auto;
     transform: none;
-    bottom: var(--cd-s3);
     // one scrolling row of actions instead of a tall wall of buttons
     flex-wrap: nowrap;
     overflow-x: auto;

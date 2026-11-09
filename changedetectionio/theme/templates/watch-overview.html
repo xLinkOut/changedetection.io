@@ -209,6 +209,7 @@ window.watchOverviewI18n = {
     {%- set wrapper_classes = [
         'has-unread-changes' if unread_changes_count else '',
         'has-error' if errored_count else '',
+        'cd-new-install' if (not watches|length and not (search_q or active_tag_uuid or active_processor or request.args.get('unread') or request.args.get('with_errors') or request.args.get('deals'))) else '',
     ] -%}
     <div id="watch-table-wrapper" class="{{ wrapper_classes | reject('equalto', '') | join(' ') }}">
         <div id="tag-lister" class="{% if active_tag %}active-tag{% endif %}">
@@ -320,7 +321,9 @@ window.watchOverviewI18n = {
                        data-confirm-message="{{ _('<p><strong>Are you sure you want to delete the selected watches?</strong></p><p>This action cannot be undone.</p>') }}"
                        data-confirm-button="{{ _('Delete') }}"><i data-feather="trash" ></i>&nbsp;{{ _('Delete') }}</button>
     </div>
+        {#- fork-ui: 'cd-no-processor-col' = no row uses a non-default processor -> CSS drops that column (cheaper than :has()) -#}
         {%- set table_classes = [
+            'cd-no-processor-col' if not (watches|selectattr('processor', 'ne', 'text_json_diff')|list) else '',
             'favicon-enabled' if 'favicons_enabled' not in ui_settings or ui_settings['favicons_enabled'] else 'favicon-not-enabled',
         ] -%}
         {#- fork-ui: empty states. Onboarding for a brand new install, a way out when filters/search match nothing. CSS hides the (now redundant) table. -#}

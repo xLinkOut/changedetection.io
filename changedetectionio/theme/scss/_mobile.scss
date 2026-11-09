@@ -1153,7 +1153,7 @@ dialog.cd-sheet {
   display: none;
 }
 // a brand new install has nothing to filter
-#watch-table-wrapper:has(.cd-empty--new) {
+#watch-table-wrapper.cd-new-install {
   #tag-lister,
   #list-related-buttons {
     display: none;
