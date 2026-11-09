@@ -78,8 +78,8 @@
   --cd-text-faint: #8a94a2;
 
   --cd-accent: #8eabff;
-  --cd-accent-solid: #4a6df0;
-  --cd-accent-solid-hover: #6482f5;
+  --cd-accent-solid: #3f5fe6;
+  --cd-accent-solid-hover: #3552d4;
   --cd-accent-soft: #1d2848;
   --cd-on-accent: #ffffff;
 
@@ -88,7 +88,7 @@
   --cd-changed-solid: #f2a516;
   --cd-danger: #ff8a80;
   --cd-danger-soft: #3b1816;
-  --cd-danger-solid: #d8453f;
+  --cd-danger-solid: #c73a34;
   --cd-success: #5fd991;
   --cd-success-soft: #123322;
   --cd-paused: #aab3c0;
@@ -191,6 +191,11 @@ html[data-darkmode] {
   --color-watch-table-error: var(--cd-danger);
   --color-watch-table-row-text: var(--cd-text);
   --color-text-watch-tag-list: var(--cd-surface-3);
+
+  // trigger/ignore/block highlights carry white text (inline in _helpers.html + JS)
+  --highlight-trigger-text-bg-color: var(--cd-accent-solid);
+  --highlight-ignored-text-bg-color: #5b6472;
+  --highlight-blocked-text-bg-color: #b8322d;
 
   --color-sidebar-bg: var(--cd-surface);
   --color-sidebar-text: var(--cd-text);

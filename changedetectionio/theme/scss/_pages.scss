@@ -394,3 +394,26 @@ body.preview-page #settings {
   background-color: var(--cd-accent-solid);
   color: var(--cd-on-accent);
 }
+
+// upstream inline white text meant for the old gradient
+div[style*="color: #fff"] {
+  color: var(--cd-text-muted) !important;
+}
+#queue-page table.pure-table small {
+  opacity: 1;
+  color: var(--cd-text-muted);
+}
+.fieldlist_formfields {
+  .addRuleRow,
+  .removeRuleRow,
+  .verifyRuleRow {
+    background-color: var(--cd-surface-3);
+    color: var(--cd-text);
+    border-radius: var(--cd-r-sm);
+    min-width: 32px;
+    min-height: 32px;
+    &:hover {
+      background-color: var(--cd-border-strong);
+    }
+  }
+}

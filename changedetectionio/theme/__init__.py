@@ -28,6 +28,8 @@ def install(app):
 
     app.jinja_env.globals['get_html_head_extras'] = head_extras
 
+    _accessible_badge_colors()
+
 
 def _css_version():
     # Revalidating cache-buster so a rebuilt theme.css is picked up without a restart.
@@ -35,3 +37,24 @@ def _css_version():
         return int((Path(__file__).parent.parent / 'static' / 'theme' / 'theme.css').stat().st_mtime)
     except OSError:
         return 0
+
+
+def _accessible_badge_colors():
+    """Tag and processor badge colours come from processors.generate_processor_badge_colors(),
+    which keeps each name's hue but pairs light-mode pastel/olive text (about 3:1 on yellow) and
+    dark-mode white-on-bright-yellow (1.4:1). Same hue, readable pairs. Callers look the function
+    up on the module at call time, so replacing the attribute is enough."""
+    import re
+
+    from changedetectionio import processors
+
+    original = processors.generate_processor_badge_colors
+
+    def accessible(name):
+        colors = original(name)
+        hue = re.search(r'hsl\((\d+),', colors['light']['bg']).group(1)
+        colors['light']['color'] = f'hsl({hue}, 65%, 20%)'
+        colors['dark'] = {'bg': f'hsl({hue}, 40%, 22%)', 'color': f'hsl({hue}, 80%, 88%)'}
+        return colors
+
+    processors.generate_processor_badge_colors = accessible

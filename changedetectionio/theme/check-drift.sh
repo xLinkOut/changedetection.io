@@ -8,14 +8,14 @@ LIST=changedetectionio/theme/overrides.txt
 
 if [ "$1" = "--update" ]; then
   [ -n "$2" ] && grep -q "^$2 " "$LIST" || { echo "usage: $0 --update <path listed in overrides.txt>"; exit 2; }
-  sed -i "s|^$2 .*|$2 $(git hash-object "$2")|" "$LIST" && echo "re-pinned $2"
+  sed -i "s|^$2 .*|$2 $(git hash-object -w "$2")|" "$LIST" && echo "re-pinned $2"
   exit
 fi
 
 drift=0
 while read -r path pinned; do
   [ -z "$path" ] || [ "${path:0:1}" = "#" ] && continue
-  current=$(git hash-object "$path" 2>/dev/null)
+  current=$(git hash-object -w "$path" 2>/dev/null)
   [ "$current" = "$pinned" ] && continue
   drift=1
   echo "== DRIFT: $path ($pinned -> ${current:-missing})"
