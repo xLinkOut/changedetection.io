@@ -368,10 +368,17 @@ def apply_settings_update(datastore, payload, on_workers_changed=None) -> dict: 
     if notifications is not None:
         notifications = _expect_dict(notifications, 'notifications')
         if 'notification_urls' in notifications:
-            from changedetectionio.api.operations import validate_notification_urls
+            from changedetectionio.api.operations import ApiError, validate_notification_urls
 
             urls = _expect_str_list(notifications['notification_urls'], 'notifications.notification_urls')
-            validate_notification_urls(urls)
+            try:
+                validate_notification_urls(urls)
+            except ApiError as error:
+                raise ApiV2Error(
+                    error.message,
+                    error.status,
+                    fields={'notifications.notification_urls': [error.message]},
+                ) from error
             app_settings['notification_urls'] = urls
         for key in ('notification_title', 'notification_body', 'base_url'):
             if key in notifications:

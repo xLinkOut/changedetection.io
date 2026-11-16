@@ -1258,7 +1258,7 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
     def test_notification():
         import apprise
 
-        from changedetectionio.api.operations import validate_notification_urls
+        from changedetectionio.api.operations import ApiError, validate_notification_urls
         from changedetectionio.notification.apprise_plugin.assets import apprise_asset
 
         body = request.get_json(silent=True) or {}
@@ -1269,7 +1269,14 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
             urls = [line.strip() for line in urls.splitlines() if line.strip()]
         if not isinstance(urls, list) or not urls:
             raise ApiV2Error('No notification URLs configured', 400, code='no_notification_urls')
-        validate_notification_urls(urls)
+        try:
+            validate_notification_urls(urls)
+        except ApiError as error:
+            raise ApiV2Error(
+                error.message,
+                error.status,
+                fields={'urls': [error.message]},
+            ) from error
 
         apobj = apprise.Apprise(asset=apprise_asset)
         for url in urls:
