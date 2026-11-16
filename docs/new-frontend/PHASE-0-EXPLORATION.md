@@ -105,7 +105,7 @@ The current frontend is a **server-rendered Jinja2 application**, not a single-p
 - The SPA shell can be served to anonymous users and show its own login screen, but every data API must remain protected.
 - A new UI needs a JSON session/bootstrap endpoint, a JSON login/logout, and a CSRF token the SPA can send in `X-CSRFToken`.
 - `EventSource` cannot send custom headers. The SSE endpoint must authenticate with the Flask session cookie.
-- The new UI will use **session + CSRF for its own UI API endpoints**, and the **existing `x-api-key` mechanism for the existing public API** (the key can be supplied to the authenticated SPA via a bootstrap request). This avoids changing the public API's authentication behavior.
+- The approved plan uses a new **`/api/v2`** browser-first API with **session + CSRF**. The SPA never receives or uses the v1 API key. `/api/v1` remains unchanged for external clients. See `DECISIONS.md` for the authoritative decision and `PHASE-1-PLAN.md` for the endpoint plan.
 
 ---
 
@@ -286,7 +286,7 @@ Yes. There are 25 locales in `changedetectionio/translations/` plus an optional 
 
 ### How the new UI will keep translations
 
-1. A new endpoint `GET /api/v1/ui/i18n/<locale>` returns a JSON map of `msgid → msgstr` from the existing `.po` catalogs (cached, one locale at a time). English (`en_GB`) is the fallback.
+1. A new endpoint `GET /api/v2/i18n/<locale>` returns a JSON map of `msgid → msgstr` from the existing `.po` catalogs (cached, one locale at a time). Pulse Wave 1 ships English + Italian; other locales fall back to English. The old UI keeps all 25 locales.
 2. The React `t()` helper uses those msgids. Existing strings that are already translated can be reused verbatim.
 3. New UI strings are wrapped in `t('…')`; a small extraction script scans `frontend/src/**/*.tsx` and merges new msgids into `messages.pot` / `.po` files, so the existing translation workflow still works.
 4. Plural strings use `Intl.PluralRules` plus the catalog's plural forms for the small number of cases that need it; everything else uses `t()`.

@@ -1,10 +1,10 @@
 # Phase 1 — Plan for a new changedetection.io frontend
 
-Status: **waiting for approval — no application code will be written before approval.**
+Status: **approved with Wave 1 scope decisions.** The authoritative decision log is `docs/new-frontend/DECISIONS.md`; if this plan disagrees, that file wins.
 
 Repository: `dgtlmoon/changedetection.io`
 Working branch: `new-frontend`
-Old frontend: untouched. The new app is built in `frontend/` and served from a new `/app` route. The old UI remains available at its existing URLs until the new one reaches parity and the user agrees to switch.
+Old frontend: untouched. The new app is named **Pulse**, built in `frontend/`, and served from `/pulse`. The old UI remains available at its existing URLs until Pulse reaches parity for the essential tools and the user agrees to switch.
 
 ---
 
@@ -12,20 +12,34 @@ Old frontend: untouched. The new app is built in `frontend/` and served from a n
 
 - **Stack**: Vite + React + TypeScript, Tailwind CSS, TanStack Query, React Router, Lucide icons, Radix UI primitives (shadcn-style components, but owned in-tree), React Hook Form + Zod.
 - **Styling**: Tailwind with CSS-variable design tokens for light/dark. No old Pure CSS, no old SCSS, no old layout.
-- **Build output**: plain static files. Node.js is required only for development. Committed production assets live under `changedetectionio/static/new-ui/` and are served by Flask.
+- **Build output**: plain static files. Node.js is required only for development. Committed production assets live under `changedetectionio/static/pulse/` and are served by Flask.
 - **No polling for live data**: one `EventSource` stream. A local clock may tick relative timestamps, but it never fetches.
-- **New UI route**: `/app` (working path). The old UI remains at `/`, `/edit/...`, `/diff/...`, etc. After approval, `/` can redirect to `/app`; old routes remain as a fallback until the user agrees to remove them.
+- **New UI route**: `/pulse`. The old UI remains at `/`, `/edit/...`, `/diff/...`, etc. After Pulse parity for the essential tools and user approval, `/` can redirect to `/pulse`; old routes remain as a fallback until the user agrees to remove them.
 - **No scraping old HTML**: the SPA uses JSON APIs and binary asset endpoints only. It never parses old Jinja-rendered pages.
 - **Small commits**: one commit per step/screen, with clear messages.
 - **Feature parity is a checklist**, not a claim. `docs/new-frontend/PARITY.md` will track every old feature → new location → status.
 
-### Scope decisions
+### Scope decisions (approved)
 
-- Reuse the existing public REST API for watches, tags, history, diffs, notifications URLs, search, import, system info.
-- Add a small, additive **UI API namespace** (`/api/v1/ui/...`) for gaps, authenticated by the existing Flask session + CSRF.
-- Add **one SSE endpoint** and an in-process event broker.
+- The new frontend is named **Pulse** and lives at **`/pulse`**.
+- The new frontend uses a new **`/api/v2`** browser-first API, authenticated with the Flask session + CSRF. **The browser never receives or uses the v1 API key.**
+- `/api/v1` is left unchanged for external clients. `/api/v2` handlers may reuse existing backend functions/datastore/service logic; they do not scrape v1 or make HTTP calls to it.
+- Wave 1 builds the **essential tools** in Pulse. Advanced screens (Browser Steps, Visual Selector, XLSX/Distill import, MCP, plugins, Apprise builder, image-diff advanced, share-as-image) remain in the legacy UI and are linked from Pulse.
+- AI/LLM is **Must** for Wave 1. MCP and plugin screens are **legacy in Wave 1** and can be ported later.
+- Translations in Pulse: **English source + Italian catalog** for Wave 1. Other locales fall back to English in Pulse; the old UI keeps all 25 locales.
+- Add **one SSE endpoint** (`/api/v2/events`) and an in-process event broker.
 - Do **not** modify or delete old templates/JS/CSS.
-- `Browser Steps` and `Visual Selector` are built last but are not dropped.
+- Browser Steps and Visual Selector are **not dropped**; they remain in the legacy UI and are ported in a later wave, after the core Pulse screens are stable.
+
+### Wave 1 scope
+
+**In Pulse for Wave 1:** auth, shell/theme, dashboard, watch detail (history/diff/preview/screenshot/price), watch edit core (General, Request, Filters & Triggers, Conditions, Notifications, AI/LLM, Schedule, Restock, Stats), groups (basic), global settings (core), import URL list, queue, SSE, English + Italian.
+
+**Legacy in Wave 1 (linked from Pulse):** Browser Steps, Visual Selector, XLSX and Distill.io import, MCP settings/tokens, plugin settings, Apprise URL builder, advanced image-diff settings, share-as-image, MCP OAuth consent, PWA install page.
+
+**Later waves:** port the legacy items, starting with Browser Steps and Visual Selector after the core Pulse screens are stable.
+
+The priority tables below describe the full eventual parity target. For Wave 1, "Must" items in the legacy list above are satisfied by a clearly marked link to the existing legacy screen.
 
 ---
 
@@ -50,7 +64,7 @@ Priority meaning:
 | Queue size + checking-now indicators | Must |
 | Toasts and inline error feedback | Must |
 | Error boundary + retry | Must |
-| Language selector (25 locales + auto-detect) | Must |
+| Language selector (English + Italian in Wave 1; all 25 eventually) | Must |
 | Keyboard-accessible navigation and skip link | Must |
 | Logout | Must |
 | PWA install / share-target support | Should |
@@ -115,7 +129,7 @@ Priority meaning:
 | Request: method, headers, body, fetcher, proxy, status codes | Must |
 | Browser Steps: live browser, screenshot, step list, per-step validation | Must |
 | Visual Selector: screenshot, hover/select, multi-select, clear, fill filters | Must |
-| AI/LLM: enabled, intent, summary prompt, replace/append, group inheritance | Must |
+| AI/LLM: enabled, intent, summary prompt, replace/pulseend, group inheritance | Must |
 | Filters & Triggers: include/subtract, trigger/ignore/block, extract, text processing, preview | Must |
 | Conditions: ALL/ANY rules, field/operator/value, verify | Must |
 | Notifications: mute, screenshot, filter-failure, Apprise URLs, title/body/format, test, token help | Must |
@@ -229,7 +243,7 @@ Priority meaning:
 ### 2.1 Sitemap
 
 ```
-/app
+/pulse
 ├── /login
 ├── /                                  Dashboard (watches)
 ├── /add                               Add watch (quick + visual)
@@ -632,30 +646,30 @@ frontend/
 ```
 changedetectionio/
 ├── blueprint/
-│   └── new_ui/
-│       ├── __init__.py          # serves /app shell + assets
-│       └── templates/new_ui/
+│   └── pulse_ui/
+│       ├── __init__.py          # serves /pulse shell + assets
+│       └── templates/pulse_ui/
 │           └── index.html       # reads Vite manifest, injects bootstrap
 ├── api/
-│   └── ui.py                    # /api/v1/ui/* endpoints
+│   └── v2.py                    # /api/v2/* endpoints (or api/v2/ package)
 ├── realtime/
 │   ├── sse.py                   # broker + endpoint glue
 │   └── signals.py               # signal → event translation (or in sse.py)
 └── static/
-    └── new-ui/                  # build output (committed)
+    └── pulse/                  # build output (committed)
         ├── manifest.json
         └── assets/...
 ```
 
 ### 5.2 Build and serving
 
-- `npm run dev`: Vite dev server at `http://localhost:5173/app/`, proxies `/api`, `/static`, `/login`, `/browser-steps`, `/add-watch-ui`, `/settings`, `/queue.json` to Flask on port 5000.
-- `npm run build`: Vite build with `base: './'`, `manifest: true`, output to `../changedetectionio/static/new-ui/`.
-- `changedetectionio/blueprint/new_ui/__init__.py`:
-  - `/app` and `/app/<path>` serve the shell for non-asset paths (SPA fallback).
-  - `/app/assets/<path>` serves hashed assets with `Cache-Control: public, max-age=31536000, immutable`.
-  - The shell template reads `static/new-ui/manifest.json`, injects the entry JS/CSS, and a `window.__CDIO_BOOTSTRAP__` JSON object.
-- `<base href="{{ request.script_root }}/app/">` makes relative asset URLs work behind a reverse-proxy subpath.
+- `npm run dev`: Vite dev server at `http://localhost:5173/pulse/`, proxies `/api`, `/static`, `/login`, `/browser-steps`, `/add-watch-ui`, `/settings`, `/queue.json` to Flask on port 5000.
+- `npm run build`: Vite build with `base: './'`, `manifest: true`, output to `../changedetectionio/static/pulse/`.
+- `changedetectionio/blueprint/pulse_ui/__init__.py`:
+  - `/pulse` and `/pulse/<path>` serve the shell for non-asset paths (SPA fallback).
+  - `/pulse/assets/<path>` serves hashed assets with `Cache-Control: public, max-age=31536000, immutable`.
+  - The shell template reads `static/pulse/manifest.json`, injects the entry JS/CSS, and a `window.__CDIO_BOOTSTRAP__` JSON object.
+- `<base href="{{ request.script_root }}/pulse/">` makes relative asset URLs work behind a reverse-proxy subpath.
 - Dockerfile: no Node stage required if the built assets are committed; `MANIFEST.in` already includes `changedetectionio/static/*`. If we later build in Docker, add a Node builder stage and copy `dist`.
 - No Node.js at runtime.
 
@@ -663,51 +677,50 @@ Bootstrap object:
 ```json
 {
   "basePath": "/prefix",
-  "appBase": "/prefix/app",
-  "apiBase": "/prefix/api/v1",
+  "appBase": "/prefix/pulse",
+  "apiBase": "/prefix/api/v2",
   "authenticated": true,
   "passwordEnabled": true,
   "csrfToken": "…",
   "locale": "en_GB",
-  "languages": [{"code": "en_GB", "name": "English (UK)"}],
+  "languages": [{"code": "en_GB", "name": "English (UK)"}, {"code": "it", "name": "Italiano"}],
   "version": "0.70.3",
   "features": {
     "llm": true,
-    "mcp": true,
-    "browserSteps": true,
-    "visualSelector": true,
+    "browserStepsLegacy": true,
+    "visualSelectorLegacy": true,
     "screenshots": true,
     "restock": true
   },
-  "apiKey": "…",            // only when authenticated, for the existing public API
   "settingsSummary": { "pagerSize": 50, "timeagoFormat": "long" }
 }
 ```
-- The bootstrap endpoint is `GET /api/v1/ui/bootstrap`. It is allowed pre-login and returns only auth-needed fields; the API key and feature/settings details are included only when authenticated (or when no password is set, in which case the instance is already open).
+- The bootstrap endpoint is `GET /api/v2/bootstrap`. It is allowed pre-login and returns only auth-needed fields; feature/settings details are included only when authenticated (or when no password is set, in which case the instance is already open).
+- There is **no API key in the bootstrap**. Pulse never uses the v1 API key.
 - Theme is applied before React renders (inline script in the shell) to avoid a flash of wrong theme.
 
 ### 5.3 Authentication flow
 
 - SPA shell is served to anonymous users and renders the login screen.
-- `GET /api/v1/ui/bootstrap` returns `authenticated`, `passwordEnabled`, `csrfToken`, locale, and (if authenticated) the API key.
-- Login: `POST /api/v1/ui/login` with `{password}` and `X-CSRFToken`; sets the Flask-Login session; returns the bootstrap payload.
-- Logout: `POST /api/v1/ui/logout` with CSRF; clears the session; the SPA clears TanStack Query caches and shows login.
-- Existing public API calls use `x-api-key` from the bootstrap. New UI API calls use the session cookie + `X-CSRFToken` for mutations.
-- All new `/api/v1/ui/*` endpoints use a `login_required_json` decorator: if a password is enabled and the session is not authenticated, return `401 JSON`, not an HTML redirect. CSRF is validated with Flask-WTF `validate_csrf`.
+- `GET /api/v2/bootstrap` returns `authenticated`, `passwordEnabled`, `csrfToken`, locale, languages, and feature flags.
+- Login: `POST /api/v2/login` with `{password}` and `X-CSRFToken`; sets the Flask-Login session; returns the bootstrap payload.
+- Logout: `POST /api/v2/logout` with CSRF; clears the session; the SPA clears TanStack Query caches and shows login.
+- The browser talks **only to `/api/v2`**. All v2 calls use the session cookie and `X-CSRFToken` for mutations.
+- `/api/v1` remains for external integrations. v2 handlers may reuse the same backend functions/datastore logic as v1; they never proxy HTTP to v1 and never expose v1 credentials to the browser.
+- All `/api/v2/*` endpoints use a `login_required_json` decorator: if a password is enabled and the session is not authenticated, return `401 JSON`, not an HTML redirect. CSRF is validated with Flask-WTF `validate_csrf`.
 - `EventSource` uses the session cookie; no custom headers.
 - Security notes:
-  - The API key is already visible to authenticated users in Settings → API; the bootstrap does not widen access.
+  - No long-lived API key is exposed to JavaScript.
   - CORS remains same-origin for the SPA; no credentialed cross-origin access is introduced.
   - New UI endpoints are CSRF-protected for all mutations.
-  - The old API's behavior is unchanged.
+  - The v1 API's behavior is unchanged.
 
 ### 5.4 API client and data flow
 
 - `api/client.ts`: `fetch` wrapper with:
-  - base URL from bootstrap,
+  - base URL from bootstrap (`/api/v2`),
   - `credentials: 'same-origin'`,
-  - `X-CSRFToken` for non-GET `/api/v1/ui/*`,
-  - `x-api-key` for existing `/api/v1/*`,
+  - `X-CSRFToken` for non-GET `/api/v2/*`,
   - JSON parsing, 204 handling, error normalization (`{status, message, fields}`),
   - abort signals,
   - one automatic retry for idempotent GETs only.
@@ -746,12 +759,15 @@ Bootstrap object:
 
 ### 5.6 Internationalisation
 
-- `GET /api/v1/ui/i18n/<locale>` returns `{locale, messages: {msgid: msgstr}, plurals: {...}}` from existing `.po` catalogs.
+Wave 1 scope: **English source + Italian catalog**. Other locales fall back to English in Pulse; the old UI keeps all 25 locales.
+
+- `GET /api/v2/i18n/<locale>` returns `{locale, messages: {msgid: msgstr}, plurals: {...}}` from existing `.po` catalogs.
 - `t('msgid')` falls back to the msgid itself (English).
 - `tn('singular', 'plural', count)` uses `Intl.PluralRules`; the catalog provides the forms.
-- New strings are extracted from TSX by `frontend/scripts/extract-i18n.mjs` and merged into the existing catalogs by a small Python/`msgmerge` step; CI checks for drift.
+- Reuse existing Italian `.po` strings where they match. New Pulse strings are added to the Italian catalog by `frontend/scripts/extract-i18n.mjs` and a small Python/`msgmerge` step.
+- Keep the extraction path generic so more locales can be added later; do not block Wave 1 on translating all 25.
 - Dates/times use `Intl.DateTimeFormat`; relative times use `Intl.RelativeTimeFormat`; prices use `Intl.NumberFormat` with the currency from the API; numbers use the locale.
-- Language picker updates the session via `POST /api/v1/ui/locale` (or existing `/set-language/<locale>`) and reloads the catalog.
+- Language picker updates the session via `POST /api/v2/locale` (or existing `/set-language/<locale>`) and reloads the catalog.
 - RTL: not currently supported by existing locales; use logical CSS properties so it is not blocked if added later.
 
 ### 5.7 Performance
@@ -767,8 +783,8 @@ Bootstrap object:
 
 - All HTML rendered as text; no `dangerouslySetInnerHTML` for user content. Diff output is rendered as structured spans, not raw HTML.
 - URLs validated by the backend; frontend also uses `safeHref()` to block `javascript:`.
-- CSRF header on all `/api/v1/ui/*` mutations.
-- API key kept in memory only; never in localStorage/sessionStorage.
+- CSRF header on all `/api/v2/*` mutations.
+- No v1 API key is sent to the browser; Pulse uses session + CSRF only.
 - No credentials in URLs.
 - Confirm destructive actions; type-to-confirm for "clear all history"/"delete group with many watches" if needed.
 - External links use `rel="noopener noreferrer"`.
@@ -779,7 +795,7 @@ Bootstrap object:
 
 ### 6.1 Endpoint
 
-`GET /api/v1/ui/events`
+`GET /api/v2/events`
 
 - Auth: Flask session cookie (required when a password is set).
 - Query: optional `?last_event_id=<id>` as a fallback when the `Last-Event-ID` header is unavailable.
@@ -843,7 +859,7 @@ Payloads stay small: identifiers + changed fields, never full snapshots or diffs
 ### 6.4 Client implementation
 
 - `createEventSource()` in `api/sse.ts`:
-  - Single `EventSource(`${apiBase}/ui/events`)`.
+  - Single `EventSource(`${apiBase}/events`)` where `apiBase` is `/api/v2` (plus any reverse-proxy prefix).
   - `withCredentials` is automatic for same-origin.
   - Listen to named events and dispatch to query cache handlers.
   - `onopen`: if this is a reconnect, set a flag and perform exactly one refetch of the active queries (not a polling loop).
@@ -862,7 +878,7 @@ Payloads stay small: identifiers + changed fields, never full snapshots or diffs
 - Default Docker: single process, Werkzeug threaded. SSE works. Each open tab holds one connection; a typical deployment has a handful.
 - Nginx:
   ```nginx
-  location /api/v1/ui/events {
+  location /api/v2/events {
       proxy_pass http://changedetection;
       proxy_http_version 1.1;
       proxy_set_header Connection "";
@@ -877,62 +893,64 @@ Payloads stay small: identifiers + changed fields, never full snapshots or diffs
   - `gthread` worker with `--threads` comfortably above the number of concurrent SSE clients, or `gevent`.
   - Multi-worker deployments need sticky sessions or a shared broker; otherwise events generated in worker A are not seen by clients in worker B. The plan documents this limitation and keeps the default single-process deployment correct.
 - If using a CDN/reverse proxy that buffers by default, test with `curl -N` and verify frames arrive immediately.
-- Add a health check to the README: open `/app`, confirm the connection indicator is "Live", trigger a recheck, see the row update without a reload.
+- Add a health check to the README: open `/pulse`, confirm the connection indicator is "Live", trigger a recheck, see the row update without a reload.
 
 ---
 
 ## 7. Backend gaps and minimal endpoints to add
 
-All new endpoints are additive. No old route or behavior is removed. New `/api/v1/ui/*` endpoints use the Flask session + CSRF; existing `/api/v1/*` keeps `x-api-key`.
+All new endpoints are additive. No old route or behavior is removed. New `/api/v2/*` endpoints use the Flask session + CSRF; existing `/api/v1/*` keeps `x-api-key` for external clients. Pulse never uses v1 credentials.
+
+For Wave 1, only the endpoints needed by the Wave 1 screens are implemented (dashboard, watch detail, watch edit core, groups, core settings, import URL list, queue, SSE, auth). The MCP/plugin/advanced-import/backups-advanced endpoints can be added when those legacy screens are ported. Backups create/list/download/restore is included in Wave 1 because it is basic data safety.
 
 ### 7.1 Auth / bootstrap / i18n
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/api/v1/ui/bootstrap` | Auth state, CSRF token, locale, languages, feature flags, base path, settings summary, API key when authenticated. |
-| POST | `/api/v1/ui/login` | JSON password login; sets session; returns bootstrap. |
-| POST | `/api/v1/ui/logout` | JSON logout. |
-| POST | `/api/v1/ui/locale` | Set session locale; returns new locale (or reuse `/set-language/<locale>`). |
-| GET | `/api/v1/ui/i18n/<locale>` | Existing `.po` catalog as JSON. |
+| GET | `/api/v2/bootstrap` | Auth state, CSRF token, locale, languages, feature flags, base path, settings summary. No API key. |
+| POST | `/api/v2/login` | JSON password login; sets session; returns bootstrap. |
+| POST | `/api/v2/logout` | JSON logout. |
+| POST | `/api/v2/locale` | Set session locale; returns new locale (or reuse `/set-language/<locale>`). |
+| GET | `/api/v2/i18n/<locale>` | Existing `.po` catalog as JSON. |
 
 ### 7.2 Realtime
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/api/v1/ui/events` | Single SSE stream (session auth). |
+| GET | `/api/v2/events` | Single SSE stream (session auth). |
 
 ### 7.3 Dashboard / bulk / queue
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `/api/v1/ui/watches/bulk` | `{op, uuids, extra_data}` for all bulk operations; reuses `_handle_operations`. |
-| GET | `/api/v1/ui/watches/ids` | UUIDs matching a filter (for select-all-matching without fetching details). Optional: the SPA can filter the full list. |
-| POST | `/api/v1/ui/watches/{uuid}/recheck` | Queue one watch (POST, CSRF-safe). |
-| POST | `/api/v1/ui/watches/{uuid}/clone` | Clone and return new UUID. |
-| POST | `/api/v1/ui/watches/{uuid}/share` | Share watch config and return URL. |
-| POST | `/api/v1/ui/watches/{uuid}/mark-viewed` | Mark viewed. |
-| POST | `/api/v1/ui/watches/{uuid}/clear-errors` | Clear last error. |
-| POST | `/api/v1/ui/watches/{uuid}/clear-history` | Clear history (or reuse `DELETE /api/v1/watch/{uuid}/history`). |
-| GET | `/api/v1/ui/queue` | JSON snapshot (alias/wrapper of `/queue.json`). |
-| POST | `/api/v1/ui/queue/clear` | Clear queue, returns count. |
-| POST | `/api/v1/ui/queue/cancel` | Cancel running UUID. |
+| POST | `/api/v2/watches/bulk` | `{op, uuids, extra_data}` for all bulk operations; reuses `_handle_operations`. |
+| GET | `/api/v2/watches/ids` | UUIDs matching a filter (for select-all-matching without fetching details). Optional: the SPA can filter the full list. |
+| POST | `/api/v2/watches/{uuid}/recheck` | Queue one watch (POST, CSRF-safe). |
+| POST | `/api/v2/watches/{uuid}/clone` | Clone and return new UUID. |
+| POST | `/api/v2/watches/{uuid}/share` | Share watch config and return URL. |
+| POST | `/api/v2/watches/{uuid}/mark-viewed` | Mark viewed. |
+| POST | `/api/v2/watches/{uuid}/clear-errors` | Clear last error. |
+| POST | `/api/v2/watches/{uuid}/clear-history` | Clear history (v2 wrapper around the same datastore function as v1's DELETE history). |
+| GET | `/api/v2/queue` | JSON snapshot (alias/wrapper of `/queue.json`). |
+| POST | `/api/v2/queue/clear` | Clear queue, returns count. |
+| POST | `/api/v2/queue/cancel` | Cancel running UUID. |
 
 ### 7.4 Watch detail / preview / diff
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/api/v1/ui/watches/{uuid}/preview` | Preview data: version, text, trigger/ignore/block line numbers, error text, screenshot flags. |
-| POST | `/api/v1/ui/watches/{uuid}/filters/preview` | Apply current unsaved filter form values and return before/after text + highlights. |
-| POST | `/api/v1/ui/watches/{uuid}/conditions/verify` | Verify one condition rule against the current snapshot. |
-| GET | `/api/v1/ui/watches/{uuid}/screenshot` | Latest screenshot image (and `?error=1` for the error screenshot). |
-| GET | `/api/v1/ui/watches/{uuid}/visual-selector` | Decompressed element data JSON + screenshot URL. |
-| POST | `/api/v1/ui/watches/{uuid}/summary` | Start/return AI change summary for a version pair. |
-| GET | `/api/v1/ui/watches/{uuid}/summary` | Read summary status/result. |
-| GET | `/api/v1/ui/watches/{uuid}/processor-data` | Restock/image processor data for the graph. |
-| GET | `/api/v1/ui/watches/{uuid}/processor-chart` | Processor chart image/JSON (as provided by the processor). |
-| GET | `/api/v1/ui/watches/{uuid}/processor-export.xlsx` | Processor XLSX export. |
-| POST | `/api/v1/ui/watches/{uuid}/extract` | Regex extract → CSV. |
-| GET | `/api/v1/ui/watches/{uuid}/download-patch` | Download difference patch. |
+| GET | `/api/v2/watches/{uuid}/preview` | Preview data: version, text, trigger/ignore/block line numbers, error text, screenshot flags. |
+| POST | `/api/v2/watches/{uuid}/filters/preview` | Apply current unsaved filter form values and return before/after text + highlights. |
+| POST | `/api/v2/watches/{uuid}/conditions/verify` | Verify one condition rule against the current snapshot. |
+| GET | `/api/v2/watches/{uuid}/screenshot` | Latest screenshot image (and `?error=1` for the error screenshot). |
+| GET | `/api/v2/watches/{uuid}/visual-selector` | Decompressed element data JSON + screenshot URL. |
+| POST | `/api/v2/watches/{uuid}/summary` | Start/return AI change summary for a version pair. |
+| GET | `/api/v2/watches/{uuid}/summary` | Read summary status/result. |
+| GET | `/api/v2/watches/{uuid}/processor-data` | Restock/image processor data for the graph. |
+| GET | `/api/v2/watches/{uuid}/processor-chart` | Processor chart image/JSON (as provided by the processor). |
+| GET | `/api/v2/watches/{uuid}/processor-export.xlsx` | Processor XLSX export. |
+| POST | `/api/v2/watches/{uuid}/extract` | Regex extract → CSV. |
+| GET | `/api/v2/watches/{uuid}/download-patch` | Download difference patch. |
 
 Diff text itself can be computed client-side from two existing snapshot endpoints for character mode; the existing `/difference` API remains available for server-rendered line/word diffs.
 
@@ -943,42 +961,44 @@ Diff text itself can be computed client-side from two existing snapshot endpoint
   - `POST /browser-steps/browsersteps_update?uuid=...&browsersteps_session_id=...`
   - `GET /browser-steps/browsersteps_image?uuid=...&step_n=...`
   - `POST /add-watch-ui/snapshot`
-- If we want all calls under `/api/v1/ui`, add thin aliases:
-  - `POST /api/v1/ui/watches/{uuid}/browser-steps/session`
-  - `POST /api/v1/ui/watches/{uuid}/browser-steps/action`
-  - `POST /api/v1/ui/add-watch/preview`
+- If we want all calls under `/api/v2`, add thin aliases:
+  - `POST /api/v2/watches/{uuid}/browser-steps/session`
+  - `POST /api/v2/watches/{uuid}/browser-steps/action`
+  - `POST /api/v2/add-watch/preview`
 - The alias endpoints reuse the same functions; no new browser logic.
 
 ### 7.6 Groups / tags
 
-- Existing `/api/v1/tag` covers create/update/delete/get.
+- v2 exposes group CRUD (list, get, create, update, delete) wrapping the same datastore logic as v1's `/api/v1/tag`. The browser never calls v1.
 - Add:
 | Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `/api/v1/ui/groups/{uuid}/unlink` | Remove the tag from all watches, keep the tag. |
-| POST | `/api/v1/ui/groups/{uuid}/mute` | Toggle mute (POST, CSRF-safe). |
-| POST | `/api/v1/ui/groups/{uuid}/recheck` | Recheck all watches in the group. |
-| GET | `/api/v1/ui/groups` | Full group list with colours, patterns, counts (or enrich `/api/v1/tags`). |
+| GET | `/api/v2/groups` | Full group list with colours, patterns, counts. |
+| POST | `/api/v2/groups` | Create group. |
+| GET/PUT/DELETE | `/api/v2/groups/{uuid}` | Get/update/delete group. |
+| POST | `/api/v2/groups/{uuid}/unlink` | Remove the tag from all watches, keep the tag. |
+| POST | `/api/v2/groups/{uuid}/mute` | Toggle mute (POST, CSRF-safe). |
+| POST | `/api/v2/groups/{uuid}/recheck` | Recheck all watches in the group. |
 
 ### 7.7 Settings / notifications / MCP / plugins
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/api/v1/ui/settings` | Read `settings.application`, `settings.requests`, UI options, LLM, MCP summary, feature flags. Secrets are masked. |
-| PUT | `/api/v1/ui/settings` | Validate with existing forms and save. Sections: general, fetching, filters, ui, rss, proxies, notifications, llm, mcp. |
-| POST | `/api/v1/ui/settings/password` | Set/remove password (or part of settings). |
-| POST | `/api/v1/ui/settings/api-key/reset` | Regenerate API key. |
-| GET | `/api/v1/ui/notifications/logs` | Notification debug log (JSON). |
-| POST | `/api/v1/ui/notifications/test` | Send a test notification. |
-| GET | `/api/v1/ui/notifications/apprise/services` | Alias of the existing JSON service catalog (optional). |
-| GET/PUT | `/api/v1/ui/mcp` | MCP settings. |
-| GET/POST | `/api/v1/ui/mcp/tokens` | List/add token. |
-| POST | `/api/v1/ui/mcp/tokens/{id}` | Update token. |
-| POST | `/api/v1/ui/mcp/tokens/{id}/revoke` | Revoke token. |
-| GET | `/api/v1/ui/mcp/oauth/grants` | List grants. |
-| POST | `/api/v1/ui/mcp/oauth/grants/{id}/revoke` | Revoke grant. |
-| GET | `/api/v1/ui/plugins` | Plugin settings tabs + field metadata (type, label, choices, help). |
-| PUT | `/api/v1/ui/plugins/{id}` | Save plugin settings. |
+| GET | `/api/v2/settings` | Read `settings.application`, `settings.requests`, UI options, LLM, MCP summary, feature flags. Secrets are masked. |
+| PUT | `/api/v2/settings` | Validate with existing forms and save. Sections: general, fetching, filters, ui, rss, proxies, notifications, llm, mcp. |
+| POST | `/api/v2/settings/password` | Set/remove password (or part of settings). |
+| POST | `/api/v2/settings/api-key/reset` | Regenerate API key. |
+| GET | `/api/v2/notifications/logs` | Notification debug log (JSON). |
+| POST | `/api/v2/notifications/test` | Send a test notification. |
+| GET | `/api/v2/notifications/pulserise/services` | Alias of the existing JSON service catalog (optional). |
+| GET/PUT | `/api/v2/mcp` | MCP settings. |
+| GET/POST | `/api/v2/mcp/tokens` | List/add token. |
+| POST | `/api/v2/mcp/tokens/{id}` | Update token. |
+| POST | `/api/v2/mcp/tokens/{id}/revoke` | Revoke token. |
+| GET | `/api/v2/mcp/oauth/grants` | List grants. |
+| POST | `/api/v2/mcp/oauth/grants/{id}/revoke` | Revoke grant. |
+| GET | `/api/v2/plugins` | Plugin settings tabs + field metadata (type, label, choices, help). |
+| PUT | `/api/v2/plugins/{id}` | Save plugin settings. |
 
 Custom plugin templates cannot be generically rendered; those tabs link to the legacy settings page. This preserves the feature and is called out in the parity checklist.
 
@@ -986,24 +1006,25 @@ Custom plugin templates cannot be generically rendered; those tabs link to the l
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `/api/v1/ui/import/xlsx` | Multipart XLSX import (Wachete/custom mapping). |
-| POST | `/api/v1/ui/import/distill` | Distill.io JSON import. |
-| POST | `/api/v1/ui/import/urls` | Optional alias of `/api/v1/import` for form-style URL lists with tags. |
-| GET | `/api/v1/ui/backups` | List backups. |
-| POST | `/api/v1/ui/backups` | Create backup. |
-| DELETE | `/api/v1/ui/backups/{filename}` | Remove one/all backups. |
-| GET | `/api/v1/ui/backups/{filename}/download` | Download backup. |
-| POST | `/api/v1/ui/backups/restore` | Multipart restore with include/replace options. |
-| GET | `/api/v1/ui/export/watches.json` | Export watch configs (no history). Could |
-| GET | `/api/v1/ui/export/watches.csv` | Export watch configs as CSV. Could |
+| POST | `/api/v2/import/xlsx` | Multipart XLSX import (Wachete/custom mapping). |
+| POST | `/api/v2/import/distill` | Distill.io JSON import. |
+| POST | `/api/v2/import/urls` | v2 wrapper around the same import service used by v1, for form-style URL lists with tags. |
+| GET | `/api/v2/backups` | List backups. |
+| POST | `/api/v2/backups` | Create backup. |
+| DELETE | `/api/v2/backups/{filename}` | Remove one/all backups. |
+| GET | `/api/v2/backups/{filename}/download` | Download backup. |
+| POST | `/api/v2/backups/restore` | Multipart restore with include/replace options. |
+| GET | `/api/v2/export/watches.json` | Export watch configs (no history). Could |
+| GET | `/api/v2/export/watches.csv` | Export watch configs as CSV. Could |
 
-### 7.9 Minimal changes to existing API / models
+### 7.9 v2 response shape and shared signals
 
-- Enrich `GET /api/v1/watch` list items with `history_n`, `fetch_time`, and `error_text` (compiled error text) so the dashboard can render without N+1 calls. Keep the existing fields unchanged.
-- Enrich `GET /api/v1/tags` list items with `tag_colour`, `url_match_pattern`, `overrides_watch`, `notification_muted`, and `watch_count` (computed) so the Groups screen is one request.
-- Add `watch.created` / `watch.updated` events from create/update paths (backend, not API schema).
-- Optionally add a `format_price` helper endpoint? Not needed; use `Intl.NumberFormat`.
-- Optionally add `timezone` list to bootstrap or `/api/v1/ui/settings`; or use the browser's `Intl.supportedValuesOf('timeZone')` with a server-provided current value. Use the browser API to avoid a backend change.
+- `/api/v2/watches` returns the dashboard-shaped fields directly: `uuid`, `url`, `title`, `page_title`, `tags` (with titles/colours), `paused`, `notification_muted`, `last_checked`, `last_changed`, `last_error`, `error_text`, `history_n`, `fetch_time`, `checking_now`, `queued`, `viewed`, `processor`, `processor_state_restock_diff`. This avoids N+1 calls and does not change v1.
+- `/api/v2/groups` returns tag colours, URL patterns, override flags, mute state and watch counts in one request.
+- Add `watch.created` / `watch.updated` events from create/update paths (backend signals, not API schema).
+- No need for a `format_price` endpoint; use `Intl.NumberFormat`.
+- Use the browser's `Intl.supportedValuesOf('timeZone')` for the timezone list, plus the server-provided current value, to avoid a backend endpoint.
+- v1 remains exactly as it is; any dashboard-shaped fields live only in v2.
 
 ### 7.10 Endpoint conventions
 
@@ -1023,32 +1044,40 @@ Custom plugin templates cannot be generically rendered; those tabs link to the l
 
 **Phase 2 — Foundation (approved plan first):**
 1. Backend scaffolding:
-   - SSE broker + signals + `/api/v1/ui/events`.
+   - SSE broker + signals + `/api/v2/events`.
    - Bootstrap/login/logout/session + CSRF helpers.
-   - `/api/v1/ui` blueprint + auth decorators + error format.
-   - i18n catalog endpoint.
-   - Minimal existing API enrichment (`watch` list fields, `tags` list fields).
+   - `/api/v2` blueprint + auth decorators + error format.
+   - i18n catalog endpoint (English + Italian).
+   - v2 dashboard/watch/tag/settings/queue/import endpoints for Wave 1.
    - Tests for auth, SSE, and new endpoints.
 2. Frontend foundation:
    - Vite/React/TS/Tailwind project.
    - Design tokens, primitives, app shell, bottom tabs/sidebar.
-   - Theme system + language picker.
+   - Theme system + language picker (English + Italian).
    - API client, query client, error normalizer.
    - Login screen.
    - SSE client + connection indicator + query cache patching.
    - Error boundary, toasts, empty/loading components.
 
-**Phase 3 — Screens, in this order:**
+**Phase 3 — Wave 1 screens, in this order:**
 1. Dashboard + quick add watch.
 2. Watch detail: history, diff (line/word/character), preview, screenshot, error states.
 3. Watch edit: general, request, filters/triggers, conditions, notifications, AI, stats, schedule, restock settings.
-4. Groups and global settings.
-5. Import/export/backups/queue/notification log.
+4. Groups and global settings (core).
+5. Import URL list, backups, queue, notification log.
 6. Price/restock graph.
-7. Browser Steps and Visual Selector.
-8. Plugin tabs, MCP settings, PWA, polish.
+7. Polish, legacy links, and the Wave 1 parity checklist.
 
 After each screen: test at 360px, 768px, 1280px, light and dark; run keyboard/a11y checks; report.
+
+**Later waves — advanced screens:**
+1. Browser Steps.
+2. Visual Selector.
+3. XLSX/Distill import.
+4. MCP settings/tokens and OAuth consent.
+5. Plugin settings tabs.
+6. Apprise builder, image-diff advanced, share-as-image, PWA install.
+These stay in the legacy UI until ported. Do not delete the legacy pages.
 
 **Phase 4 — Quality and handoff:**
 - End-to-end flows: add watch, edit, see a change, read the diff, save a notification setting, import a list.
@@ -1059,7 +1088,7 @@ After each screen: test at 360px, 768px, 1280px, light and dark; run keyboard/a1
 - Parity checklist complete.
 - User approval.
 
-### 8.2 Why Browser Steps and Visual Selector are last
+### 8.2 Why Browser Steps and Visual Selector are later-wave
 
 They are the hardest and riskiest:
 - They depend on Playwright/Chromium being available.
@@ -1067,7 +1096,7 @@ They are the hardest and riskiest:
 - Mobile interaction (tap vs drag, pinch zoom, small targets) needs careful design.
 - They must not block the core dashboard/diff/edit work.
 
-They are still **Must** and are included in the plan. If the browser backend is not configured, the UI shows a clear "requires a browser fetcher" explanation and the rest of the watch edit page still works.
+In Wave 1 they remain fully available in the **legacy UI**, linked from the Pulse watch edit page. They are **not dropped**; they are ported in a later wave. If the browser backend is not configured, the legacy page already shows the capability explanation.
 
 ### 8.3 Risks and mitigations
 
@@ -1076,14 +1105,14 @@ They are still **Must** and are included in the plan. If the browser backend is 
 | SSE thread-per-connection under Werkzeug | Many tabs could exhaust threads | Document limits; keep single-process default; recommend gthread/gevent for high concurrency; one stream per tab; close on logout/unload. |
 | Reverse proxy buffers SSE | "Live" never updates | Send `X-Accel-Buffering: no`, `no-transform`; document nginx config; test with `curl -N`. |
 | Multi-worker deployment loses events | Some clients miss updates | Document single-process default; sticky sessions or a shared broker if multi-worker. |
-| Backend gaps are larger than expected | Schedule slip | Additive `/api/v1/ui` endpoints; reuse existing functions; build in the listed order; no big-bang rewrite. |
-| Old UI and new UI share backend state | Regression risk | Do not modify old routes/templates; add signals/endpoints only; run old test suite; feature-flag new UI at `/app`. |
+| Backend gaps are larger than expected | Schedule slip | Additive `/api/v2` endpoints; reuse existing functions; build in the listed order; no big-bang rewrite. |
+| Old UI and new UI share backend state | Regression risk | Do not modify old routes/templates; add signals/endpoints only; run old test suite; feature-flag new UI at `/pulse`. |
 | Diff performance on huge snapshots | UI freezes | Web Worker; line virtualization; character diff only for visible changed lines; cap initial render. |
 | Canvas/visual selector on mobile | Unusable interactions | Full-screen mode; tap-to-select; zoom controls; large hit targets; test on 360px. |
 | Browser Steps requires Playwright | Feature unavailable on plain installs | Clear capability message; hide/disable with explanation; never crash the edit page. |
 | i18n drift | Missing translations | Catalog endpoint + extraction script + CI check; English fallback. |
 | Plugin custom templates | Can't render generically | Generic WTForms renderer for simple fields; link to legacy for custom templates; parity checklist notes it. |
-| API key in SPA memory | Key exposure on XSS | Strict output escaping, no raw HTML, CSP-friendly build, key only in memory, not persisted; new endpoints use session+CSRF. |
+| Browser credential exposure | Session/CSRF misuse | Pulse never receives the v1 API key; v2 is session+CSRF; strict output escaping; no raw HTML; no credentials in storage or URLs. |
 | 500+ watches | Slow list | Single fetch, virtualization, memoized rows, no per-row calls, server list enrichment. |
 | Destructive actions | Data loss | Confirmation dialogs, explicit labels, no optimistic delete, clear-history separate from delete. |
 | Date/timezone confusion | Wrong schedules | Browser timezone list, server current time, explicit timezone labels, tests around DST. |
@@ -1093,18 +1122,21 @@ They are still **Must** and are included in the plan. If the browser backend is 
 
 ## 9. Definition of done and parity checklist
 
-The project is done when:
+**Wave 1 is done when:**
 
-- All **Must** and **Should** features in section 1 work at 360px, 768px, and 1280px, in light and dark mode.
-- No data polling for live updates; SSE is the only realtime transport for the new UI.
+- All Wave 1 **Must** features in section 1 work at 360px, 768px, and 1280px, in light and dark mode.
+- Advanced screens are reachable through clearly marked legacy links, and the old UI still works.
+- No data polling for live updates; SSE is the only realtime transport in Pulse.
 - The dashboard stays smooth with 500+ watches (virtualized, no per-row fetches).
 - Login/logout, password-disabled mode, CSRF, and sub-path deployments work.
 - The built frontend is served by Flask without Node.js at runtime.
-- Existing translations are available; new strings have an extraction path.
-- Browser Steps and Visual Selector work when a capable browser is configured, and degrade with a clear message when not.
-- `docs/new-frontend/PARITY.md` maps every old feature to its new location and status.
+- English + Italian are available in Pulse; other locales fall back to English.
+- `/api/v1` is unchanged; Pulse uses `/api/v2` only.
+- `docs/new-frontend/PARITY.md` maps every old feature to its new location (including legacy links) and status.
 - `docs/new-frontend/README.md` explains development, build, serving, switching from the old UI, and SSE/proxy requirements.
 - The user has tested and approved the result.
+
+**Full parity is done when** the later waves port Browser Steps, Visual Selector, XLSX/Distill import, MCP, plugins and the remaining advanced screens into Pulse, and the user agrees to retire the legacy fallback.
 
 Parity checklist format (to be filled during implementation):
 
@@ -1116,18 +1148,18 @@ Parity checklist format (to be filled during implementation):
 
 ---
 
-## 10. Questions for the user (max 5)
+## 10. Resolved decisions
 
-1. **Route strategy**: I recommend serving the new UI at `/app` during development and switching `/` to redirect to `/app` only after your approval, keeping the old routes available as a fallback. Is that acceptable, or do you want the new UI at `/` from the start?
-2. **Backend additions**: The plan needs additive endpoints under `/api/v1/ui/*` (settings, bulk actions, queue, previews, backups, MCP, SSE) plus small enrichments to the existing watch/tag list responses. Do you approve these minimal backend additions? (No existing endpoint or old UI behavior will be removed.)
-3. **Plugin parity**: For plugin settings, I plan a generic renderer for simple WTForms fields and a link to the legacy settings page for plugins that ship custom templates. Is that acceptable, or must every plugin screen be fully re-rendered in the new design?
-4. **Priority of advanced screens**: I plan AI/LLM as **Must**, MCP server settings and plugin tabs as **Should**, and MCP OAuth consent as **Should** (reusing the legacy consent page initially). Do you agree with that split?
-5. **Translations**: I plan to reuse the existing `.po/.mo` catalogs via a JSON endpoint and add new UI strings to the existing translation workflow, with English fallback. Is that the desired approach, or should the new UI be English-only for the first version?
+All five questions were answered by the user on 2026-11-16. See `docs/new-frontend/DECISIONS.md` for the authoritative log.
+
+1. **Route strategy** — approved with a named endpoint: **Pulse at `/pulse`**. Keep the old UI at its existing routes; switch `/` only after Pulse parity and user approval.
+2. **API strategy** — approved: new **`/api/v2`** browser-first API, session + CSRF; v1 remains unchanged for external clients. The browser never receives the v1 API key.
+3. **Plugin parity** — approved: Wave 1 keeps plugin screens in the legacy UI; a generic renderer can come later. Essential tools first.
+4. **Advanced-screen priority** — approved: focus on homepage, single-watch edit, and basic screens; AI/LLM is included; MCP/plugins/advanced screens stay legacy in Wave 1.
+5. **Translations** — approved: **English + Italian** for Pulse Wave 1; other locales fall back to English. The old UI keeps all 25 locales.
 
 ---
 
 ## Approval gate
 
-**No application code will be written until you reply with "approved" (and answer the questions above, if needed).**
-
-After approval, Phase 2 starts with the backend SSE/auth/UI-API scaffolding and the frontend foundation. The old frontend remains untouched.
+**Approved.** Phase 2 may start after the context is compacted. It begins with the `/api/v2` auth/bootstrap/SSE scaffolding and the Pulse frontend foundation. The old frontend remains untouched.
