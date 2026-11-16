@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="{{ get_locale() or 'en' }}" dir="ltr" data-theme="system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pulse · changedetection.io</title>
+  <base href="{{ script_root }}/pulse/">
+  <script>
+    // Apply the saved theme before first paint so the app never flashes the
+    // wrong colours. "system" follows prefers-color-scheme live.
+    (function () {
+      try {
+        var stored = localStorage.getItem('pulse.theme') || 'system';
+        var dark = stored === 'dark' ||
+          (stored === 'system' && window.matchMedia &&
+           window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.dataset.themePreference = stored;
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+  <style>
+    :root { color-scheme: light dark; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f7f8fa;
+      color: #101828;
+    }
+    html[data-theme="dark"] body { background: #0b0f19; color: #f2f4f7; }
+    #pulse-boot {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .pulse-boot-card {
+      max-width: 460px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .pulse-boot-mark {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      animation: pulse-breathe 1.6s ease-in-out infinite;
+    }
+    .pulse-boot-card h1 { font-size: 20px; margin: 0 0 8px; }
+    .pulse-boot-card p { margin: 0; opacity: .72; font-size: 14px; }
+    .pulse-boot-card code {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(127,127,127,.14);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    @keyframes pulse-breathe {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(.9); opacity: .65; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-boot-mark { animation: none; }
+    }
+  </style>
+  {% for css in entry_css %}
+  <link rel="stylesheet" href="{{ script_root }}/pulse/{{ css }}">
+  {% endfor %}
+</head>
+<body>
+  <div id="root">
+    <div id="pulse-boot">
+      <div class="pulse-boot-card">
+        <div class="pulse-boot-mark" aria-hidden="true"></div>
+        {% if built %}
+          <h1>Pulse</h1>
+          <p>Loading your watches…</p>
+        {% else %}
+          <h1>Pulse is not built yet</h1>
+          <p>The new frontend source lives in <strong>frontend/</strong>. Build it with:</p>
+          <code>cd frontend &amp;&amp; npm install &amp;&amp; npm run build</code>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if built %}
+  <script type="module" src="{{ script_root }}/pulse/{{ entry_js }}"></script>
+  {% endif %}
+</body>
+</html>

@@ -14,6 +14,16 @@ class ApiError(Exception):
         self.status = status
 
 
+def _emit(name, **kwargs):
+    """Best-effort realtime signal; never let a UI subscriber break an API write."""
+    try:
+        from blinker import signal
+
+        signal(name).send(**kwargs)
+    except Exception as error:
+        logger.debug(f"Could not emit signal {name}: {error}")
+
+
 # {schema_name: (the merged spec dict it was built from, validator)}
 _spec_validators = {}
 
@@ -162,6 +172,7 @@ def create_watch(datastore, data):
         processors.save_processor_config(datastore, new_uuid, processor_config_data)
     if paused_for_config:
         datastore.update_watch(uuid=new_uuid, update_obj={'paused': False})
+    _emit('watch_created', watch_uuid=new_uuid)
     return new_uuid
 
 
@@ -225,6 +236,7 @@ def update_watch(datastore, uuid, data):
 
     # Save processor config to JSON file
     processors.save_processor_config(datastore, uuid, processor_config_data)
+    _emit('watch_updated', watch_uuid=uuid)
 
 
 def queue_rechecks(update_q, uuids, metadata=None):
@@ -291,6 +303,7 @@ def create_tag(datastore, data):
         if tag:
             tag.update(extra)
             tag.commit()
+    _emit('group_created', uuid=new_uuid)
     return new_uuid
 
 
@@ -325,6 +338,7 @@ def update_tag(datastore, uuid, data):
     # Clear checksums for all watches using this tag to force reprocessing, tag changes affect inherited configuration
     cleared_count = datastore.clear_checksums_for_tag(uuid)
     logger.info(f"Tag {uuid} updated, cleared {cleared_count} watch checksums")
+    _emit('group_updated', uuid=uuid)
 
 
 def delete_tag(datastore, uuid):
@@ -337,6 +351,7 @@ def delete_tag(datastore, uuid):
         if watch.get('tags') and uuid in watch['tags']:
             watch['tags'].remove(uuid)
             watch.commit()
+    _emit('group_deleted', uuid=uuid)
 
 
 def checking_now(datastore):

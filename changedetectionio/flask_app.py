@@ -892,6 +892,10 @@ def changedetection_app(config=None, datastore_o=None):
         ) or os.getenv("SALTED_PASS", False)
 
         if has_password_enabled and not flask_login.current_user.is_authenticated:
+            # The Pulse shell contains no data; the SPA renders its own login
+            # screen and every /api/v2 response is auth-checked individually.
+            if request.blueprint == 'pulse_ui':
+                return None
             # Permitted
             if request.endpoint and request.endpoint == 'static_content' and request.view_args:
                 # Handled by static_content handler
@@ -1441,6 +1445,63 @@ def changedetection_app(config=None, datastore_o=None):
         csrf.exempt('changedetectionio.blueprint.mcp.oauth.token')
         csrf.exempt('changedetectionio.blueprint.mcp.oauth.register')
 
+    # Browser-first JSON API for the Pulse frontend. Session + CSRF auth, no
+    # v1 API key in the browser. Additive: /api/v1 and the legacy UI are
+    # unchanged.
+    from changedetectionio.api.v2 import construct_blueprint as construct_api_v2_blueprint
+
+    app.register_blueprint(
+        construct_api_v2_blueprint(datastore, update_q), url_prefix='/api/v2'
+    )
+
+    # JSON errors for /api/v2 even when the error happens before routing (CSRF)
+    # or the path does not exist. Other paths keep Flask's normal responses.
+    from flask_wtf.csrf import CSRFError
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(error):
+        from flask import jsonify
+
+        if request.path.startswith('/api/v2/'):
+            return jsonify(
+                {
+                    'error': 'CSRF token missing or invalid',
+                    'code': 'csrf_failed',
+                    'fields': {},
+                }
+            ), 400
+        return error.get_response()
+
+    @app.errorhandler(404)
+    def handle_not_found(error):
+        from flask import jsonify
+
+        if request.path.startswith('/api/v2/'):
+            return jsonify({'error': 'Not found', 'fields': {}}), 404
+        return error.get_response()
+
+    @app.errorhandler(405)
+    def handle_method_not_allowed(error):
+        from flask import jsonify
+
+        if request.path.startswith('/api/v2/'):
+            return jsonify({'error': 'Method not allowed', 'fields': {}}), 405
+        return error.get_response()
+
+    # Pulse's single SSE stream. The legacy Socket.IO server, if enabled, keeps
+    # running independently.
+    from changedetectionio.realtime.sse import init_sse
+
+    init_sse(app, datastore, update_q)
+
+    # Pulse SPA shell. It is deliberately available without a session (the SPA
+    # draws the login screen); data access is enforced by /api/v2.
+    from changedetectionio.blueprint.pulse_ui import (
+        construct_blueprint as construct_pulse_ui_blueprint,
+    )
+
+    app.register_blueprint(construct_pulse_ui_blueprint(), url_prefix='/pulse')
+
     import changedetectionio.blueprint.pwa as pwa
 
     # url_prefix='' is required, not cosmetic - see the blueprint docstring
@@ -1707,8 +1768,20 @@ def notification_runner(worker_id=0):
                         ].get('notification_format')
                     if n_object.get('notification_urls', {}):
                         sent_obj = process_notification(n_object, datastore)
+                        try:
+                            signal('notification_sent').send(
+                                watch_uuid=n_object.get('uuid'), error=None
+                            )
+                        except Exception:
+                            pass
 
                 except Exception as e:
+                    try:
+                        signal('notification_sent').send(
+                            watch_uuid=n_object.get('uuid'), error=str(e)
+                        )
+                    except Exception:
+                        pass
                     logger.error(
                         f"Notification worker {worker_id} - Watch URL: {n_object['watch_url']}  Error {str(e)}"
                     )

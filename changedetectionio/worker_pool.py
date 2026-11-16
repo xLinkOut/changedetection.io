@@ -387,6 +387,12 @@ def queue_item_async_safe(update_q, item, silent=False):
 
         if not silent:
             logger.trace(f"Successfully queued item: {item_uuid}")
+        try:
+            from blinker import signal
+
+            signal('watch_queued').send(watch_uuid=item_uuid)
+        except Exception:
+            pass
         return True
         
     except Exception as e:

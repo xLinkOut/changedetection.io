@@ -18,6 +18,11 @@ dist/
 venv/
 .python-version
 
+# Pulse frontend development dependencies (the built assets are committed)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
 # IDEs
 .idea
 .vscode/settings.json
@@ -38,3 +43,6 @@ changedetectionio/tests/logs/
 /.mcp.json
 /opencode.json
 /opencode.jsonc
+
+# TypeScript incremental build files
+frontend/*.tsbuildinfo
