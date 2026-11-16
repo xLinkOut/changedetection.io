@@ -146,7 +146,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/backups/restore.py changedetectionio/blueprint/backups/templates/backup_restore.html
 msgid "Restore backup"
-msgstr ""
+msgstr "Ripristina backup"
 
 #: changedetectionio/blueprint/backups/restore.py
 msgid "A restore is already running, check back in a few minutes"
@@ -2078,7 +2078,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/tags/templates/edit-tag.html changedetectionio/blueprint/ui/templates/edit.html
 msgid "Filters & Triggers"
-msgstr ""
+msgstr "Filtri e attivatori"
 
 #: changedetectionio/blueprint/tags/templates/edit-tag.html
 msgid ""
@@ -2195,7 +2195,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/tags/templates/groups-overview.html changedetectionio/templates/base.html
 msgid "Unlink"
-msgstr ""
+msgstr "Scollega"
 
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
 msgid "Keep the tag but unlink any watches"
@@ -2394,7 +2394,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/edit.py changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Default"
-msgstr ""
+msgstr "Predefinito"
 
 #: changedetectionio/blueprint/ui/edit.py
 msgid "Updated watch - unpaused!"
@@ -2935,7 +2935,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Consecutive filter failures"
-msgstr ""
+msgstr "Errori consecutivi dei filtri"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "History length"
@@ -2943,7 +2943,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Last fetch duration"
-msgstr ""
+msgstr "Durata ultimo recupero"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Notification alert count"
@@ -2979,7 +2979,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Download watch data package"
-msgstr ""
+msgstr "Scarica pacchetto dati del sito"
 
 #: changedetectionio/blueprint/ui/templates/edit.html
 msgid "Delete Watch?"
@@ -3077,11 +3077,11 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Workers"
-msgstr ""
+msgstr "Worker"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Running now"
-msgstr ""
+msgstr "In esecuzione"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 #: changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html
@@ -3098,7 +3098,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Clear"
-msgstr ""
+msgstr "Cancella"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Clear Queue"
@@ -3114,7 +3114,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: changedetectionio/blueprint/ui/templates/queue.html
 msgid "No workers configured (FETCH_WORKERS=0) and queue is empty"
@@ -3264,7 +3264,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Web page URL"
-msgstr ""
+msgstr "URL della pagina web"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 #, python-format
@@ -3289,7 +3289,7 @@ msgstr "Non letto"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Deals"
-msgstr ""
+msgstr "Offerte"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "With errors"
@@ -3297,7 +3297,7 @@ msgstr "Con errori"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Healthy"
-msgstr ""
+msgstr "Sano"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Filter by type"
@@ -3359,7 +3359,7 @@ msgstr ""
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Apply"
-msgstr ""
+msgstr "Applica"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Set proxy for selected"
@@ -3423,11 +3423,11 @@ msgstr ""
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Web page"
-msgstr ""
+msgstr "Pagina web"
 
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "Restock & Price"
-msgstr ""
+msgstr "Rifornimento e prezzo"
 
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
@@ -3953,7 +3953,7 @@ msgstr "Rimuovi elementi"
 
 #: changedetectionio/forms.py
 msgid "Extract lines containing"
-msgstr ""
+msgstr "Estrai righe contenenti"
 
 #: changedetectionio/forms.py
 msgid "Extract text"
@@ -4158,7 +4158,7 @@ msgstr ""
 
 #: changedetectionio/forms.py
 msgid "Relative time format"
-msgstr ""
+msgstr "Formato tempo relativo"
 
 #: changedetectionio/forms.py
 msgid "Long (1 minute ago)"
@@ -4805,7 +4805,7 @@ msgstr ""
 #. FIXME: fragment msgids (#4074)
 #: changedetectionio/processors/restock_diff/templates/restock_diff/chart_default.html
 msgid "Changes"
-msgstr ""
+msgstr "Modifiche"
 
 #. {pct} is a percentage including the % sign, e.g. "80%"
 #: changedetectionio/processors/restock_diff/templates/restock_diff/chart_default.html
@@ -5913,7 +5913,7 @@ msgstr ""
 
 #: changedetectionio/templates/menu.html
 msgid "Paused"
-msgstr ""
+msgstr "In pausa"
 
 #: changedetectionio/templates/menu.html
 msgid "Running"
@@ -5933,7 +5933,7 @@ msgstr ""
 
 #: changedetectionio/templates/menu.html
 msgid "Log out"
-msgstr ""
+msgstr "Esci"
 
 #: changedetectionio/templates/menu.html
 msgid "EDIT"
@@ -6022,3 +6022,1201 @@ msgstr ""
 msgid "Main settings"
 msgstr "Impostazioni principali"
 
+
+#: pulse
+msgid "Watches"
+msgstr "Siti web"
+
+#: pulse
+msgid "Add watch"
+msgstr "Aggiungi sito"
+
+#: pulse
+msgid "Add a watch"
+msgstr "Aggiungi un sito"
+
+#: pulse
+msgid "Groups"
+msgstr "Gruppi"
+
+#: pulse
+msgid "Live"
+msgstr "In diretta"
+
+#: pulse
+msgid "Connecting"
+msgstr "Connessione"
+
+#: pulse
+msgid "Reconnecting"
+msgstr "Riconnessione"
+
+#: pulse
+msgid "Offline"
+msgstr "Non in linea"
+
+#: pulse
+msgid "Live updates off"
+msgstr "Aggiornamenti live disattivati"
+
+#: pulse
+msgid "Open classic UI"
+msgstr "Apri interfaccia classica"
+
+#: pulse
+msgid "Theme"
+msgstr "Tema"
+
+#: pulse
+msgid "Light"
+msgstr "Chiaro"
+
+#: pulse
+msgid "Dark"
+msgstr "Scuro"
+
+#: pulse
+msgid "System"
+msgstr "Sistema"
+
+#: pulse
+msgid "Menu"
+msgstr "Menu"
+
+#: pulse
+msgid "Global status"
+msgstr "Stato globale"
+
+#: pulse
+msgid "Pause all checks"
+msgstr "Sospendi tutti i controlli"
+
+#: pulse
+msgid "Resume all checks"
+msgstr "Riprendi tutti i controlli"
+
+#: pulse
+msgid "Mute all notifications"
+msgstr "Silenzia tutte le notifiche"
+
+#: pulse
+msgid "Unmute all notifications"
+msgstr "Riattiva tutte le notifiche"
+
+#: pulse
+msgid "Skip to content"
+msgstr "Vai al contenuto"
+
+#: pulse
+msgid "Checking"
+msgstr "Controllo"
+
+#: pulse
+msgid "Errors"
+msgstr "Errori"
+
+#: pulse
+msgid "Search watches"
+msgstr "Cerca siti"
+
+#: pulse
+msgid "Search title, URL or error…"
+msgstr "Cerca titolo, URL o errore…"
+
+#: pulse
+msgid "Clear search"
+msgstr "Cancella ricerca"
+
+#: pulse
+msgid "Filter by status"
+msgstr "Filtra per stato"
+
+#: pulse
+msgid "All groups"
+msgstr "Tutti i gruppi"
+
+#: pulse
+msgid "All processors"
+msgstr "Tutti i processori"
+
+#: pulse
+msgid "Sort"
+msgstr "Ordina"
+
+#: pulse
+msgid "Load more"
+msgstr "Carica altri"
+
+#: pulse
+msgid "Add paused"
+msgstr "Aggiungi in pausa"
+
+#: pulse
+msgid "Save the watch without checking it yet."
+msgstr "Salva il sito senza controllarlo subito."
+
+#: pulse
+msgid "Add with visual selector"
+msgstr "Aggiungi con selettore visivo"
+
+#: pulse
+msgid "Legacy"
+msgstr "Classico"
+
+#: pulse
+msgid "No watches yet"
+msgstr "Nessun sito ancora"
+
+#: pulse
+msgid "Add the first web page you want to keep an eye on."
+msgstr "Aggiungi la prima pagina web che vuoi tenere d’occhio."
+
+#: pulse
+msgid "No watches match this view"
+msgstr "Nessun sito corrisponde a questa vista"
+
+#: pulse
+msgid "Try clearing the search or filters."
+msgstr "Prova a cancellare la ricerca o i filtri."
+
+#: pulse
+msgid "Clear filters"
+msgstr "Cancella filtri"
+
+#: pulse
+msgid "All watches"
+msgstr "Tutti i siti"
+
+#: pulse
+msgid "snapshots"
+msgstr "istantanee"
+
+#: pulse
+msgid "Error"
+msgstr "Errore"
+
+#: pulse
+msgid "AI change summary"
+msgstr "Riepilogo AI delle modifiche"
+
+#: pulse
+msgid "Summarise changes"
+msgstr "Riassumi le modifiche"
+
+#: pulse
+msgid "Generating…"
+msgstr "Generazione…"
+
+#: pulse
+msgid "Check now"
+msgstr "Controlla ora"
+
+#: pulse
+msgid "Download patch"
+msgstr "Scarica patch"
+
+#: pulse
+msgid "Changes only"
+msgstr "Solo modifiche"
+
+#: pulse
+msgid "Show added"
+msgstr "Mostra aggiunte"
+
+#: pulse
+msgid "Show removed"
+msgstr "Mostra rimozioni"
+
+#: pulse
+msgid "Character"
+msgstr "Caratteri"
+
+#: pulse
+msgid "Side by side"
+msgstr "Affiancato"
+
+#: pulse
+msgid "Inline"
+msgstr "In linea"
+
+#: pulse
+msgid "Before"
+msgstr "Prima"
+
+#: pulse
+msgid "After"
+msgstr "Dopo"
+
+#: pulse
+msgid "Previous change"
+msgstr "Modifica precedente"
+
+#: pulse
+msgid "Next change"
+msgstr "Modifica successiva"
+
+#: pulse
+msgid "Swap versions"
+msgstr "Inverti versioni"
+
+#: pulse
+msgid "Snapshot history"
+msgstr "Cronologia istantanee"
+
+#: pulse
+msgid "Latest"
+msgstr "Più recente"
+
+#: pulse
+msgid "No differences to show with the current filters."
+msgstr "Nessuna differenza da mostrare con i filtri attuali."
+
+#: pulse
+msgid "Version"
+msgstr "Versione"
+
+#: pulse
+msgid "Trigger"
+msgstr "Attivatore"
+
+#: pulse
+msgid "Ignored"
+msgstr "Ignorato"
+
+#: pulse
+msgid "Blocked"
+msgstr "Bloccato"
+
+#: pulse
+msgid "This snapshot is empty"
+msgstr "Questa istantanea è vuota"
+
+#: pulse
+msgid "Back to watch"
+msgstr "Torna al sito"
+
+#: pulse
+msgid "Edit watch"
+msgstr "Modifica sito"
+
+#: pulse
+msgid "Discard"
+msgstr "Scarta"
+
+#: pulse
+msgid "Unsaved changes"
+msgstr "Modifiche non salvate"
+
+#: pulse
+msgid "All changes saved"
+msgstr "Tutte le modifiche salvate"
+
+#: pulse
+msgid "Open link override"
+msgstr "URL di apertura alternativo"
+
+#: pulse
+msgid "Use page title in list"
+msgstr "Usa il titolo della pagina nell’elenco"
+
+#: pulse
+msgid "Use system setting"
+msgstr "Usa impostazione di sistema"
+
+#: pulse
+msgid "Schedule"
+msgstr "Programmazione"
+
+#: pulse
+msgid "Use global interval and schedule"
+msgstr "Usa intervallo e programmazione globali"
+
+#: pulse
+msgid "Check every"
+msgstr "Controlla ogni"
+
+#: pulse
+msgid "Only check during a schedule"
+msgstr "Controlla solo durante una programmazione"
+
+#: pulse
+msgid "Outside these windows the watch is not checked."
+msgstr "Fuori da queste finestre il sito non viene controllato."
+
+#: pulse
+msgid "Timezone"
+msgstr "Fuso orario"
+
+#: pulse
+msgid "Maximum snapshots"
+msgstr "Istantanee massime"
+
+#: pulse
+msgid "Danger zone"
+msgstr "Zona pericolosa"
+
+#: pulse
+msgid "Clear history"
+msgstr "Cancella cronologia"
+
+#: pulse
+msgid "Delete watch"
+msgstr "Elimina sito"
+
+#: pulse
+msgid "Fetch method"
+msgstr "Metodo di recupero"
+
+#: pulse
+msgid "Request headers"
+msgstr "Intestazioni della richiesta"
+
+#: pulse
+msgid "JavaScript before extraction"
+msgstr "JavaScript prima dell’estrazione"
+
+#: pulse
+msgid "Browser automation"
+msgstr "Automazione browser"
+
+#: pulse
+msgid "Open Browser Steps"
+msgstr "Apri passaggi browser"
+
+#: pulse
+msgid "Open Visual Selector"
+msgstr "Apri selettore visivo"
+
+#: pulse
+msgid "Trigger text"
+msgstr "Testo attivatore"
+
+#: pulse
+msgid "Ignore text"
+msgstr "Testo da ignorare"
+
+#: pulse
+msgid "Remove duplicate lines"
+msgstr "Rimuovi righe duplicate"
+
+#: pulse
+msgid "Trim whitespace"
+msgstr "Rimuovi spazi"
+
+#: pulse
+msgid "Preview with these filters"
+msgstr "Anteprima con questi filtri"
+
+#: pulse
+msgid "All of the following"
+msgstr "Tutte le seguenti"
+
+#: pulse
+msgid "Any of the following"
+msgstr "Almeno una delle seguenti"
+
+#: pulse
+msgid "Add rule"
+msgstr "Aggiungi regola"
+
+#: pulse
+msgid "Verify"
+msgstr "Verifica"
+
+#: pulse
+msgid "Rule passes on the latest snapshot"
+msgstr "La regola è soddisfatta sull’ultima istantanea"
+
+#: pulse
+msgid "Rule does not pass"
+msgstr "La regola non è soddisfatta"
+
+#: pulse
+msgid "Format"
+msgstr "Formato"
+
+#: pulse
+msgid "Attach a screenshot"
+msgstr "Allega una schermata"
+
+#: pulse
+msgid "Notification URLs"
+msgstr "URL delle notifiche"
+
+#: pulse
+msgid "Notification title"
+msgstr "Titolo della notifica"
+
+#: pulse
+msgid "Notification body"
+msgstr "Corpo della notifica"
+
+#: pulse
+msgid "Reset to system defaults"
+msgstr "Ripristina impostazioni di sistema"
+
+#: pulse
+msgid "Available tokens"
+msgstr "Token disponibili"
+
+#: pulse
+msgid "Inherited from groups"
+msgstr "Ereditato dai gruppi"
+
+#: pulse
+msgid "Change intent"
+msgstr "Intento del cambiamento"
+
+#: pulse
+msgid "Change summary prompt"
+msgstr "Prompt del riepilogo"
+
+#: pulse
+msgid "Prompt mode"
+msgstr "Modalità del prompt"
+
+#: pulse
+msgid "Restock detection"
+msgstr "Rilevamento rifornimento"
+
+#: pulse
+msgid "Notify below price"
+msgstr "Notifica sotto il prezzo"
+
+#: pulse
+msgid "Notify above price"
+msgstr "Notifica sopra il prezzo"
+
+#: pulse
+msgid "Change threshold (%)"
+msgstr "Soglia di variazione (%)"
+
+#: pulse
+msgid "Checks completed"
+msgstr "Controlli completati"
+
+#: pulse
+msgid "Notification alerts"
+msgstr "Avvisi di notifica"
+
+#: pulse
+msgid "Remote reply"
+msgstr "Risposta remota"
+
+#: pulse
+msgid "Capabilities"
+msgstr "Capacità"
+
+#: pulse
+msgid "Downloads"
+msgstr "Download"
+
+#: pulse
+msgid "Download latest HTML"
+msgstr "Scarica ultimo HTML"
+
+#: pulse
+msgid "New group"
+msgstr "Nuovo gruppo"
+
+#: pulse
+msgid "Notifications on"
+msgstr "Notifiche attive"
+
+#: pulse
+msgid "AI on"
+msgstr "AI attiva"
+
+#: pulse
+msgid "AI off"
+msgstr "AI disattivata"
+
+#: pulse
+msgid "Overrides watches"
+msgstr "Sovrascrive i siti"
+
+#: pulse
+msgid "Group name"
+msgstr "Nome del gruppo"
+
+#: pulse
+msgid "Auto-apply to URLs matching"
+msgstr "Applica automaticamente agli URL corrispondenti"
+
+#: pulse
+msgid "Use a custom colour"
+msgstr "Usa un colore personalizzato"
+
+#: pulse
+msgid "Matching watches"
+msgstr "Siti corrispondenti"
+
+#: pulse
+msgid "Let this group override watch settings"
+msgstr "Consenti a questo gruppo di sovrascrivere le impostazioni dei siti"
+
+#: pulse
+msgid "Unlink from all watches"
+msgstr "Scollega da tutti i siti"
+
+#: pulse
+msgid "Delete group"
+msgstr "Elimina gruppo"
+
+#: pulse
+msgid "All settings"
+msgstr "Tutte le impostazioni"
+
+#: pulse
+msgid "Default check interval"
+msgstr "Intervallo di controllo predefinito"
+
+#: pulse
+msgid "Default schedule"
+msgstr "Programmazione predefinita"
+
+#: pulse
+msgid "Default timezone"
+msgstr "Fuso orario predefinito"
+
+#: pulse
+msgid "Snapshots to keep per watch"
+msgstr "Istantanee da conservare per sito"
+
+#: pulse
+msgid "Filter failures before notifying"
+msgstr "Errori dei filtri prima di notificare"
+
+#: pulse
+msgid "Allow anonymous access to watch history"
+msgstr "Consenti accesso anonimo alla cronologia"
+
+#: pulse
+msgid "Treat empty pages as a change"
+msgstr "Considera le pagine vuote come modifiche"
+
+#: pulse
+msgid "Password protection"
+msgstr "Protezione con password"
+
+#: pulse
+msgid "Set password"
+msgstr "Imposta password"
+
+#: pulse
+msgid "Default fetch method"
+msgstr "Metodo di recupero predefinito"
+
+#: pulse
+msgid "Fetch workers"
+msgstr "Worker di recupero"
+
+#: pulse
+msgid "Request timeout (seconds)"
+msgstr "Timeout richiesta (secondi)"
+
+#: pulse
+msgid "Random jitter (seconds)"
+msgstr "Variazione casuale (secondi)"
+
+#: pulse
+msgid "Global filters"
+msgstr "Filtri globali"
+
+#: pulse
+msgid "Global remove elements"
+msgstr "Elementi da rimuovere globalmente"
+
+#: pulse
+msgid "Global ignore text"
+msgstr "Testo da ignorare globalmente"
+
+#: pulse
+msgid "Interface"
+msgstr "Interfaccia"
+
+#: pulse
+msgid "Realtime UI updates"
+msgstr "Aggiornamenti in tempo reale"
+
+#: pulse
+msgid "Favicons"
+msgstr "Favicon"
+
+#: pulse
+msgid "Open diff in a new tab"
+msgstr "Apri differenze in una nuova scheda"
+
+#: pulse
+msgid "Enable watch sharing"
+msgstr "Abilita condivisione siti"
+
+#: pulse
+msgid "API key"
+msgstr "Chiave API"
+
+#: pulse
+msgid "Copy"
+msgstr "Copia"
+
+#: pulse
+msgid "Copied"
+msgstr "Copiato"
+
+#: pulse
+msgid "Regenerate key"
+msgstr "Rigenera chiave"
+
+#: pulse
+msgid "Send test"
+msgstr "Invia prova"
+
+#: pulse
+msgid "Refresh"
+msgstr "Aggiorna"
+
+#: pulse
+msgid "Download"
+msgstr "Scarica"
+
+#: pulse
+msgid "Restore a backup"
+msgstr "Ripristina un backup"
+
+#: pulse
+msgid "Uptime"
+msgstr "Tempo di attività"
+
+#: pulse
+msgid "Sign in to Pulse"
+msgstr "Accedi a Pulse"
+
+#: pulse
+msgid "Website change detection, with a calmer interface."
+msgstr "Rilevamento modifiche dei siti, con un’interfaccia più tranquilla."
+
+#: pulse
+msgid "Sign in"
+msgstr "Accedi"
+
+#: pulse
+msgid "Show password"
+msgstr "Mostra password"
+
+#: pulse
+msgid "Hide password"
+msgstr "Nascondi password"
+
+#: pulse
+msgid "Please enter your password"
+msgstr "Inserisci la password"
+
+#: pulse
+msgid "Could not log in"
+msgstr "Accesso non riuscito"
+
+#: pulse
+msgid "Your session is protected by the same login as the classic interface."
+msgstr "La sessione è protetta dallo stesso accesso dell’interfaccia classica."
+
+#: pulse
+msgid "Loading"
+msgstr "Caricamento"
+
+#: pulse
+msgid "Try again"
+msgstr "Riprova"
+
+#: pulse
+msgid "Something went wrong"
+msgstr "Qualcosa è andato storto"
+
+#: pulse
+msgid "This page does not exist"
+msgstr "Questa pagina non esiste"
+
+#: pulse
+msgid "Back to watches"
+msgstr "Torna ai siti"
+
+#: pulse
+msgid "Notification sent"
+msgstr "Notifica inviata"
+
+#: pulse
+msgid "Notification failed"
+msgstr "Notifica non riuscita"
+
+#: pulse
+msgid "Watch added"
+msgstr "Sito aggiunto"
+
+#: pulse
+msgid "Watch deleted"
+msgstr "Sito eliminato"
+
+#: pulse
+msgid "Watch queued"
+msgstr "Sito messo in coda"
+
+#: pulse
+msgid "Marked as viewed"
+msgstr "Segnato come letto"
+
+#: pulse
+msgid "Errors cleared"
+msgstr "Errori cancellati"
+
+#: pulse
+msgid "History cleared"
+msgstr "Cronologia cancellata"
+
+#: pulse
+msgid "Group saved"
+msgstr "Gruppo salvato"
+
+#: pulse
+msgid "Group created"
+msgstr "Gruppo creato"
+
+#: pulse
+msgid "Group deleted"
+msgstr "Gruppo eliminato"
+
+#: pulse
+msgid "Group updated"
+msgstr "Gruppo aggiornato"
+
+#: pulse
+msgid "Settings saved"
+msgstr "Impostazioni salvate"
+
+#: pulse
+msgid "Could not save this watch"
+msgstr "Impossibile salvare questo sito"
+
+#: pulse
+msgid "Could not save this group"
+msgstr "Impossibile salvare questo gruppo"
+
+#: pulse
+msgid "Could not save settings"
+msgstr "Impossibile salvare le impostazioni"
+
+#: pulse
+msgid "Could not load your watches"
+msgstr "Impossibile caricare i siti"
+
+#: pulse
+msgid "Could not load settings"
+msgstr "Impossibile caricare le impostazioni"
+
+#: pulse
+msgid "Could not load this watch"
+msgstr "Impossibile caricare questo sito"
+
+#: pulse
+msgid "Could not load this group"
+msgstr "Impossibile caricare questo gruppo"
+
+#: pulse
+msgid "Could not load groups"
+msgstr "Impossibile caricare i gruppi"
+
+#: pulse
+msgid "Could not load the queue"
+msgstr "Impossibile caricare la coda"
+
+#: pulse
+msgid "Could not load history"
+msgstr "Impossibile caricare la cronologia"
+
+#: pulse
+msgid "The queue is empty"
+msgstr "La coda è vuota"
+
+#: pulse
+msgid "Waiting"
+msgstr "In attesa"
+
+#: pulse
+msgid "Clear queue"
+msgstr "Svuota coda"
+
+#: pulse
+msgid "Import watches"
+msgstr "Importa siti"
+
+#: pulse
+msgid "URL list"
+msgstr "Elenco URL"
+
+#: pulse
+msgid "Import result"
+msgstr "Risultato importazione"
+
+#: pulse
+msgid "Spreadsheet and Distill.io imports"
+msgstr "Importazioni da fogli di calcolo e Distill.io"
+
+#: pulse
+msgid "Language"
+msgstr "Lingua"
+
+#: pulse
+msgid "System default"
+msgstr "Predefinito di sistema"
+
+#: pulse
+msgid "Set browser / fetch method"
+msgstr "Imposta browser / metodo di recupero"
+
+#: pulse
+msgid "Set proxy"
+msgstr "Imposta proxy"
+
+#: pulse
+msgid "Page {page} of {pages}"
+msgstr "Pagina {page} di {pages}"
+
+#: pulse
+msgid "Showing {shown} of {total}"
+msgstr "Visualizzati {shown} di {total}"
+
+#: pulse
+msgid "Select all {total} matching"
+msgstr "Seleziona tutti i {total} corrispondenti"
+
+#: pulse
+msgid "{count} selected"
+msgstr "{count} selezionati"
+
+#: pulse
+msgid "All matching watches selected"
+msgstr "Tutti i siti corrispondenti selezionati"
+
+#: pulse
+msgid "Selection is for this view"
+msgstr "La selezione è per questa vista"
+
+#: pulse
+msgid "Bulk actions"
+msgstr "Azioni multiple"
+
+#: pulse
+msgid "Bulk action completed"
+msgstr "Azione multipla completata"
+
+#: pulse
+msgid "Bulk action failed"
+msgstr "Azione multipla non riuscita"
+
+#: pulse
+msgid "Add to group"
+msgstr "Aggiungi al gruppo"
+
+#: pulse
+msgid "Use default notifications"
+msgstr "Usa notifiche predefinite"
+
+#: pulse
+msgid "Mark as viewed"
+msgstr "Segna come letto"
+
+#: pulse
+msgid "Mark as unviewed"
+msgstr "Segna come non letto"
+
+#: pulse
+msgid "Delete watches"
+msgstr "Elimina siti"
+
+#: pulse
+msgid "Delete this watch?"
+msgstr "Eliminare questo sito?"
+
+#: pulse
+msgid "Clear history for this watch?"
+msgstr "Cancellare la cronologia di questo sito?"
+
+#: pulse
+msgid "Clear history for {count} watches?"
+msgstr "Cancellare la cronologia di {count} siti?"
+
+#: pulse
+msgid "The watch and all of its history will be deleted. This cannot be undone."
+msgstr "Il sito e tutta la sua cronologia verranno eliminati. L’operazione non può essere annullata."
+
+#: pulse
+msgid "Snapshots and screenshots are removed. The watch stays. This cannot be undone."
+msgstr "Istantanee e schermate vengono rimosse. Il sito resta. L’operazione non può essere annullata."
+
+#: pulse
+msgid "Every waiting check is removed. Running checks keep going. This cannot be undone."
+msgstr "Tutti i controlli in attesa vengono rimossi. I controlli in corso continuano. L’operazione non può essere annullata."
+
+#: pulse
+msgid "Delete this group?"
+msgstr "Eliminare questo gruppo?"
+
+#: pulse
+msgid "The group is removed from every watch. The watches themselves stay."
+msgstr "Il gruppo viene rimosso da tutti i siti. I siti restano."
+
+#: pulse
+msgid "Groups can share filters, notifications and AI settings."
+msgstr "I gruppi possono condividere filtri, notifiche e impostazioni AI."
+
+#: pulse
+msgid "A group name that does not exist yet is created when you save."
+msgstr "Un nome di gruppo inesistente viene creato al salvataggio."
+
+#: pulse
+msgid "No groups yet. Type a name to create one."
+msgstr "Nessun gruppo. Scrivi un nome per crearne uno."
+
+#: pulse
+msgid "Add a group and press Enter"
+msgstr "Aggiungi un gruppo e premi Invio"
+
+#: pulse
+msgid "What to watch, how often, and which processor to use."
+msgstr "Cosa monitorare, con quale frequenza e con quale processore."
+
+#: pulse
+msgid "How often this watch is checked."
+msgstr "Con quale frequenza viene controllato questo sito."
+
+#: pulse
+msgid "How many snapshots to keep for this watch."
+msgstr "Quante istantanee conservare per questo sito."
+
+#: pulse
+msgid "These actions cannot be undone."
+msgstr "Queste azioni non possono essere annullate."
+
+#: pulse
+msgid "Use the global interval."
+msgstr "Usa l’intervallo globale."
+
+#: pulse
+msgid "IANA timezone, for example Europe/Rome."
+msgstr "Fuso orario IANA, ad esempio Europe/Rome."
+
+#: pulse
+msgid "Use the global timezone"
+msgstr "Usa il fuso orario globale"
+
+#: pulse
+msgid "Delay before extracting text with a browser."
+msgstr "Attesa prima di estrarre il testo con un browser."
+
+#: pulse
+msgid "Used for POST/PUT/PATCH. Jinja2 variables like {{ now }} are allowed."
+msgstr "Usato per POST/PUT/PATCH. Sono ammesse variabili Jinja2 come {{ now }}."
+
+#: pulse
+msgid "One per line, Key: Value. Jinja2 variables are allowed."
+msgstr "Una per riga, Chiave: Valore. Sono ammesse variabili Jinja2."
+
+#: pulse
+msgid "Advanced. Runs in the browser before the page is processed."
+msgstr "Avanzato. Viene eseguito nel browser prima di elaborare la pagina."
+
+#: pulse
+msgid "Narrow the page down to the part that matters, then decide what counts as a change."
+msgstr "Riduci la pagina alla parte che conta, poi decidi cosa è una modifica."
+
+#: pulse
+msgid "One per line. Leave empty to watch the whole page."
+msgstr "Una per riga. Lascia vuoto per monitorare tutta la pagina."
+
+#: pulse
+msgid "CSS or XPath selectors, one per line."
+msgstr "Selettori CSS o XPath, uno per riga."
+
+#: pulse
+msgid "Only notify when one of these lines appears."
+msgstr "Notifica solo quando appare una di queste righe."
+
+#: pulse
+msgid "Lines containing these values are ignored."
+msgstr "Le righe che contengono questi valori vengono ignorate."
+
+#: pulse
+msgid "Do not report a change while this text is present."
+msgstr "Non segnalare modifiche mentre questo testo è presente."
+
+#: pulse
+msgid "Regex, one per line. Only matching text is compared."
+msgstr "Regex, una per riga. Viene confrontato solo il testo corrispondente."
+
+#: pulse
+msgid "Only keep lines containing these values."
+msgstr "Mantieni solo le righe che contengono questi valori."
+
+#: pulse
+msgid "Add rules that must match before a change is reported."
+msgstr "Aggiungi regole che devono corrispondere prima di segnalare una modifica."
+
+#: pulse
+msgid "Verification uses the latest snapshot and the filters saved on this watch."
+msgstr "La verifica usa l’ultima istantanea e i filtri salvati su questo sito."
+
+#: pulse
+msgid "Tell the AI what you care about, for example “only notify me about price drops”."
+msgstr "Di’ all’AI cosa ti interessa, ad esempio “avvisami solo per i cali di prezzo”."
+
+#: pulse
+msgid "Optional. Leave empty to use the global prompt."
+msgstr "Opzionale. Lascia vuoto per usare il prompt globale."
+
+#: pulse
+msgid "Settings for the Restock & Price processor. They apply when the processor is selected."
+msgstr "Impostazioni per il processore Rifornimento e prezzo. Si applicano quando il processore è selezionato."
+
+#: pulse
+msgid "This watch uses a different processor. Switch to Restock & Price in General to use these settings."
+msgstr "Questo sito usa un altro processore. Passa a Rifornimento e prezzo in Generale per usare queste impostazioni."
+
+#: pulse
+msgid "A group on this watch overrides its restock and price settings."
+msgstr "Un gruppo su questo sito sovrascrive le impostazioni di rifornimento e prezzo."
+
+#: pulse
+msgid "Read-only information from the last checks."
+msgstr "Informazioni di sola lettura dagli ultimi controlli."
+
+#: pulse
+msgid "Debug data for this watch."
+msgstr "Dati di debug per questo sito."
+
+#: pulse
+msgid "Pulse is the new interface. The classic UI stays available at its usual routes."
+msgstr "Pulse è la nuova interfaccia. L’interfaccia classica resta disponibile ai suoi indirizzi abituali."
+
+#: pulse
+msgid "Global defaults for every watch on this instance."
+msgstr "Impostazioni globali per tutti i siti di questa istanza."
+
+#: pulse
+msgid "Where Pulse and the classic interface send change alerts."
+msgstr "Dove Pulse e l’interfaccia classica inviano gli avvisi di modifica."
+
+#: pulse
+msgid "Global notification services"
+msgstr "Servizi di notifica globali"
+
+#: pulse
+msgid "Used by watches and groups that do not override notifications."
+msgstr "Usati dai siti e dai gruppi che non sovrascrivono le notifiche."
+
+#: pulse
+msgid "No notification services configured yet."
+msgstr "Nessun servizio di notifica configurato."
+
+#: pulse
+msgid "Edit notification settings"
+msgstr "Modifica impostazioni notifiche"
+
+#: pulse
+msgid "Notification log"
+msgstr "Registro notifiche"
+
+#: pulse
+msgid "Apprise builder"
+msgstr "Generatore Apprise"
+
+#: pulse
+msgid "Recent send attempts, with notification URL passwords masked."
+msgstr "Tentativi di invio recenti, con le password degli URL delle notifiche mascherate."
+
+#: pulse
+msgid "The log is empty"
+msgstr "Il registro è vuoto"
+
+#: pulse
+msgid "No notification has been sent yet."
+msgstr "Nessuna notifica è stata ancora inviata."
+
+#: pulse
+msgid "Paste one URL per line. Add group names after a space, separated by commas."
+msgstr "Incolla un URL per riga. Aggiungi i nomi dei gruppi dopo uno spazio, separati da virgole."
+
+#: pulse
+msgid "Skip URLs that are already watched"
+msgstr "Salta gli URL già monitorati"
+
+#: pulse
+msgid "Add the watches paused"
+msgstr "Aggiungi i siti in pausa"
+
+#: pulse
+msgid "These importers are still in the classic interface for this wave."
+msgstr "Questi importatori restano nell’interfaccia classica per questa fase."
+
+#: pulse
+msgid "{count} watch"
+msgid_plural "{count} watches"
+msgstr[0] "{count} sito"
+msgstr[1] "{count} siti"
+
+#: pulse
+msgid "Create the group, then share settings across its watches."
+msgstr "Crea il gruppo, poi condividi le impostazioni tra i suoi siti."
+
+#: pulse
+msgid "Recently changed"
+msgstr "Modificati di recente"
+
+#: pulse
+msgid "Recently checked"
+msgstr "Controllati di recente"
+
+#: pulse
+msgid "Newest first"
+msgstr "Più recenti"
+
+#: pulse
+msgid "Title A–Z"
+msgstr "Titolo A–Z"
+
+#: pulse
+msgid "Paused first"
+msgstr "In pausa prima"
+
+#: pulse
+msgid "Muted first"
+msgstr "Silenziati prima"
+
+#: pulse
+msgid "watches"
+msgstr "siti"
+
+#: pulse
+msgid "watch"
+msgstr "sito"
+
+#: pulse
+msgid "{count} watches · {unread} unread · {errors} with errors"
+msgstr "{count} siti · {unread} non letti · {errors} con errori"
+
+#: pulse
+msgid "{count} watches"
+msgstr "{count} siti"
+
+#: pulse
+msgid "AI enabled for this watch"
+msgstr "AI attiva per questo sito"
+
+#: pulse
+msgid "No groups yet"
+msgstr "Nessun gruppo"
+
+#: pulse
+msgid "Queue"
+msgstr "Coda"
+
+#: pulse
+msgid "AI"
+msgstr "AI"
