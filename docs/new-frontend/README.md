@@ -2,7 +2,7 @@
 
 This folder contains the planning and handoff material for the new changedetection.io frontend.
 
-**Current status:** Phase 0 (exploration) and Phase 1 (plan) are complete. The plan is approved with a narrowed Wave 1 scope. **No application code has been written yet.**
+**Current status:** Phase 0 (exploration) and Phase 1 (plan) are complete. Phase 2 is in progress: the `/api/v2` backend, SSE stream, Pulse shell and the main Wave 1 screens are implemented and smoke-tested. See [`PHASE-2-PROGRESS.md`](./PHASE-2-PROGRESS.md) for what works and the known gaps.
 
 **Branch:** `new-frontend`
 
@@ -12,6 +12,8 @@ This folder contains the planning and handoff material for the new changedetecti
 2. [`PHASE-0-EXPLORATION.md`](./PHASE-0-EXPLORATION.md) — how the old frontend, auth, APIs, realtime, production serving and translations work; complete old-UI inventory.
 3. [`PHASE-1-PLAN.md`](./PHASE-1-PLAN.md) — feature inventory, IA, wireframes, design system, architecture, SSE design, backend gaps, build order and risks.
 4. [`PARITY.md`](./PARITY.md) — Wave 1, legacy-link and later-wave checklist.
+5. [`PHASE-2-PROGRESS.md`](./PHASE-2-PROGRESS.md) — implemented endpoints/screens, verification and known gaps.
+6. [`../../frontend/README.md`](../../frontend/README.md) — develop, build, serve, SSE proxy notes and layout.
 
 ## Approved decisions in one screen
 
@@ -25,16 +27,11 @@ This folder contains the planning and handoff material for the new changedetecti
 - Old frontend stays untouched and fully available.
 - Do not delete the old frontend until parity is complete and the user agrees.
 
-## Next step after context compaction
+## Next steps
 
-Start Phase 2:
-
-1. Create `/api/v2` (auth/bootstrap/login/logout, JSON errors, session + CSRF).
-2. Add the SSE broker and `GET /api/v2/events`.
-3. Add the v2 endpoints needed for Wave 1 (dashboard watches, watch detail/history, watch update, tags/groups, settings, queue, import URL list).
-4. Scaffold `frontend/` (Vite + React + TypeScript + Tailwind).
-5. Build the Pulse shell/theme/API client/login/SSE client.
-6. Build the dashboard first, then watch detail, then watch edit.
+1. Review the first Pulse milestone with the user (dashboard, watch detail, watch edit, groups, settings, queue, SSE).
+2. Close the Wave 1 gaps listed in `PHASE-2-PROGRESS.md`: error summary, diff minimap, extract-to-CSV, 500+ performance, a11y audit, remaining Italian strings.
+3. Finish the Wave 1 parity checklist and only then discuss switching `/` to `/pulse`.
 
 ## Working rules
 
