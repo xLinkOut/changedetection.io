@@ -59,7 +59,7 @@ function InlineDiff({ parts }: { parts: DiffPart[] }) {
     <pre
       role="document"
       aria-label="Text differences"
-      className="max-h-[70dvh] overflow-auto whitespace-pre-wrap break-words p-3 font-mono text-[13px] leading-5"
+      className="whitespace-pre-wrap break-words p-3 font-mono text-[13px] leading-5"
       style={{ fontVariantLigatures: 'none' }}
     >
       {parts.map((part, index) => (
@@ -84,7 +84,7 @@ function SplitView({ rows }: { rows: SideBySideRow[] }) {
         <div className="border-r border-border px-3 py-1.5">Before</div>
         <div className="px-3 py-1.5">After</div>
       </div>
-      <div className="max-h-[70dvh] overflow-auto">
+      <div>
         {rows.map((row, index) => (
           <div key={index} className="grid grid-cols-2 border-b border-border/50 last:border-0">
             <div

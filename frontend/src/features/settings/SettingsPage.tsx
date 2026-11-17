@@ -23,7 +23,7 @@ import { useSettings } from '@/lib/queries'
 import type { Settings } from '@/lib/types'
 import { PageHeader } from '@/components/ui/misc'
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { ErrorState, Skeleton } from '@/components/ui/states'
 import { LegacyLink } from '@/components/legacy/LegacyLink'
 import { cn } from '@/lib/cn'
@@ -75,6 +75,15 @@ const homeSections: {
 ]
 
 const validSections = new Set(homeSections.map((item) => item.section))
+
+const SECTION_GRADIENTS = [
+  'linear-gradient(135deg,#5347CE,#887CFD)',
+  'linear-gradient(135deg,#4896FE,#16C8C7)',
+  'linear-gradient(135deg,#887CFD,#4896FE)',
+  'linear-gradient(135deg,#16C8C7,#5347CE)',
+  'linear-gradient(135deg,#6E5CF0,#3E82F0)',
+  'linear-gradient(135deg,#2BB8C4,#5347CE)',
+]
 
 export function SettingsPage() {
   const { section } = useParams<{ section?: string }>()
@@ -131,15 +140,18 @@ export function SettingsPage() {
       <div className="space-y-4">
         <PageHeader title={t('Settings')} description={t('Global defaults for every watch on this instance.')} />
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {homeSections.map((item) => {
+          {homeSections.map((item, index) => {
             const Icon = item.icon
             return (
               <Link
                 key={item.section}
                 to={`/settings/${item.section}`}
-                className="pulse-card flex items-start gap-3 p-4 transition-colors hover:border-border-strong hover:bg-surface-2/40"
+                className="pulse-card pulse-card-hover flex items-start gap-3 p-4"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-input bg-primary/10 text-primary">
+                <span
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-sm"
+                  style={{ background: SECTION_GRADIENTS[index % SECTION_GRADIENTS.length] }}
+                >
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <span className="min-w-0">
@@ -214,13 +226,6 @@ export function SettingsPage() {
       />
 
       <Card>
-        <CardHeader>
-          <div>
-            <CardTitle>{t(sectionMeta.title)}</CardTitle>
-            <CardDescription>{t(sectionMeta.description)}</CardDescription>
-          </div>
-          <sectionMeta.icon className="h-5 w-5 text-muted" aria-hidden="true" />
-        </CardHeader>
         <div className={cn('p-4 md:p-5', key === 'backups' && 'p-0')}>
           {key === 'general' ? (
             <GeneralSettings
@@ -245,7 +250,7 @@ export function SettingsPage() {
       </Card>
 
       {key !== 'info' && key !== 'backups' && key !== 'api' ? (
-        <div className="sticky bottom-20 mt-3 flex justify-end lg:bottom-4">
+        <div className="sticky bottom-[104px] z-20 mt-3 flex justify-end md:hidden">
           <Button variant="primary" onClick={onSave} loading={save.isPending}>
             <Save className="h-4 w-4" /> {t('Save')}
           </Button>

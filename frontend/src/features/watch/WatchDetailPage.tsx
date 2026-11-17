@@ -18,6 +18,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { apiBase, apiFetch } from '@/lib/api'
+import { useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { useToast } from '@/components/ui/toast'
 import { useDeleteWatch, useHistory, useWatch } from '@/lib/queries'
@@ -40,6 +41,7 @@ export type WatchTab = 'changes' | 'preview' | 'screenshot' | 'error' | 'price'
 
 export function WatchDetailPage({ tab }: { tab: WatchTab }) {
   const { uuid } = useParams<{ uuid: string }>()
+  const { bootstrap } = useAuth()
   const { t, locale } = useI18n()
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -179,6 +181,17 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
                     }
                   >
                     <Clipboard className="mr-2 inline h-4 w-4" /> {t('Clone watch')}
+                  </DropdownItem>
+                  <DropdownItem
+                    onSelect={() =>
+                      window.open(
+                        `${bootstrap.basePath || ''}/diff/${watch.uuid}`,
+                        '_blank',
+                        'noopener,noreferrer',
+                      )
+                    }
+                  >
+                    <ExternalLink className="mr-2 inline h-4 w-4" /> {t('Share as image')}
                   </DropdownItem>
                   <DropdownSeparator />
                   <DropdownItem onSelect={() => setHistoryOpen(true)} destructive>

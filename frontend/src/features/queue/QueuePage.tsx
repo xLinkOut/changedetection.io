@@ -91,9 +91,9 @@ export function QueuePage() {
       />
 
       <div className="grid grid-cols-3 gap-2">
-        <Metric label={t('Workers')} value={snapshot.worker_count} icon={ListChecks} />
-        <Metric label={t('Running now')} value={snapshot.running_count} icon={RefreshCw} />
-        <Metric label={t('Queued')} value={snapshot.queued_count} icon={Clock} />
+        <Metric label={t('Workers')} value={snapshot.worker_count} icon={ListChecks} gradient="linear-gradient(135deg,#5347CE,#887CFD)" />
+        <Metric label={t('Running now')} value={snapshot.running_count} icon={RefreshCw} gradient="linear-gradient(135deg,#4896FE,#16C8C7)" />
+        <Metric label={t('Queued')} value={snapshot.queued_count} icon={Clock} gradient="linear-gradient(135deg,#887CFD,#4896FE)" />
       </div>
 
       <Card>
@@ -173,13 +173,29 @@ export function QueuePage() {
   )
 }
 
-function Metric({ label, value, icon: Icon }: { label: string; value: number; icon: typeof Clock }) {
+function Metric({
+  label,
+  value,
+  icon: Icon,
+  gradient,
+}: {
+  label: string
+  value: number
+  icon: typeof Clock
+  gradient: string
+}) {
   return (
     <div className="rounded-card border border-border bg-surface p-3">
-      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted">
-        <Icon className="h-3.5 w-3.5" /> {label}
+      <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
+        <span
+          className="flex h-6 w-6 items-center justify-center rounded-lg text-white"
+          style={{ background: gradient }}
+        >
+          <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+        </span>
+        <span className="truncate">{label}</span>
       </div>
-      <p className="mt-1 text-2xl font-semibold">{value}</p>
+      <p className="display-number mt-1.5 text-3xl">{value}</p>
     </div>
   )
 }

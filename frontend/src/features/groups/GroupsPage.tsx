@@ -105,13 +105,20 @@ export function GroupsPage() {
       ) : (
         <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
           {groups.map((group) => (
-            <Card key={group.uuid} className="flex flex-col p-4">
+            <Card key={group.uuid} className="pulse-card-hover relative flex flex-col overflow-hidden p-4">
+              <span
+                className="absolute inset-x-0 top-0 h-[3px]"
+                style={{ background: `linear-gradient(90deg, ${group.colour}, transparent 90%)` }}
+                aria-hidden="true"
+              />
               <div className="flex items-start gap-3">
                 <span
-                  className="mt-1 h-3 w-3 shrink-0 rounded-full"
-                  style={{ backgroundColor: group.colour }}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-display text-sm font-semibold text-white shadow-sm"
+                  style={{ background: `linear-gradient(135deg, ${group.colour}, #887CFD)` }}
                   aria-hidden="true"
-                />
+                >
+                  {group.title.trim().slice(0, 1).toUpperCase()}
+                </span>
                 <div className="min-w-0 flex-1">
                   <Link to={`/groups/${group.uuid}`} className="truncate text-sm font-semibold hover:text-primary">
                     {group.title}

@@ -2,8 +2,8 @@ import { forwardRef, type InputHTMLAttributes, type LabelHTMLAttributes, type Re
 import { cn } from '@/lib/cn'
 
 export const inputClass =
-  'min-h-11 w-full rounded-input border border-border-strong bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted ' +
-  'focus-visible:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ' +
+  'min-h-11 w-full rounded-input border border-border-strong bg-surface px-3 py-2 text-sm text-fg shadow-sm placeholder:text-muted ' +
+  'transition-[border-color,box-shadow] focus-visible:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary/60 ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(

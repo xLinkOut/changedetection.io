@@ -19,6 +19,23 @@ export default defineConfig(({ command }) => ({
     manifest: 'manifest.json',
     sourcemap: false,
     target: 'es2020',
+    rollupOptions: {
+      output: {
+        // Keep vendor code in its own long-lived chunks so an app edit does not
+        // invalidate the framework, query or diff libraries in the browser cache.
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          query: ['@tanstack/react-query'],
+          radix: [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-tooltip',
+          ],
+          diff: ['diff'],
+        },
+      },
+    },
   },
   server: {
     port: 5173,

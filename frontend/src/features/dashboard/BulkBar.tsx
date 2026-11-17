@@ -32,7 +32,7 @@ export function BulkBar({
   fetchers: Option[]
   proxies: string[]
 }) {
-  const { t } = useI18n()
+  const { t, tn } = useI18n()
   const [tagOpen, setTagOpen] = useState(false)
   const [tagName, setTagName] = useState('')
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -46,7 +46,7 @@ export function BulkBar({
 
   return (
     <>
-      <div className="fixed inset-x-0 bottom-14 z-40 px-2 pb-1 lg:inset-x-auto lg:bottom-4 lg:left-1/2 lg:w-[900px] lg:-translate-x-1/2 lg:px-4">
+      <div className="fixed inset-x-0 bottom-[104px] z-40 px-2 pb-1 lg:inset-x-auto lg:bottom-4 lg:left-1/2 lg:w-[900px] lg:-translate-x-1/2 lg:px-4">
         <div className="rounded-dialog border border-border bg-surface p-2 shadow-xl">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" onClick={onClear} aria-label={t('Clear selection')}>
@@ -54,7 +54,7 @@ export function BulkBar({
             </Button>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">
-                {t('{count} selected').replace('{count}', String(count))}
+                {tn('{count} selected', '{count} selected', count)}
               </p>
               {!allMatchingSelected && total > count ? (
                 <button type="button" onClick={onSelectAllMatching} className="truncate text-xs text-primary hover:underline">

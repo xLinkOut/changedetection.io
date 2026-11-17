@@ -1,11 +1,40 @@
 {
+  "_diff-B0Qh_GUm.js": {
+    "file": "assets/diff-B0Qh_GUm.js",
+    "name": "diff"
+  },
+  "_query-ByzsJkHO.js": {
+    "file": "assets/query-ByzsJkHO.js",
+    "name": "query"
+  },
+  "_radix-JMv-VPb_.js": {
+    "file": "assets/radix-JMv-VPb_.js",
+    "name": "radix",
+    "imports": [
+      "_query-ByzsJkHO.js"
+    ]
+  },
+  "_react-DvL4R23H.js": {
+    "file": "assets/react-DvL4R23H.js",
+    "name": "react",
+    "imports": [
+      "_query-ByzsJkHO.js",
+      "_radix-JMv-VPb_.js"
+    ]
+  },
   "index.html": {
-    "file": "assets/index-Du7ZaohU.js",
+    "file": "assets/index-Baq0GXvg.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
+    "imports": [
+      "_query-ByzsJkHO.js",
+      "_radix-JMv-VPb_.js",
+      "_react-DvL4R23H.js",
+      "_diff-B0Qh_GUm.js"
+    ],
     "css": [
-      "assets/index-CqR2XN0q.css"
+      "assets/index-BH78Wayn.css"
     ]
   }
 }

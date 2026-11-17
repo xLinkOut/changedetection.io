@@ -7,15 +7,13 @@ type Size = 'sm' | 'md' | 'lg' | 'icon'
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-primary text-primary-contrast hover:bg-primary-hover border border-transparent',
+    'signal-gradient text-white border border-transparent shadow-glow hover:brightness-110 active:brightness-95 ' +
+    'disabled:bg-surface-2 disabled:text-muted disabled:shadow-none disabled:[background-image:none] disabled:opacity-100',
   secondary:
-    'bg-surface text-fg border border-border-strong hover:bg-surface-2',
-  ghost:
-    'bg-transparent text-fg border border-transparent hover:bg-surface-2',
-  danger:
-    'bg-danger text-white border border-transparent hover:opacity-90',
-  subtle:
-    'bg-surface-2 text-fg border border-transparent hover:bg-border',
+    'bg-surface text-fg border border-border-strong hover:border-primary/40 hover:bg-surface-2',
+  ghost: 'bg-transparent text-fg border border-transparent hover:bg-surface-2',
+  danger: 'bg-danger text-white border border-transparent hover:brightness-110',
+  subtle: 'bg-surface-2 text-fg border border-transparent hover:bg-surface-3',
 }
 
 const sizes: Record<Size, string> = {
@@ -36,7 +34,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        'inline-flex select-none items-center justify-center font-medium transition-colors',
+        'inline-flex select-none items-center justify-center font-medium transition-[background,box-shadow,filter,transform] duration-200',
+        'active:translate-y-px',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
         'disabled:pointer-events-none disabled:opacity-50',
         variants[variant],

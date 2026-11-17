@@ -976,7 +976,7 @@ export function NotificationsSection({ state, patch, settings, watch }: SectionP
           value={state.notification_urls}
           onChange={(event) => patch({ notification_urls: event.target.value })}
           rows={5}
-          placeholder="discord://…\ntgram://…"
+          placeholder={'discord://…\ntgram://…'}
           className="font-mono"
         />
       </Field>

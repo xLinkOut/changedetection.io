@@ -51,6 +51,10 @@ export function I18nProvider({
   const [ready, setReady] = useState(locale.startsWith('en'))
 
   useEffect(() => {
+    document.documentElement.lang = locale.replace('_', '-')
+  }, [locale])
+
+  useEffect(() => {
     let cancelled = false
     if (locale.startsWith('en')) {
       setCatalog(EMPTY)

@@ -5,11 +5,11 @@ type Tone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
 
 const tones: Record<Tone, string> = {
   neutral: 'bg-surface-2 text-muted border-border',
-  primary: 'bg-primary/10 text-primary border-primary/20',
-  success: 'bg-success-bg text-success border-success/20',
-  warning: 'bg-warning-bg text-warning border-warning/20',
-  danger: 'bg-danger-bg text-danger border-danger/20',
-  info: 'bg-info/10 text-info border-info/20',
+  primary: 'bg-violet/10 text-primary border-violet/25',
+  success: 'bg-teal/10 text-success border-teal/25',
+  warning: 'bg-warning-bg text-warning border-warning/25',
+  danger: 'bg-danger-bg text-danger border-danger/25',
+  info: 'bg-azure/10 text-info border-azure/25',
 }
 
 export function Badge({
@@ -34,10 +34,7 @@ export function Badge({
 
 export function TagPill({ title, colour }: { title: string; colour: string }) {
   return (
-    <span
-      className="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
-      style={{ backgroundColor: `${colour}22`, color: colour, border: `1px solid ${colour}55` }}
-    >
+    <span className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border bg-surface-2/80 px-1.5 py-0.5 text-[10px] font-medium text-fg/80">
       <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: colour }} aria-hidden="true" />
       <span className="truncate">{title}</span>
     </span>
@@ -57,11 +54,11 @@ export function StatusDot({
 }) {
   const dot: Record<Tone, string> = {
     neutral: 'bg-muted',
-    primary: 'bg-primary',
-    success: 'bg-success',
+    primary: 'bg-violet',
+    success: 'bg-teal',
     warning: 'bg-warning',
     danger: 'bg-danger',
-    info: 'bg-info',
+    info: 'bg-azure',
   }
   return (
     <span

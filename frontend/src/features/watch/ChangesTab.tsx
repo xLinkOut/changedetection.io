@@ -12,8 +12,8 @@ import { Checkbox } from '@/components/ui/input'
 import { SegmentedControl } from '@/components/ui/tabs'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/states'
 import { Badge } from '@/components/ui/badge'
-import { LegacyLink } from '@/components/legacy/LegacyLink'
 import { DiffViewer } from './DiffViewer'
+import { DiffMinimap } from './DiffMinimap'
 import { HistoryRail, SnapshotSelect } from './HistoryRail'
 import { SummaryCard } from './SummaryCard'
 
@@ -39,6 +39,11 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
   const [showAdded, setShowAdded] = useState(true)
   const [showRemoved, setShowRemoved] = useState(true)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const diffScrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    diffScrollRef.current?.scrollTo({ top: 0 })
+  }, [from, to, view, mode])
 
   useEffect(() => {
     if (previousLatest.current !== latest) {
@@ -89,7 +94,7 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
   )}&to_version=${encodeURIComponent(to)}`
 
   return (
-    <div className="flex min-h-[60dvh]">
+    <div className="flex min-h-[420px]">
       <HistoryRail versions={versions} selected={to} onSelect={(timestamp) => setTo(timestamp)} />
 
       <div className="min-w-0 flex-1">
@@ -123,16 +128,26 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
               ariaLabel={t('Diff mode')}
             />
 
-            <div className="ml-auto hidden lg:block">
-              <SegmentedControl
-                options={[
-                  { value: 'split', label: t('Side by side') },
-                  { value: 'unified', label: t('Inline') },
-                ]}
-                value={view}
-                onChange={(value) => setView(value as 'split' | 'unified')}
-                ariaLabel={t('Diff layout')}
-              />
+            <div className="ml-auto hidden items-center gap-0.5 rounded-full border border-border bg-surface-2 p-0.5 lg:flex">
+              {[
+                { value: 'split', label: t('Side by side') },
+                { value: 'unified', label: t('Inline') },
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={view === option.value}
+                  onClick={() => setView(option.value as 'split' | 'unified')}
+                  className={cn(
+                    'min-h-8 rounded-full px-2.5 text-[11px] font-medium transition',
+                    view === option.value
+                      ? 'bg-surface text-fg shadow-sm'
+                      : 'text-muted hover:text-fg',
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
 
             <Button
@@ -165,9 +180,6 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">{t('Download patch')}</span>
             </a>
-            <LegacyLink href={`/diff/${watch.uuid}`} compact>
-              {t('Share as image')}
-            </LegacyLink>
           </div>
 
           {filtersOpen ? (
@@ -240,14 +252,21 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
         ) : null}
 
         {!loading && !error && result ? (
-          <>
-            <div className="hidden lg:block">
-              {view === 'split' ? <DiffViewer parts={result.parts} mode={mode} view="split" /> : null}
+          <div className="flex min-w-0 items-stretch">
+            <div
+              ref={diffScrollRef}
+              className="min-w-0 flex-1 overflow-auto lg:max-h-[calc(100dvh-17rem)]"
+              data-diff-scroll
+            >
+              <div className="hidden lg:block">
+                {view === 'split' ? <DiffViewer parts={result.parts} mode={mode} view="split" /> : null}
+              </div>
+              <div className={cn(view === 'split' ? 'lg:hidden' : '')}>
+                <DiffViewer parts={result.parts} mode={mode} view="unified" />
+              </div>
             </div>
-            <div className={cn(view === 'split' ? 'lg:hidden' : '')}>
-              <DiffViewer parts={result.parts} mode={mode} view="unified" />
-            </div>
-          </>
+            <DiffMinimap parts={result.parts} scrollRef={diffScrollRef} />
+          </div>
         ) : null}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react'
-import { ChevronDown, Plus, Sparkles } from 'lucide-react'
+import { ChevronDown, Link2, Plus, Sparkles } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { useQuickAdd } from '@/lib/queries'
@@ -9,7 +9,15 @@ import { Checkbox, Input, Label, Select } from '@/components/ui/input'
 import { cn } from '@/lib/cn'
 import { LegacyLink } from '@/components/legacy/LegacyLink'
 
-export function QuickAdd({ large = false, autoFocus = false }: { large?: boolean; autoFocus?: boolean }) {
+export function QuickAdd({
+  large = false,
+  autoFocus = false,
+  hero = false,
+}: {
+  large?: boolean
+  autoFocus?: boolean
+  hero?: boolean
+}) {
   const { bootstrap } = useAuth()
   const { t } = useI18n()
   const { toast } = useToast()
@@ -54,38 +62,56 @@ export function QuickAdd({ large = false, autoFocus = false }: { large?: boolean
   }
 
   return (
-    <form onSubmit={submit} className={cn('pulse-card p-3 md:p-4', large && 'md:p-5')} aria-label={t('Add a new watch')}>
-      <div className={cn('flex flex-col gap-2', large ? 'md:flex-row' : 'sm:flex-row')}>
+    <form
+      onSubmit={submit}
+      className={cn(
+        hero
+          ? 'rounded-[18px] border border-white/50 bg-surface/85 p-1.5 shadow-lg backdrop-blur-md dark:border-white/10'
+          : 'pulse-card p-3 md:p-4',
+        large && !hero && 'md:p-5',
+      )}
+      aria-label={t('Add a new watch')}
+    >
+      <div className={cn('flex flex-col gap-1.5', hero ? 'sm:flex-row' : 'sm:flex-row')}>
         <div className="relative flex-1">
+          <Link2
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+            aria-hidden="true"
+          />
           <Input
             ref={inputRef}
             type="text"
             inputMode="url"
-            placeholder={t('https://example.com/page-to-watch')}
+            placeholder={t('Paste a URL to start watching…')}
             value={url}
             onChange={(event) => setUrl(event.target.value)}
             autoFocus={autoFocus}
             aria-label={t('Web page URL')}
-            className={cn(large && 'h-12 text-base')}
+            className={cn(
+              'h-12 pl-9 text-[15px]',
+              hero && 'border-transparent bg-transparent focus-visible:border-transparent focus-visible:bg-surface',
+              large && !hero && 'h-12 text-base',
+            )}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <Button
             type="submit"
             variant="primary"
-            size={large ? 'lg' : 'md'}
+            size={large || hero ? 'lg' : 'md'}
             loading={quickAdd.isPending}
             className="flex-1 sm:flex-none"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" aria-hidden="true" />
             {t('Watch')}
           </Button>
           <Button
             type="button"
             variant="ghost"
-            size={large ? 'lg' : 'md'}
+            size={large || hero ? 'lg' : 'md'}
             onClick={() => setAdvanced((value) => !value)}
             aria-expanded={advanced}
+            aria-label={t('Options')}
           >
             <ChevronDown className={cn('h-4 w-4 transition-transform', advanced && 'rotate-180')} />
             <span className={cn(!large && 'hidden md:inline')}>{t('Options')}</span>
@@ -94,7 +120,12 @@ export function QuickAdd({ large = false, autoFocus = false }: { large?: boolean
       </div>
 
       {advanced ? (
-        <div className="mt-3 grid gap-3 border-t border-border pt-3 sm:grid-cols-2">
+        <div
+          className={cn(
+            'mt-2 grid gap-3 border-t border-border pt-3 sm:grid-cols-2',
+            hero && 'px-1.5 pb-1.5',
+          )}
+        >
           <div className="space-y-1">
             <Label htmlFor="quick-add-processor">{t('Processor')}</Label>
             <Select
@@ -126,7 +157,7 @@ export function QuickAdd({ large = false, autoFocus = false }: { large?: boolean
             onChange={(event) => setPaused(event.target.checked)}
             className="sm:col-span-2"
           />
-          {large ? (
+          {large && !hero ? (
             <div className="sm:col-span-2">
               <LegacyLink href="/add-watch-ui/">
                 {t('Add with visual selector')}

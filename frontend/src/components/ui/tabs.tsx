@@ -25,7 +25,10 @@ export function Tabs({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={cn('no-scrollbar flex gap-1 overflow-x-auto border-b border-border px-1', className)}
+      className={cn(
+        'no-scrollbar flex flex-wrap gap-1 border-b border-border px-1 lg:flex-nowrap lg:overflow-x-auto',
+        className,
+      )}
     >
       {tabs.map((tab) => {
         const active = tab.value === value
@@ -37,8 +40,8 @@ export function Tabs({
             aria-selected={active}
             onClick={() => onChange(tab.value)}
             className={cn(
-              'relative inline-flex min-h-11 shrink-0 items-center gap-1.5 px-3 text-sm font-medium',
-              active ? 'text-primary' : 'text-muted hover:text-fg',
+              'relative inline-flex min-h-12 shrink-0 items-center gap-1.5 px-3.5 text-sm font-medium transition',
+              active ? 'text-fg' : 'text-muted hover:text-fg',
             )}
           >
             {tab.icon}
@@ -54,7 +57,7 @@ export function Tabs({
               </span>
             ) : null}
             {active ? (
-              <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-primary" aria-hidden="true" />
+              <span className="signal-gradient absolute inset-x-2.5 bottom-0 h-[2.5px] rounded-full" aria-hidden="true" />
             ) : null}
           </button>
         )
@@ -94,7 +97,7 @@ export function SegmentedControl({
             className={cn(
               'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors',
               active
-                ? 'border-primary bg-primary text-primary-contrast'
+                ? 'signal-gradient border-transparent text-white shadow-glow'
                 : 'border-border bg-surface text-muted hover:border-border-strong hover:text-fg',
             )}
           >

@@ -30,7 +30,9 @@ export function PageHeader({
     <div className={cn('flex flex-col gap-3 pb-4 md:flex-row md:items-start md:justify-between', className)}>
       <div className="min-w-0">
         {back ? <div className="mb-1">{back}</div> : null}
-        <h1 className="truncate text-xl font-semibold text-fg md:text-2xl">{title}</h1>
+        <h1 className="truncate font-display text-[26px] font-semibold tracking-[-0.03em] text-fg md:text-[32px]">
+          {title}
+        </h1>
         {description ? <div className="mt-1 text-sm text-muted">{description}</div> : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

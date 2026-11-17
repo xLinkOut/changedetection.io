@@ -305,7 +305,7 @@ export function GroupEditPage() {
   ]
 
   return (
-    <div className="mx-auto max-w-4xl pb-20">
+    <div className="mx-auto max-w-4xl pb-48 lg:pb-24">
       <Link to="/groups" className="mb-2 inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
         <ArrowLeft className="h-4 w-4" /> {t('All groups')}
       </Link>
@@ -318,7 +318,13 @@ export function GroupEditPage() {
             : tn('{count} watch', '{count} watches', group?.watch_count ?? 0)
         }
         actions={
-          <Button variant="primary" onClick={() => save.mutate(toPayload(state))} loading={save.isPending} disabled={!state.title.trim()}>
+          <Button
+            variant="primary"
+            onClick={() => save.mutate(toPayload(state))}
+            loading={save.isPending}
+            disabled={!state.title.trim()}
+            className="hidden md:inline-flex"
+          >
             <Save className="h-4 w-4" /> {t('Save')}
           </Button>
         }
@@ -584,7 +590,7 @@ export function GroupEditPage() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-14 z-30 border-t border-border bg-surface/95 px-3 py-2 backdrop-blur lg:bottom-0 lg:left-60">
+      <div className="fixed inset-x-0 bottom-[104px] z-30 border-t border-border bg-surface/95 px-3 py-2 backdrop-blur lg:bottom-0 lg:left-[264px]">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-2">
           <span className={cn('text-xs', dirty ? 'text-warning' : 'text-muted')}>{dirty ? t('Unsaved changes') : t('All changes saved')}</span>
           <Button variant="primary" onClick={() => save.mutate(toPayload(state))} loading={save.isPending} disabled={!state.title.trim()}>

@@ -41,6 +41,22 @@ This runs `tsc -b` and Vite. Output:
 Commit the built files with the source change, so production images do not need
 a Node build stage.
 
+## Design system
+
+- Visual reference: [`../docs/new-frontend/DESIGN.md`](../docs/new-frontend/DESIGN.md).
+- Tokens: `src/styles/globals.css` (indigo `#5347CE`, violet `#887CFD`,
+  azure `#4896FE`, teal `#16C8C7`; light/dark variants).
+- Font: SF Pro Display first, then SF Pro Text, `-apple-system`, Inter,
+  Segoe UI Variable, Ubuntu Sans and system fallbacks. SF Pro is not bundled.
+- Motion: `prefers-reduced-motion` disables every animation; page entrance is
+  opacity-only so it cannot break fixed action bars.
+- Theme and language are also in **Settings → Interface** for phones.
+
+## Keyboard
+
+- `⌘K` / `Ctrl+K`: command palette, searches watches on the server and jumps to
+  screens. Arrow keys move, Enter opens, Escape closes.
+
 ## How it talks to the backend
 
 - Only `/api/v2` is used by the SPA. It is authenticated with the Flask session
@@ -79,21 +95,28 @@ threaded/gevent server and a shared broker or sticky sessions.
 
 - English is the source; Italian is the first Pulse catalog.
 - `GET /api/v2/i18n/<locale>` returns the existing Babel `.po` catalog as JSON.
-- `npm run i18n:extract` writes `i18n-strings.json` with all `t()`/`tn()`
-  msgids so new strings can be merged into the catalogs.
-- Strings with no translation fall back to English.
+- `npm run i18n:extract` writes `i18n-strings.json` with `t()`/`tn()` msgids and
+  common translatable object fields (`title`, `label`, `description`) so data
+  arrays are not missed.
+- All 797 current Pulse strings have Italian translations. Strings with no
+  translation fall back to English.
+- Compile after editing the catalog:
+  `pybabel compile -d changedetectionio/translations -l it`.
 
 ## Layout
 
 ```
 src/
 ├── app/          router, providers, error boundary
-├── components/   design-system primitives and layout
+├── components/   design-system primitives, brand mark, layout, palette
 ├── features/     auth, dashboard, watch, watch-edit, groups,
 │                 settings, queue, import, notifications
 ├── lib/          API client, queries, SSE, i18n, theme, formatting, diff
 └── styles/       Tailwind entry and design tokens
 ```
+
+The build splits vendor code into `react`, `query`, `radix` and `diff` chunks;
+the app entry stays around 311 kB (76 kB gzip).
 
 ## Useful checks
 

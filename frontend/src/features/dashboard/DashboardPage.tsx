@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { CheckCheck, Filter, Plus, RefreshCw, SearchX } from 'lucide-react'
+import { Filter, Plus, SearchX } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { useToast } from '@/components/ui/toast'
@@ -9,10 +9,10 @@ import { apiFetch, buildQuery } from '@/lib/api'
 import { useBulkAction, useDeleteWatch, useGroups, useSettings, useWatchAction, useWatches, type WatchFilters } from '@/lib/queries'
 import type { Watch, WatchListResponse } from '@/lib/types'
 import { cn } from '@/lib/cn'
-import { PageHeader } from '@/components/ui/misc'
 import { Button } from '@/components/ui/button'
 import { ListSkeleton, EmptyState, ErrorState } from '@/components/ui/states'
 import { ConfirmDialog } from '@/components/ui/confirm'
+import { DashboardHero } from './DashboardHero'
 import { QuickAdd } from './QuickAdd'
 import { FilterBar } from './FilterBar'
 import { WatchCard } from './WatchCard'
@@ -34,7 +34,7 @@ function patchWatchLocally(client: ReturnType<typeof useQueryClient>, uuid: stri
 
 export function DashboardPage() {
   const { bootstrap } = useAuth()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const { toast } = useToast()
   const navigate = useNavigate()
   const client = useQueryClient()
@@ -237,33 +237,24 @@ export function DashboardPage() {
 
   const hasFilters = Boolean(filters.q || filters.tag || filters.processor || (filters.status && filters.status !== 'all'))
 
+  const heroStats = stats || {
+    watch_count: 0,
+    unread_changes_count: 0,
+    error_count: 0,
+    queue_size: 0,
+    checking_now: 0,
+  }
+
   return (
     <div className="space-y-4">
-      <PageHeader
-        title={t('Watches')}
-        description={
-          stats
-            ? t('{count} watches · {unread} unread · {errors} with errors')
-                .replace('{count}', String(stats.watch_count))
-                .replace('{unread}', String(stats.unread_changes_count))
-                .replace('{errors}', String(stats.error_count))
-            : undefined
-        }
-        actions={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => runFilteredAction('mark-viewed')}>
-              <CheckCheck className="h-4 w-4" />
-              {t('Mark all viewed')}
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => runFilteredAction('recheck')}>
-              <RefreshCw className="h-4 w-4" />
-              {t('Recheck all')}
-            </Button>
-          </>
-        }
+      <DashboardHero
+        stats={heroStats}
+        locale={locale}
+        quickAdd={<QuickAdd hero />}
+        onMarkAllViewed={() => runFilteredAction('mark-viewed')}
+        onRecheckAll={() => runFilteredAction('recheck')}
+        busy={bulk.isPending}
       />
-
-      <QuickAdd />
 
       <div className="space-y-3">
         <FilterBar
@@ -310,11 +301,11 @@ export function DashboardPage() {
           </div>
         ) : (
           <>
-            <div className="hidden overflow-hidden rounded-card border border-border bg-surface shadow-card dark:shadow-card-dark lg:block">
+            <div className="hidden overflow-hidden rounded-[20px] border border-border bg-surface shadow-card dark:shadow-card-dark lg:block">
               <table className="w-full table-fixed border-collapse text-left">
-                <thead className="border-b border-border bg-surface-2 text-[11px] uppercase tracking-wide text-muted">
+                <thead className="border-b border-border bg-surface-2/70 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
                   <tr>
-                    <th className="w-10 px-2 py-2">
+                    <th className="w-10 px-2 py-3">
                       <input
                         type="checkbox"
                         aria-label={t('Select all on this page')}
@@ -337,12 +328,12 @@ export function DashboardPage() {
                         className="h-[18px] w-[18px] rounded border-border-strong text-primary"
                       />
                     </th>
-                    <th className="w-20 px-1 py-2 text-center">{t('Status')}</th>
-                    <th className="px-2 py-2">{t('Web page')}</th>
-                    <th className="w-32 px-2 py-2">{t('Price')}</th>
-                    <th className="w-28 px-2 py-2">{t('Checked')}</th>
-                    <th className="w-28 px-2 py-2">{t('Changed')}</th>
-                    <th className="w-44 px-2 py-2 text-right">{t('Actions')}</th>
+                    <th className="w-[104px] px-2 py-3">{t('Status')}</th>
+                    <th className="px-2 py-3">{t('Web page')}</th>
+                    <th className="w-32 px-2 py-3">{t('Price')}</th>
+                    <th className="w-24 px-2 py-3">{t('Checked')}</th>
+                    <th className="w-24 px-2 py-3">{t('Changed')}</th>
+                    <th className="w-[220px] px-2 py-3 text-right">{t('Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -361,7 +352,7 @@ export function DashboardPage() {
             </div>
 
             <div className="space-y-2 lg:hidden" role="list">
-              {items.slice(0, visible).map((watch) => (
+              {items.slice(0, visible).map((watch, index) => (
                 <WatchCard
                   key={watch.uuid}
                   watch={watch}
@@ -369,6 +360,7 @@ export function DashboardPage() {
                   onSelect={toggleSelect}
                   handlers={handlers}
                   onNavigate={navigateWatch}
+                  index={index}
                 />
               ))}
             </div>

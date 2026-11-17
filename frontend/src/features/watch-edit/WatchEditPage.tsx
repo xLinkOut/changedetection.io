@@ -180,7 +180,7 @@ export function WatchEditPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl pb-24">
+    <div className="mx-auto max-w-5xl pb-48 lg:pb-24">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <Link to={`/watches/${watch.uuid}/changes`} className="inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
           <ArrowLeft className="h-4 w-4" /> {t('Back to watch')}
@@ -192,7 +192,13 @@ export function WatchEditPage() {
         title={t('Edit watch')}
         description={watch.title || watch.url}
         actions={
-          <Button variant="primary" onClick={onSave} loading={save.isPending} disabled={!dirty}>
+          <Button
+            variant="primary"
+            onClick={onSave}
+            loading={save.isPending}
+            disabled={!dirty}
+            className="hidden md:inline-flex"
+          >
             <Save className="h-4 w-4" /> {t('Save')}
           </Button>
         }
@@ -240,7 +246,7 @@ export function WatchEditPage() {
 
       <div
         className={cn(
-          'fixed inset-x-0 bottom-14 z-30 border-t border-border bg-surface/95 px-3 py-2 backdrop-blur lg:bottom-0 lg:left-60',
+          'fixed inset-x-0 bottom-[104px] z-30 border-t border-border bg-surface/95 px-3 py-2 backdrop-blur lg:bottom-0 lg:left-[264px]',
         )}
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">

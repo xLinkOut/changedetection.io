@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
   <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="{{ script_root }}/static/pulse/favicon.svg">
   <title>Pulse · changedetection.io</title>
   <base href="{{ script_root }}/pulse/">
   <script>
@@ -30,11 +31,11 @@
     :root { color-scheme: light dark; }
     html, body { margin: 0; min-height: 100%; }
     body {
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #f7f8fa;
-      color: #101828;
+      font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI Variable Display", "Segoe UI", "Ubuntu Sans", Ubuntu, Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f6f5fc;
+      color: #17142b;
     }
-    html[data-theme="dark"] body { background: #0b0f19; color: #f2f4f7; }
+    html[data-theme="dark"] body { background: #08070f; color: #f4f2ff; }
     #pulse-boot {
       min-height: 100dvh;
       display: grid;
@@ -51,7 +52,7 @@
       height: 44px;
       margin: 0 auto 16px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      background: linear-gradient(135deg, #5347CE 0%, #887CFD 45%, #4896FE 75%, #16C8C7);
       animation: pulse-breathe 1.6s ease-in-out infinite;
     }
     .pulse-boot-card h1 { font-size: 20px; margin: 0 0 8px; }

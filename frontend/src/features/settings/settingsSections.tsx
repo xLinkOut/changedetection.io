@@ -9,8 +9,12 @@ import {
   Eye,
   EyeOff,
   KeyRound,
+  Languages,
+  Monitor,
+  Moon,
   Plus,
   RefreshCw,
+  Sun,
   Trash2,
   Upload,
 } from 'lucide-react'
@@ -19,6 +23,7 @@ import { useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { useToast } from '@/components/ui/toast'
 import { useBackups, type Backup } from '@/lib/queries'
+import { useTheme } from '@/lib/theme'
 import type { Settings } from '@/lib/types'
 import { formatBytes, formatDateTime, formatDuration } from '@/lib/format'
 import { Button } from '@/components/ui/button'
@@ -29,6 +34,7 @@ import { LegacyLink } from '@/components/legacy/LegacyLink'
 import { ScheduleEditor } from '@/features/watch-edit/sections'
 import { normaliseSchedule, scheduleToBackend, type ScheduleState } from '@/features/watch-edit/formState'
 import { EmptyState, Skeleton } from '@/components/ui/states'
+import { cn } from '@/lib/cn'
 
 export type SettingsSection =
   | 'general'
@@ -168,7 +174,9 @@ export function GeneralSettings({
         <div className="grid grid-cols-5 gap-1.5">
           {(['weeks', 'days', 'hours', 'minutes', 'seconds'] as const).map((part) => (
             <label key={part} className="block">
-              <span className="mb-1 block text-[11px] capitalize text-muted">{t(part)}</span>
+              <span className="mb-1 block text-[11px] capitalize text-muted">
+                {t(part.charAt(0).toUpperCase() + part.slice(1))}
+              </span>
               <Input
                 type="number"
                 min={0}
@@ -412,6 +420,88 @@ export function FiltersSettings({
   )
 }
 
+function AppearanceSettings() {
+  const { t, locale, languages, setLocale } = useI18n()
+  const { preference, setPreference } = useTheme()
+  const { refresh } = useAuth()
+  const { toast } = useToast()
+  const [busy, setBusy] = useState(false)
+
+  const themes = [
+    { value: 'light', label: t('Light'), icon: Sun },
+    { value: 'dark', label: t('Dark'), icon: Moon },
+    { value: 'system', label: t('System'), icon: Monitor },
+  ] as const
+
+  return (
+    <div className="space-y-4 rounded-input border border-border bg-surface-2/40 p-3.5">
+      <div>
+        <h3 className="flex items-center gap-1.5 text-sm font-semibold">
+          <Sun className="h-4 w-4" aria-hidden="true" /> {t('Appearance')}
+        </h3>
+        <p className="mt-0.5 text-xs text-muted">
+          {t('Saved in this browser. It does not change the classic interface.')}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-1.5">
+        {themes.map((theme) => {
+          const Icon = theme.icon
+          const active = preference === theme.value
+          return (
+            <button
+              key={theme.value}
+              type="button"
+              onClick={() => setPreference(theme.value)}
+              aria-pressed={active}
+              className={cn(
+                'flex min-h-11 items-center justify-center gap-1.5 rounded-input border text-sm font-medium transition',
+                active
+                  ? 'border-primary/40 bg-primary/10 text-primary'
+                  : 'border-border bg-surface text-muted hover:text-fg',
+              )}
+            >
+              <Icon className="h-4 w-4" aria-hidden="true" /> {theme.label}
+            </button>
+          )
+        })}
+      </div>
+
+      <Field label={t('Language')} htmlFor="settings-language">
+        <div className="relative">
+          <Languages
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+            aria-hidden="true"
+          />
+          <Select
+            id="settings-language"
+            value={locale}
+            disabled={busy}
+            onChange={async (event) => {
+              setBusy(true)
+              try {
+                await setLocale(event.target.value)
+                await refresh()
+              } catch {
+                toast(t('Could not change language'), { tone: 'error' })
+              } finally {
+                setBusy(false)
+              }
+            }}
+            className="pl-9"
+          >
+            {languages.map((language) => (
+              <option key={language.code} value={language.code}>
+                {language.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </Field>
+    </div>
+  )
+}
+
 export function UiSettings({
   value,
   onChange,
@@ -422,6 +512,7 @@ export function UiSettings({
   const { t } = useI18n()
   return (
     <div className="space-y-4">
+      <AppearanceSettings />
       <div className="grid gap-1">
         <Switch label={t('Realtime UI updates')} description={t('Pulse uses one SSE stream. Turning this off disables live updates in Pulse and Socket.IO in the classic UI.')} checked={value.realtime_updates} onCheckedChange={(checked) => onChange({ ...value, realtime_updates: checked })} />
         <Switch label={t('Favicons')} checked={value.favicons_enabled} onCheckedChange={(checked) => onChange({ ...value, favicons_enabled: checked })} />
@@ -440,7 +531,7 @@ export function UiSettings({
         <Field label={t('Classic sidebar mode')} htmlFor="settings-sidebar">
           <Select id="settings-sidebar" value={value.sidebar_mode} onChange={(event) => onChange({ ...value, sidebar_mode: event.target.value })}>
             {value.sidebar_modes.map((mode) => (
-              <option key={mode.value} value={mode.value}>{mode.label}</option>
+              <option key={mode.value} value={mode.value}>{t(mode.label)}</option>
             ))}
           </Select>
         </Field>
