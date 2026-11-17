@@ -82,7 +82,7 @@ msgstr "Cancella selezione"
 #: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
 msgid "What matters — when to notify me"
-msgstr ""
+msgstr "Cosa conta — quando avvisarmi"
 
 #: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
 #: changedetectionio/blueprint/watchlist/templates/watch-overview.html
@@ -90,6 +90,7 @@ msgid ""
 "e.g. Notify me when products go in/out of stock, lead times change by more than a week, or new product variants "
 "appear. Skip review additions."
 msgstr ""
+"Es. avvisami quando un prodotto torna disponibile o si esaurisce, quando i tempi di consegna cambiano di oltre una settimana o quando compaiono nuove varianti. Ignora le aggiunte alle recensioni."
 
 #: changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html
 #: changedetectionio/blueprint/tags/templates/groups-overview.html
@@ -4598,7 +4599,7 @@ msgstr "L'URL deve iniziare con http:// o https://"
 
 #: changedetectionio/processors/extract.py
 msgid "No matches found while scanning all of the watch history for that RegEx."
-msgstr ""
+msgstr "Nessuna corrispondenza trovata in tutta la cronologia del monitoraggio."
 
 #: changedetectionio/processors/image_ssim_diff/difference.py
 msgid "Not enough history to compare. Need at least 2 snapshots."
@@ -8730,3 +8731,139 @@ msgstr "Proxy e browser"
 #: pulse
 msgid "RSS"
 msgstr "RSS"
+
+#: pulse
+msgid "Anyone with this link can import a copy of the watch settings."
+msgstr "Chiunque abbia questo link può importare una copia delle impostazioni del monitoraggio."
+
+#: pulse
+msgid "Capture groups become their own columns."
+msgstr "I gruppi di cattura diventano colonne separate."
+
+#: pulse
+msgid "Could not extract the history"
+msgstr "Impossibile estrarre la cronologia"
+
+#: pulse
+msgid "Could not share this watch"
+msgstr "Impossibile condividere il monitoraggio"
+
+#: pulse
+msgid "Create share link"
+msgstr "Crea link di condivisione"
+
+#: pulse
+msgid "Download CSV"
+msgstr "Scarica CSV"
+
+#: pulse
+msgid "Enter a regular expression"
+msgstr "Inserisci un’espressione regolare"
+
+#: pulse
+msgid "Extract"
+msgstr "Estrai"
+
+#: pulse
+msgid "Extract data as CSV"
+msgstr "Estrai i dati in CSV"
+
+#: pulse
+msgid "Extracted matches preview"
+msgstr "Anteprima delle corrispondenze"
+
+#: pulse
+msgid "Import this link in another changedetection.io instance to copy the watch settings."
+msgstr "Importa questo link in un’altra istanza di changedetection.io per copiare le impostazioni del monitoraggio."
+
+#: pulse
+msgid "Next page"
+msgstr "Pagina successiva"
+
+#: pulse
+msgid "No snapshots to extract yet"
+msgstr "Nessuna istantanea da estrarre"
+
+#: pulse
+msgid "Pagination"
+msgstr "Paginazione"
+
+#: pulse
+msgid "Preview shows the first {count} rows. The download contains every match."
+msgstr "L’anteprima mostra le prime {count} righe. Il download contiene tutte le corrispondenze."
+
+#: pulse
+msgid "Regular expression"
+msgstr "Espressione regolare"
+
+#: pulse
+msgid "Run a check first. Extraction reads every saved snapshot of this watch."
+msgstr "Esegui prima un controllo. L’estrazione legge tutte le istantanee salvate del monitoraggio."
+
+#: pulse
+msgid "Run a regular expression over every snapshot and download the matches as a spreadsheet, one row per snapshot."
+msgstr "Esegui un’espressione regolare su tutte le istantanee e scarica le corrispondenze come foglio di calcolo, una riga per istantanea."
+
+#: pulse
+msgid "Scanning every snapshot…"
+msgstr "Scansione di tutte le istantanee…"
+
+#: pulse
+msgid "Share link"
+msgstr "Link di condivisione"
+
+#: pulse
+msgid "Share link ready"
+msgstr "Link di condivisione pronto"
+
+#: pulse
+msgid "Share this watch"
+msgstr "Condividi il monitoraggio"
+
+#: pulse
+msgid "Showing {from}–{to} of {total}"
+msgstr "Da {from} a {to} di {total}"
+
+#: pulse
+msgid "The watch URL, filters and settings are uploaded to the changedetection.io share service. History and notifications are never shared."
+msgstr "URL, filtri e impostazioni del monitoraggio vengono caricati sul servizio di condivisione di changedetection.io. Cronologia e notifiche non vengono mai condivise."
+
+#: pulse
+msgid "{count} matches"
+msgstr "{count} corrispondenze"
+
+#: pulse
+msgid "{count} snapshots scanned"
+msgstr "{count} istantanee analizzate"
+
+#: pulse
+msgid "Previous page"
+msgstr "Pagina precedente"
+
+#: pulse
+msgid "Add a group"
+msgstr "Aggiungi un gruppo"
+
+#: pulse
+msgid "Pulse hit an unexpected error while rendering this screen. Your data is safe."
+msgstr "Pulse ha incontrato un errore imprevisto durante la visualizzazione. I tuoi dati sono al sicuro."
+
+#: pulse
+msgid "Reload"
+msgstr "Ricarica"
+
+#: pulse
+msgid "Dismiss notification"
+msgstr "Chiudi la notifica"
+
+#: pulse
+msgid "Open the watched page"
+msgstr "Apri la pagina monitorata"
+
+#: pulse
+msgid "Side-by-side text differences"
+msgstr "Differenze affiancate"
+
+#: pulse
+msgid "Text differences"
+msgstr "Differenze di testo"
