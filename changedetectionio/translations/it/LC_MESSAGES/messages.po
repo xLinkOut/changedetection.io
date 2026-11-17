@@ -8867,3 +8867,15 @@ msgstr "Differenze affiancate"
 #: pulse
 msgid "Text differences"
 msgstr "Differenze di testo"
+
+#: pulse
+msgid "Dashboard banner"
+msgstr "Banner della dashboard"
+
+#: pulse
+msgid "Hide banner"
+msgstr "Nascondi banner"
+
+#: pulse
+msgid "Show banner"
+msgstr "Mostra banner"

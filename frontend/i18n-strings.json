@@ -1,6 +1,6 @@
 {
   "source": "frontend",
-  "generatedAt": "2026-11-17T10:01:39.363Z",
+  "generatedAt": "2026-11-17T10:14:45.259Z",
   "strings": [
     "0 disables pagination.",
     "0 means unlimited.",
@@ -204,6 +204,7 @@
     "Current global state",
     "Danger zone",
     "Dark",
+    "Dashboard banner",
     "Days",
     "Deals",
     "Debug AI requests",
@@ -311,6 +312,7 @@
     "Groups can share filters, notifications and AI settings.",
     "HTTP, HTTPS or SOCKS5. Name and URL are both required for a row to be saved.",
     "Healthy",
+    "Hide banner",
     "Hide muted watches from the feed",
     "Hide password",
     "Highest",
@@ -641,6 +643,7 @@
     "Share this watch",
     "Short (1m ago)",
     "Show added",
+    "Show banner",
     "Show password",
     "Show removed",
     "Showing {from}–{to} of {total}",
