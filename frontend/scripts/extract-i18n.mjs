@@ -23,6 +23,9 @@ function walk(dir) {
 const strings = new Set()
 const plurals = new Map()
 const call = /\btn?\(\s*(['"])((?:\\.|(?!\1).)*)\1(?:\s*,\s*(['"])((?:\\.|(?!\3).)*)\3)?/g
+// Labels and descriptions stored in data arrays are rendered through t(variable),
+// so the literal is not inside a t() call. Capture the common field names too.
+const field = /\b(title|label|description|hint):\s*(['"])((?:\\.|(?!\2).)*)\2/g
 
 for (const file of walk(src)) {
   if (!file.endsWith('.tsx') && !file.endsWith('.ts')) continue
@@ -36,6 +39,13 @@ for (const file of walk(src)) {
     } else {
       strings.add(singular)
     }
+  }
+  while ((match = field.exec(source))) {
+    const value = match[3]
+    // Ignore empty strings, URLs, CSS/code fragments and icon names.
+    if (!value || value.length < 2) continue
+    if (/^(https?:|\/|\.|#|linear-gradient|rgb|var\()/.test(value)) continue
+    strings.add(value)
   }
 }
 
