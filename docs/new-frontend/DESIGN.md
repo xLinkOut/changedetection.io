@@ -95,6 +95,10 @@ active marker.
   never shared.
 - **Pagination** uses the configured pager size on the server, so the DOM stays
   small at any watch count; pager size 0 keeps the "show everything" option.
+- **Collapsible banner**: the dashboard hero/quick-add closes with an X and
+  becomes a slim live strip (watch/unread/error counts, checking/queue). The
+  choice is saved in `localStorage`, and the expanded/collapsed controls move
+  keyboard focus to the button that undoes the action.
 - Active diff layout is a quiet two-option switch; diff mode (lines/words/chars)
   carries the gradient so the toolbar has one primary choice.
 - Watch detail tabs wrap on phones instead of hiding tabs off-screen.
@@ -117,7 +121,7 @@ English is the source. Italian is a first-class catalog for Pulse. Rules:
   **Disponibilità**), "In linea" for inline (use **Unificato**).
 - UI copy is sentence case; only eyebrows/table headers are uppercase.
 
-All 837 strings currently used by Pulse have an Italian translation. New strings
+All 840 strings currently used by Pulse have an Italian translation. New strings
 must be added to `changedetectionio/translations/it/LC_MESSAGES/messages.po`
 and `.mo` recompiled with `pybabel compile -d changedetectionio/translations -l it`.
 

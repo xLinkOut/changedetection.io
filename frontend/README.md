@@ -56,6 +56,8 @@ a Node build stage.
 
 - `⌘K` / `Ctrl+K`: command palette, searches watches on the server and jumps to
   screens. Arrow keys move, Enter opens, Escape closes, Tab stays inside.
+- The dashboard banner has a 44px close button and remembers its collapsed
+  state in this browser; the collapsed strip keeps the live counts visible.
 - Watch tabs and segmented controls support Left/Right/Home/End with roving
   tabindex; dialogs return focus to the trigger.
 - Every screen is audited for accessible names, labels, heading order, focus
@@ -102,7 +104,7 @@ threaded/gevent server and a shared broker or sticky sessions.
 - `npm run i18n:extract` writes `i18n-strings.json` with `t()`/`tn()` msgids and
   common translatable object fields (`title`, `label`, `description`) so data
   arrays are not missed.
-- All 837 current Pulse strings have Italian translations. Strings with no
+- All 840 current Pulse strings have Italian translations. Strings with no
   translation fall back to English.
 - Compile after editing the catalog:
   `pybabel compile -d changedetectionio/translations -l it`.

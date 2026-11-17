@@ -61,6 +61,9 @@ Old UI: **untouched and fully available**.
   validation, empty and error states.
 - Share watch dialog (when enabled in Settings → Interface): uploads the
   trimmed configuration and shows a copyable import link.
+- Collapsible dashboard banner: the hero and quick-add collapse to a slim live
+  summary strip; the preference is remembered per browser and focus moves to
+  the expand/collapse control.
 - Watch edit: General, Request, Filters & Triggers, Conditions, Notifications,
   AI, Restock & Price, Stats. Live filter preview, condition verification,
   notification test, field errors, unsaved-changes guard, danger zone.
@@ -82,7 +85,7 @@ Old UI: **untouched and fully available**.
 - Diff change map/minimap: click a band to jump through the diff.
 - Appearance and language controls in Settings → Interface, plus the top bar.
 - Italian catalog refined for natural tone and completed for every Pulse string
-  (837/837); product terms are consistent and technical names stay English.
+  (840/840); product terms are consistent and technical names stay English.
 - Notification success/failure is emitted by the worker and toasted live.
 - Vendor chunks are split (`react`, `query`, `radix`, `diff`); the app entry is
   ~311 kB (76 kB gzip) and an edit no longer invalidates the framework chunk.
