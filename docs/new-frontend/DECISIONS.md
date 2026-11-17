@@ -190,7 +190,41 @@ Then start Phase 2:
 
 ## 10. Open items
 
-- Exact Pulse logo/branding: not decided; use the existing changedetection.io wordmark/logo initially.
 - Whether to remove the legacy fallback after approval: later decision.
 - Advanced screens port order: after Wave 1, starting with Browser Steps and Visual Selector.
 - API v2 versioning policy: additive changes in v2; breaking changes would create v3. Do not remove v1.
+- Keyboard/a11y audit: focus states and the command palette exist; a full screen-by-screen audit is still pending.
+
+## 11. Amendment — 2026-11-17: visual direction and language
+
+The user asked Pulse to stop looking like a generic dashboard. These decisions
+supersede the neutral visual defaults in the Phase 1 plan.
+
+- **Palette**: `#5347CE` indigo, `#887CFD` violet, `#4896FE` azure, `#16C8C7`
+  teal. Used as one gradient for primary actions, the mark, active states and
+  signal traces; tinted neutrals around it.
+- **Font**: **SF Pro Display** first in the stack, with SF Pro Text,
+  `-apple-system`, Inter, Segoe UI Variable, Ubuntu Sans and system fallbacks.
+  SF Pro is not redistributed; Apple devices use the installed face.
+- **Identity**: signal/pulse language throughout — waveform mark, real live
+  equalizer, state-coloured signal spine on watch rows, aurora surfaces, a
+  clickable diff change map. No fake data drives any animation.
+- **Motion**: opacity page entrance, hover lift, unread sheen, checking scan;
+  all disabled under `prefers-reduced-motion`. Page entrance must not use a
+  transform, because it would break fixed action bars.
+- **Command palette**: ⌘K / Ctrl+K opens a server-backed watch search and
+  navigation palette.
+- **Appearance controls**: theme and language also live in
+  Settings → Interface, so they are reachable on phones without crowding the
+  header.
+- **Italian**: non-literal, natural tone. `Live` and `Offline` stay English;
+  a watch is a **monitoraggio**; healthy is **Attivo**; restock is
+  **Disponibilità**; technical names stay untranslated. All Pulse strings have
+  Italian translations.
+- **Diff**: add a change map/minimap (was a known Wave 1 gap).
+- **Notifications**: emit `notification_sent` from the worker so Pulse can toast
+  success/failure instead of assuming delivery.
+- **Build**: vendor chunks are split so app edits do not invalidate framework
+  code in browser caches. Production remains static; Node is development-only.
+
+Full visual reference: [`DESIGN.md`](./DESIGN.md).

@@ -64,6 +64,21 @@ Old UI: **untouched and fully available**.
 - Legacy links for Browser Steps, Visual Selector, XLSX/Distill import, MCP,
   plugins, Apprise builder, advanced image diff, share-as-image and PWA.
 
+### Visual refresh (2026-11-17)
+
+- New identity: indigo/violet/azure/teal palette, waveform mark, aurora surfaces,
+  signal spines on watch rows, live equalizers, floating mobile dock and a
+  dark control-room sidebar. Full reference in `DESIGN.md`.
+- SF Pro Display is first in the font stack, with system fallbacks.
+- Command palette at ⌘K / Ctrl+K with server-side watch search and navigation.
+- Diff change map/minimap: click a band to jump through the diff.
+- Appearance and language controls in Settings → Interface, plus the top bar.
+- Italian catalog refined for natural tone and completed for every Pulse string
+  (797/797); product terms are consistent and technical names stay English.
+- Notification success/failure is emitted by the worker and toasted live.
+- Vendor chunks are split (`react`, `query`, `radix`, `diff`); the app entry is
+  ~311 kB (76 kB gzip) and an edit no longer invalidates the framework chunk.
+
 ## Verified
 
 - `pytest changedetectionio/tests/test_api_v2.py` — 5 passed.
@@ -71,37 +86,39 @@ Old UI: **untouched and fully available**.
   `test_basic_socketio` — 24 passed.
 - `npx tsc --noEmit` and `npm run build` pass.
 - Browser smoke tests with headless Chrome at 360, 768 and 1280px, light and
-  dark: dashboard, login, watch detail, watch edit, groups, settings, queue,
-  import, filter preview, condition verify, bulk bar.
+  dark: dashboard, login (desktop + mobile), watch detail, watch edit, groups,
+  settings, queue, import, filter preview, condition verify, bulk bar,
+  command palette, appearance/language controls, Italian UI.
+- Command palette: Ctrl+K, server search for "lamp", Enter opened the matching
+  watch.
 - Live SSE: a title changed through the API updated the open dashboard without
-  a reload.
+  a reload; the browser console had no errors.
 - Local worker test: created a watch against a local HTTP server, ran three
   checks, read history/snapshots/preview/patch.
 - Backup create/list/download/remove/restore smoke test.
+- 500-watch benchmark on the refreshed design: dashboard API ~7–13 ms; 60
+  cards rendered in ~0.55 s at 390×844.
 
 ## Known gaps for Wave 1
 
-- The Italian catalog covers the main screens; some newer strings still fall
-  back to English.
 - Dashboard uses progressive loading (60 at a time) rather than true row
   virtualization.
-- Diff minimap is not built.
 - Regex extract-to-CSV is not rebuilt; the legacy diff page is available.
 - Share-watch-config API is not rebuilt.
 - Advanced screens remain legacy links: Browser Steps, Visual Selector, XLSX
   and Distill.io import, MCP, plugins, Apprise builder, advanced image diff,
   share-as-image, PWA install.
-- Keyboard/a11y audit and a 500+ watch performance test still need a dedicated
-  pass.
-- `npm run build` warns about a >500 KB entry chunk; route-level code splitting
-  is planned for the quality pass.
+- Full keyboard/axe audit screen-by-screen is still pending. Focus states,
+  skip link, wrapped mobile tabs and the ⌘K palette are in place.
+- No route-level lazy loading yet; vendor chunks are split, but every screen
+  still ships in the entry chunk.
+- Some technical labels from the backend (processor badges such as "Restock",
+  sidebar mode values) remain English by design.
 
 ## Next
 
-1. Add a generic error summary in watch edit for server errors not tied to a
-   visible field.
-2. Add diff minimap and regex extract-to-CSV.
-3. Add true virtualization or tune the 60-item window for 500+ watches.
-4. Run axe/keyboard audit at 360/768/1280 and light/dark.
-5. Add remaining Italian strings.
-6. User review of the first milestone.
+1. Run the screen-by-screen keyboard/axe audit at 360/768/1280 and light/dark.
+2. Add regex extract-to-CSV and the share-watch-config endpoint.
+3. Decide whether true virtualization is needed beyond the 500-watch result.
+4. Add route-level lazy loading if the entry chunk becomes a problem again.
+5. User review of the refreshed direction and the remaining parity list.

@@ -15,7 +15,7 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 |---|---|---|---|
 | Password login | `/login` | `/pulse/login` | Pulse |
 | Logout | top menu | Pulse user menu | Pulse |
-| Language selector | header modal | Pulse settings/user menu (English + Italian) | Pulse (partial IT) |
+| Language selector | header modal | Pulse top bar + Settings → Interface (English + Italian) | Pulse |
 | Light/dark/system theme | header toggle | Pulse top bar/settings | Pulse |
 | Global search | search modal | Pulse dashboard search | Pulse |
 | Global pause/resume | top menu | Pulse global status menu | Pulse |
@@ -50,7 +50,7 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 | Diff by character | (not in old UI, requested) | Pulse diff viewer | Pulse |
 | Diff filters | `/diff/<uuid>` | Pulse diff toolbar | Pulse |
 | Diff previous/next | `/diff/<uuid>` | Pulse diff keyboard/buttons | Pulse |
-| Diff minimap | `/diff/<uuid>` | Pulse diff minimap | Not started |
+| Diff minimap | `/diff/<uuid>` | Pulse diff change map | Pulse |
 | AI change summary | `/diff/<uuid>` | Pulse diff summary | Pulse |
 | Text preview highlights | `/preview/<uuid>` | Pulse preview tab | Pulse |
 | Screenshot/error screenshot | `/diff`, `/preview` | Pulse screenshot/error tabs | Pulse |
@@ -83,8 +83,10 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 | Notification sent event | Socket.IO stub | Pulse toast/log | Pulse |
 | Connection indicator | old offline notice | Pulse indicator | Pulse |
 | Mobile navigation | hamburger drawer | Pulse bottom tabs | Pulse |
-| Keyboard accessibility | partial | Pulse full audit | Partial |
-| Italian translations | old UI only | Pulse English + Italian | Partial |
+| Keyboard accessibility | partial | Pulse focus states + ⌘K palette; full audit pending | Partial |
+| Italian translations | old UI only | Pulse catalog: every Pulse string translated | Pulse |
+| Command palette | none | ⌘K / Ctrl+K from anywhere | Pulse |
+| Appearance controls | theme toggle only | Pulse Settings → Interface | Pulse |
 
 ## Wave 1 — legacy links
 
@@ -119,6 +121,8 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 
 ## Open questions / notes
 
-- Exact Pulse branding/logo: use the existing changedetection.io wordmark initially.
+- Pulse mark: the waveform-on-gradient square, plus the changedetection.io wordmark.
 - Legacy links must be visibly marked "Legacy" and open in the old UI without losing the user's place.
 - The old UI remains fully usable; do not delete it until full parity and user approval.
+- The visual direction was revised on 2026-11-17: indigo/violet/azure/teal palette, SF Pro Display first in the font stack, aurora surfaces, signal motif and restrained motion. See `DESIGN.md`.
+- Italian is intentionally non-literal: "Live" stays "Live", a watch is a "monitoraggio", technical names stay in English. See `DESIGN.md#language`.
