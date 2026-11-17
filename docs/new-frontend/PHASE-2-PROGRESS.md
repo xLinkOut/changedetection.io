@@ -18,6 +18,9 @@ Old UI: **untouched and fully available**.
   - Watch history, snapshots, preview, screenshot, favicon, error details,
     filters preview, condition verify, AI summary start/poll, processor data,
     patch download, latest HTML, data package.
+  - Regex extract-to-CSV preview/download over every snapshot.
+  - Share-watch configuration through the changedetection.io share service
+    (opt-in; history and notification settings stripped).
   - Groups: list/get/create/update/delete, unlink, mute, recheck.
   - Settings: read/update core sections, password, API key reset, notification
     log, notification test, system info.
@@ -46,13 +49,18 @@ Old UI: **untouched and fully available**.
   targets, safe-area padding, skip link.
 - Light/dark/system theme, persisted locally and applied before first paint.
 - Session login/logout, language picker, connection indicator.
-- Dashboard: quick add + options, search, status/tag/processor filters, sort,
-  responsive table/cards, progressive loading, selection and bulk actions
-  (pause, unpause, mute, unmute, recheck, mark viewed/unviewed, clear errors,
-  tag, browser, proxy, clear history, delete).
+- Dashboard: quick add + options (processor, groups, paused, AI intent when
+  configured), search, status/tag/processor filters, sort, responsive
+  table/cards, server-side pagination with the configured pager size, selection
+  and bulk actions (pause, unpause, mute, unmute, recheck, mark
+  viewed/unviewed, clear errors, tag, browser, proxy, clear history, delete).
 - Watch detail: snapshot rail, from/to, line/word/character diff, side-by-side
   on desktop and stacked on mobile, diff filters, previous/next, download patch,
   AI summary card, preview highlights, screenshots, error text, price graph.
+- Extract tab: regex over every snapshot, match/row preview, CSV download with
+  validation, empty and error states.
+- Share watch dialog (when enabled in Settings → Interface): uploads the
+  trimmed configuration and shows a copyable import link.
 - Watch edit: General, Request, Filters & Triggers, Conditions, Notifications,
   AI, Restock & Price, Stats. Live filter preview, condition verification,
   notification test, field errors, unsaved-changes guard, danger zone.
@@ -74,14 +82,15 @@ Old UI: **untouched and fully available**.
 - Diff change map/minimap: click a band to jump through the diff.
 - Appearance and language controls in Settings → Interface, plus the top bar.
 - Italian catalog refined for natural tone and completed for every Pulse string
-  (797/797); product terms are consistent and technical names stay English.
+  (837/837); product terms are consistent and technical names stay English.
 - Notification success/failure is emitted by the worker and toasted live.
 - Vendor chunks are split (`react`, `query`, `radix`, `diff`); the app entry is
   ~311 kB (76 kB gzip) and an edit no longer invalidates the framework chunk.
 
 ## Verified
 
-- `pytest changedetectionio/tests/test_api_v2.py` — 5 passed.
+- `pytest changedetectionio/tests/test_api_v2.py` — 7 passed (adds extract,
+  share payload and pagination coverage).
 - Existing `test_auth`, `test_api`, `test_api_tags`, `test_api_notifications`,
   `test_basic_socketio` — 24 passed.
 - `npx tsc --noEmit` and `npm run build` pass.
@@ -96,29 +105,38 @@ Old UI: **untouched and fully available**.
 - Local worker test: created a watch against a local HTTP server, ran three
   checks, read history/snapshots/preview/patch.
 - Backup create/list/download/remove/restore smoke test.
-- 500-watch benchmark on the refreshed design: dashboard API ~7–13 ms; 60
-  cards rendered in ~0.55 s at 390×844.
+- 500-watch benchmark: dashboard API ~7–13 ms; a 50-row page renders well
+  under 0.3 s at 390×844.
+- Screen-by-screen accessibility audit at 360 and 1280, light and dark, on 33
+  screens (dashboard, add, groups, queue, import, notifications, every settings
+  section and every watch tab/edit section): no missing accessible names, no
+  unlabelled fields, no image-alt or heading-order errors, no duplicate IDs,
+  no text-contrast failures. All keyboard stops have a visible focus ring.
+- Keyboard checks: skip link is the first stop and appears at 44px; watch tabs
+  and segmented controls respond to arrow keys with roving tabindex; dialogs
+  trap focus and return it to the trigger; ⌘K traps Tab and restores focus.
+- Extract CSV browser flow: regex with a capture group returned 3 matches,
+  preview table and a `text/csv` attachment named `report-<uuid>.csv`.
+- Share browser flow with a stubbed share response: dialog showed the import
+  link, Copy changed to Copied, and focus returned to More actions.
+- Pagination: with pager size 2 the dashboard showed page 1/3, Next moved to
+  `?page=2`, and a page past the end clamps to the last page.
+- Italian and English at 360/768/1280: no horizontal overflow on dashboard,
+  extract, watch edit, settings, groups and share dialog.
 
 ## Known gaps for Wave 1
 
-- Dashboard uses progressive loading (60 at a time) rather than true row
-  virtualization.
-- Regex extract-to-CSV is not rebuilt; the legacy diff page is available.
-- Share-watch-config API is not rebuilt.
-- Advanced screens remain legacy links: Browser Steps, Visual Selector, XLSX
-  and Distill.io import, MCP, plugins, Apprise builder, advanced image diff,
-  share-as-image, PWA install.
-- Full keyboard/axe audit screen-by-screen is still pending. Focus states,
-  skip link, wrapped mobile tabs and the ⌘K palette are in place.
-- No route-level lazy loading yet; vendor chunks are split, but every screen
-  still ships in the entry chunk.
+- Advanced screens remain legacy links by design: Browser Steps, Visual
+  Selector, XLSX and Distill.io import, MCP, plugins, Apprise builder, advanced
+  image diff, share-as-image, PWA install.
+- No route-level lazy loading. Vendor chunks are split and the entry chunk is
+  ~324 kB (79 kB gzip), so this is not currently a performance problem.
 - Some technical labels from the backend (processor badges such as "Restock",
   sidebar mode values) remain English by design.
 
 ## Next
 
-1. Run the screen-by-screen keyboard/axe audit at 360/768/1280 and light/dark.
-2. Add regex extract-to-CSV and the share-watch-config endpoint.
-3. Decide whether true virtualization is needed beyond the 500-watch result.
-4. Add route-level lazy loading if the entry chunk becomes a problem again.
-5. User review of the refreshed direction and the remaining parity list.
+1. User review of this milestone and the remaining legacy links.
+2. Decide when to redirect `/` to `/pulse` (only after explicit approval).
+3. Plan Wave 2: Browser Steps, Visual Selector, XLSX/Distill import, MCP,
+   plugins, Apprise builder.

@@ -30,10 +30,12 @@ checking; counts always come from `/api/v2`.
 | azure | `#4896FE` | in-progress, info, gradient mid-point |
 | teal | `#16C8C7` | healthy/live, success, gradient end |
 
-The four form one gradient, `120deg` in that order. It is used on the logo,
-primary buttons, active filters, the mobile add button and the signal traces.
-It is deliberately **not** used for body text or large backgrounds; the aurora
-uses the same colours at 10–30% opacity with blur.
+The four form one gradient, `120deg` in that order. The exact bright stops are
+used on the logo/mark, aurora and signal traces. Text-bearing surfaces use a
+slightly darker action gradient (`#5347CE → #6555D6 → #2A6DBF → #0B7F7D`) so
+white labels and gradient display text stay above WCAG AA across the whole
+sweep. It is deliberately **not** used for body text or large backgrounds; the
+aurora uses the exact colours at 10–30% opacity with blur.
 
 Neutrals are violet-tinted, never pure grey:
 
@@ -84,7 +86,15 @@ active marker.
 ## 6. Signature interactions
 
 - **⌘K / Ctrl+K** opens a command palette from any screen. It searches watches
-  on the server and navigates to screens; arrow keys and Enter work.
+  on the server and navigates to screens; arrow keys, Enter, Tab trapping and
+  Escape work, and focus returns to the previous element.
+- **Extract** turns a regex over every snapshot into a preview table and a CSV
+  download, with the legacy two-cell CSV header and capture groups as columns.
+- **Share this watch** (opt-in in Settings → Interface) uploads a trimmed
+  configuration and shows a copyable import link; history and notifications are
+  never shared.
+- **Pagination** uses the configured pager size on the server, so the DOM stays
+  small at any watch count; pager size 0 keeps the "show everything" option.
 - Active diff layout is a quiet two-option switch; diff mode (lines/words/chars)
   carries the gradient so the toolbar has one primary choice.
 - Watch detail tabs wrap on phones instead of hiding tabs off-screen.
@@ -107,7 +117,7 @@ English is the source. Italian is a first-class catalog for Pulse. Rules:
   **Disponibilità**), "In linea" for inline (use **Unificato**).
 - UI copy is sentence case; only eyebrows/table headers are uppercase.
 
-All 797 strings currently used by Pulse have an Italian translation. New strings
+All 837 strings currently used by Pulse have an Italian translation. New strings
 must be added to `changedetectionio/translations/it/LC_MESSAGES/messages.po`
 and `.mo` recompiled with `pybabel compile -d changedetectionio/translations -l it`.
 
@@ -120,5 +130,9 @@ and `.mo` recompiled with `pybabel compile -d changedetectionio/translations -l 
 - The diff map is `features/watch/DiffMinimap.tsx` and receives the same
   `DiffPart[]` as the diff viewer.
 - Vendor code is split into `react`, `query`, `radix` and `diff` chunks; the app
-  entry is ~311 kB (76 kB gzip) after the split.
+  entry is ~324 kB (79 kB gzip) after the split.
+- Accessibility pass: default focus rings on every control, 44px tap targets,
+  labelled switches and form fields, roving-tabindex tabs/segments, translated
+  dialog/toast labels, and WCAG AA contrast for all text and text-bearing
+  gradients.
 - Target sizes remain 360 / 768 / 1280 px, light and dark, with 44px tap targets.

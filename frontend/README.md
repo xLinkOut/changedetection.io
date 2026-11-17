@@ -55,7 +55,11 @@ a Node build stage.
 ## Keyboard
 
 - `⌘K` / `Ctrl+K`: command palette, searches watches on the server and jumps to
-  screens. Arrow keys move, Enter opens, Escape closes.
+  screens. Arrow keys move, Enter opens, Escape closes, Tab stays inside.
+- Watch tabs and segmented controls support Left/Right/Home/End with roving
+  tabindex; dialogs return focus to the trigger.
+- Every screen is audited for accessible names, labels, heading order, focus
+  visibility, 44px tap targets and WCAG AA contrast.
 
 ## How it talks to the backend
 
@@ -98,7 +102,7 @@ threaded/gevent server and a shared broker or sticky sessions.
 - `npm run i18n:extract` writes `i18n-strings.json` with `t()`/`tn()` msgids and
   common translatable object fields (`title`, `label`, `description`) so data
   arrays are not missed.
-- All 797 current Pulse strings have Italian translations. Strings with no
+- All 837 current Pulse strings have Italian translations. Strings with no
   translation fall back to English.
 - Compile after editing the catalog:
   `pybabel compile -d changedetectionio/translations -l it`.
@@ -116,7 +120,10 @@ src/
 ```
 
 The build splits vendor code into `react`, `query`, `radix` and `diff` chunks;
-the app entry stays around 311 kB (76 kB gzip).
+the app entry stays around 324 kB (79 kB gzip).
+
+The dashboard requests one page at a time (`per_page` from the pager-size
+setting); pager size 0 requests every watch.
 
 ## Useful checks
 

@@ -30,12 +30,12 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 | Processor badge | dashboard rows | Pulse watch cards/rows | Pulse |
 | Restock/price display | dashboard rows | Pulse watch cards/rows | Pulse |
 | Quick add URL + Watch | dashboard form | Pulse dashboard quick add | Pulse |
-| Advanced quick add (processor/tags/LLM intent) | dashboard form | Pulse add sheet | Partial |
+| Advanced quick add (processor/tags/LLM intent) | dashboard form | Pulse quick add (AI intent when configured) | Pulse |
 | Tag/group filter | dashboard | Pulse filters | Pulse |
 | Status filters (All/Unread/Deals/Errors/Healthy) | dashboard | Pulse filters | Pulse |
 | Processor filter | dashboard | Pulse filters | Pulse |
 | Sort | dashboard | Pulse filters | Pulse |
-| Pagination/virtualization | dashboard | Pulse virtualized list | Partial |
+| Pagination/virtualization | dashboard | Pulse server-side pagination (Settings → Interface → Pager size) | Pulse |
 | Bulk pause/unpause/mute/unmute/recheck | dashboard toolbar | Pulse selection bar | Pulse |
 | Bulk mark viewed/unviewed | dashboard toolbar | Pulse selection bar | Pulse |
 | Bulk clear errors | dashboard toolbar | Pulse selection bar | Pulse |
@@ -56,6 +56,8 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 | Screenshot/error screenshot | `/diff`, `/preview` | Pulse screenshot/error tabs | Pulse |
 | Error text | `/diff` | Pulse error tab | Pulse |
 | Download diff patch | `/diff` | Pulse diff action | Pulse |
+| Regex extract-to-CSV | `/diff/<uuid>/extract` | Watch detail → Extract | Pulse |
+| Share watch configuration | `/share-url/<uuid>` | Watch detail → More → Share this watch (opt-in) | Pulse |
 | Price/restock graph | `/diff`, dashboard | Pulse price tab | Pulse |
 | Watch edit General | `/edit/<uuid>` | `/pulse/watches/:uuid/edit/general` | Pulse |
 | Watch edit Request | `/edit/<uuid>` | Pulse edit Request tab | Pulse |
@@ -83,7 +85,7 @@ Update this file as work progresses. A feature is not "done" until it works at 3
 | Notification sent event | Socket.IO stub | Pulse toast/log | Pulse |
 | Connection indicator | old offline notice | Pulse indicator | Pulse |
 | Mobile navigation | hamburger drawer | Pulse bottom tabs | Pulse |
-| Keyboard accessibility | partial | Pulse focus states + ⌘K palette; full audit pending | Partial |
+| Keyboard accessibility | partial | Pulse focus states, skip link, roving tabs, dialog/palette focus traps; audited screen by screen | Pulse |
 | Italian translations | old UI only | Pulse catalog: every Pulse string translated | Pulse |
 | Command palette | none | ⌘K / Ctrl+K from anywhere | Pulse |
 | Appearance controls | theme toggle only | Pulse Settings → Interface | Pulse |

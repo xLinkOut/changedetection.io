@@ -226,5 +226,22 @@ supersede the neutral visual defaults in the Phase 1 plan.
   success/failure instead of assuming delivery.
 - **Build**: vendor chunks are split so app edits do not invalidate framework
   code in browser caches. Production remains static; Node is development-only.
+- **Accessible action gradient**: the exact four colours remain on the mark,
+  aurora and traces; text-bearing gradients use darker stops (`#6555D6`,
+  `#2A6DBF`, `#0B7F7D`) so white labels pass WCAG AA. Muted text and success/info
+  inks were darkened for the same reason.
+- **Pagination**: the dashboard now pages on the server using the existing
+  pager-size setting, replacing the progressive 60-row DOM. Page size 0 still
+  means "show everything".
+- **Regex extract-to-CSV** is restored in Pulse as a watch tab, with preview
+  and download, using the same report format as the classic page.
+- **Share watch** is restored behind the existing opt-in setting, with the same
+  trimmed payload as the classic share button. History and notification keys
+  are stripped.
+- **AI intent in quick add** is restored when an LLM is configured.
+- **Accessibility**: every screen was audited at 360/1280 in light/dark for
+  names, labels, heading order, duplicate ids, focus visibility, tap targets
+  and contrast. Dialogs and the command palette trap/return focus; tabs and
+  segmented controls use arrow keys and roving tabindex.
 
 Full visual reference: [`DESIGN.md`](./DESIGN.md).
