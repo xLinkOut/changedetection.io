@@ -66,9 +66,11 @@ export function DashboardPage() {
   const [pendingHistory, setPendingHistory] = useState<Watch | null>(null)
   const [heroCollapsed, setHeroCollapsed] = useState<boolean>(() => {
     try {
-      return localStorage.getItem(HERO_COLLAPSED_KEY) === '1'
+      // Default to the compact view: monitoring first, banner on request.
+      const saved = localStorage.getItem(HERO_COLLAPSED_KEY)
+      return saved === null ? true : saved === '1'
     } catch {
-      return false
+      return true
     }
   })
 
@@ -267,13 +269,14 @@ export function DashboardPage() {
       <DashboardHero
         stats={heroStats}
         locale={locale}
-        quickAdd={<QuickAdd hero />}
         onMarkAllViewed={() => runFilteredAction('mark-viewed')}
         onRecheckAll={() => runFilteredAction('recheck')}
         busy={bulk.isPending}
         collapsed={heroCollapsed}
         onToggleCollapsed={() => setHeroCollapsed((current) => !current)}
       />
+
+      <QuickAdd />
 
       <div className="space-y-3">
         <FilterBar

@@ -12,7 +12,6 @@ const BARS = [12, 22, 34, 18, 42, 28, 16, 38, 24, 46, 20, 32, 14, 40, 26, 18, 36
 export function DashboardHero({
   stats,
   locale,
-  quickAdd,
   onMarkAllViewed,
   onRecheckAll,
   busy,
@@ -21,7 +20,6 @@ export function DashboardHero({
 }: {
   stats: Stats
   locale: string
-  quickAdd: ReactNode
   onMarkAllViewed: () => void
   onRecheckAll: () => void
   busy?: boolean
@@ -222,8 +220,6 @@ export function DashboardHero({
           </p>
         </div>
       </div>
-
-      <div className="relative mt-5">{quickAdd}</div>
     </section>
   )
 }
