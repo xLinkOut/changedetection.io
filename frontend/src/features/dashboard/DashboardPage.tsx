@@ -20,6 +20,8 @@ import { WatchTableRow } from './WatchTableRow'
 import { BulkBar } from './BulkBar'
 import type { WatchActionHandlers } from './WatchActionsMenu'
 
+const HERO_COLLAPSED_KEY = 'pulse.dashboardHeroCollapsed'
+
 function patchWatchLocally(client: ReturnType<typeof useQueryClient>, uuid: string, patch: Partial<Watch>) {
   client.setQueriesData<WatchListResponse>({ queryKey: ['watches'] }, (old) => {
     if (!old) return old
@@ -62,6 +64,21 @@ export function DashboardPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [pendingDelete, setPendingDelete] = useState<Watch | null>(null)
   const [pendingHistory, setPendingHistory] = useState<Watch | null>(null)
+  const [heroCollapsed, setHeroCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(HERO_COLLAPSED_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(HERO_COLLAPSED_KEY, heroCollapsed ? '1' : '0')
+    } catch {
+      // Private mode / storage disabled: keep the in-memory preference.
+    }
+  }, [heroCollapsed])
 
   const items = watchesQuery.data?.items || []
   const total = watchesQuery.data?.total || 0
@@ -254,6 +271,8 @@ export function DashboardPage() {
         onMarkAllViewed={() => runFilteredAction('mark-viewed')}
         onRecheckAll={() => runFilteredAction('recheck')}
         busy={bulk.isPending}
+        collapsed={heroCollapsed}
+        onToggleCollapsed={() => setHeroCollapsed((current) => !current)}
       />
 
       <div className="space-y-3">

@@ -1,5 +1,5 @@
-import { Activity, ArrowUpRight, BellRing, CircleAlert, Radio } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { Activity, ArrowUpRight, BellRing, ChevronUp, CircleAlert, Radio, X } from 'lucide-react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { useI18n } from '@/lib/i18n'
 import type { Stats } from '@/lib/types'
 import { useSSE } from '@/lib/sse'
@@ -16,6 +16,8 @@ export function DashboardHero({
   onMarkAllViewed,
   onRecheckAll,
   busy,
+  collapsed,
+  onToggleCollapsed,
 }: {
   stats: Stats
   locale: string
@@ -23,18 +25,104 @@ export function DashboardHero({
   onMarkAllViewed: () => void
   onRecheckAll: () => void
   busy?: boolean
+  collapsed: boolean
+  onToggleCollapsed: () => void
 }) {
   const { t } = useI18n()
   const { state } = useSSE()
   const active = stats.checking_now > 0 || state === 'live'
+  const showRef = useRef<HTMLButtonElement>(null)
+  const hideRef = useRef<HTMLButtonElement>(null)
+  const firstRender = useRef(true)
+
+  useEffect(() => {
+    // Opening or closing the banner unmounts the button that was used, so move
+    // focus to the control that can undo the action instead of dropping it on
+    // <body>.
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    ;(collapsed ? showRef : hideRef).current?.focus()
+  }, [collapsed])
+
+  if (collapsed) {
+    return (
+      <section
+        id="dashboard-banner"
+        aria-label={t('Dashboard banner')}
+        className="pulse-card flex min-h-14 animate-fade-in items-center gap-3 px-3 py-2"
+      >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal/10 text-success">
+          <Radio className={cn('h-4 w-4', active && 'animate-pulse')} aria-hidden="true" />
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted">
+            <span className="whitespace-nowrap font-semibold text-fg">
+              {formatNumber(stats.watch_count, locale)} {t('watches')}
+            </span>
+            <span className="h-1 w-1 rounded-full bg-border-strong" aria-hidden="true" />
+            <span className={cn('whitespace-nowrap', stats.unread_changes_count > 0 && 'font-semibold text-primary')}>
+              {formatNumber(stats.unread_changes_count, locale)} {t('unread')}
+            </span>
+            {stats.error_count > 0 ? (
+              <>
+                <span className="h-1 w-1 rounded-full bg-border-strong" aria-hidden="true" />
+                <span className="whitespace-nowrap font-semibold text-danger">
+                  {formatNumber(stats.error_count, locale)} {t('with errors')}
+                </span>
+              </>
+            ) : null}
+          </p>
+          <p className="mt-0.5 truncate text-[11px] text-muted">
+            {state === 'live' ? t('Live') : t('Reconnecting')} · {stats.checking_now} {t('checking')} ·{' '}
+            {stats.queue_size} {t('in queue')}
+          </p>
+        </div>
+
+        <Button
+          ref={showRef}
+          variant="secondary"
+          size="sm"
+          onClick={onToggleCollapsed}
+          aria-label={t('Show banner')}
+          title={t('Show banner')}
+          aria-expanded={false}
+          aria-controls="dashboard-banner"
+          className="min-w-11 shrink-0"
+        >
+          <ChevronUp className="h-4 w-4" aria-hidden="true" />
+          <span className="hidden sm:inline">{t('Show banner')}</span>
+        </Button>
+      </section>
+    )
+  }
 
   return (
-    <section className="signal-hero signal-gradient-border pulse-grain relative overflow-hidden rounded-[26px] px-4 pb-4 pt-6 md:px-7 md:pb-6 md:pt-7">
+    <section
+      id="dashboard-banner"
+      className="signal-hero signal-gradient-border pulse-grain relative overflow-hidden rounded-[26px] px-4 pb-4 pt-6 md:px-7 md:pb-6 md:pt-7"
+    >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="aurora-blob -right-24 -top-32 h-72 w-72 bg-azure/30 animate-drift" />
         <div className="aurora-blob -left-20 top-10 h-56 w-56 bg-violet/30 animate-drift [animation-delay:-7s]" />
         <div className="aurora-blob bottom-[-6rem] left-1/3 h-56 w-72 bg-teal/20 animate-drift [animation-delay:-3s]" />
       </div>
+
+      <Button
+        ref={hideRef}
+        variant="ghost"
+        size="icon"
+        onClick={onToggleCollapsed}
+        aria-label={t('Hide banner')}
+        title={t('Hide banner')}
+        aria-expanded={true}
+        aria-controls="dashboard-banner"
+        className="absolute right-2 top-2 z-20 text-muted hover:bg-surface/60 hover:text-fg"
+      >
+        <X className="h-4 w-4" aria-hidden="true" />
+      </Button>
 
       <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-10">
         <div className="min-w-0">
