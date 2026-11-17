@@ -99,7 +99,7 @@ export function GroupPicker({
                 <button
                   type="button"
                   onClick={() => onChange(selected.filter((item) => item !== tag))}
-                  className="ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-muted hover:bg-border hover:text-fg"
+                  className="relative ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-muted after:absolute after:-inset-3 hover:bg-border hover:text-fg"
                   aria-label={`Remove ${tag}`}
                 >
                   <X className="h-3 w-3" />
@@ -123,6 +123,7 @@ export function GroupPicker({
             }
           }}
           placeholder={t('Add a group and press Enter')}
+          aria-label={t('Add a group')}
         />
         <datalist id={datalistId}>
           {groups.map((group) => (

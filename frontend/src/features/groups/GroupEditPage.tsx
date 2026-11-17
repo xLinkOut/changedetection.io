@@ -306,7 +306,7 @@ export function GroupEditPage() {
 
   return (
     <div className="mx-auto max-w-4xl pb-48 lg:pb-24">
-      <Link to="/groups" className="mb-2 inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
+      <Link to="/groups" className="mb-2 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-fg">
         <ArrowLeft className="h-4 w-4" /> {t('All groups')}
       </Link>
 
@@ -371,7 +371,7 @@ export function GroupEditPage() {
                           className="h-11 w-16 cursor-pointer rounded-input border border-border bg-surface p-1"
                           aria-label={t('Group colour')}
                         />
-                        <Input value={state.colour} onChange={(event) => patch({ colour: event.target.value })} className="max-w-36 font-mono" />
+                        <Input value={state.colour} onChange={(event) => patch({ colour: event.target.value })} aria-label={t('Group colour')} className="max-w-36 font-mono" />
                       </div>
                     ) : (
                       <p className="mt-1 text-xs text-muted">{t('Automatic colour from the group name.')}</p>
@@ -384,7 +384,7 @@ export function GroupEditPage() {
                       <ul className="space-y-1 rounded-input border border-border p-2 text-sm">
                         {group.matching_watches.map((watch) => (
                           <li key={watch.uuid} className="flex items-center justify-between gap-2">
-                            <Link to={`/watches/${watch.uuid}/changes`} className="truncate hover:text-primary">
+                            <Link to={`/watches/${watch.uuid}/changes`} className="inline-flex min-h-11 items-center truncate hover:text-primary">
                               {watch.title || watch.url}
                             </Link>
                             {watch.paused ? <Badge tone="neutral">{t('Paused')}</Badge> : null}

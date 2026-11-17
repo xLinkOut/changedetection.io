@@ -181,7 +181,7 @@ export function SettingsPage() {
         </div>
         <p className="text-xs text-muted">
           {t('Pulse')} {draft.info.version} · {t('Classic interface')}:{' '}
-          <a href="/settings" className="text-primary hover:underline">
+          <a href="/settings" className="inline-flex min-h-11 items-center text-primary hover:underline">
             /settings
           </a>
         </p>
@@ -209,7 +209,7 @@ export function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl pb-20">
-      <Link to="/settings" className="mb-2 inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
+      <Link to="/settings" className="mb-2 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-fg">
         <ArrowLeft className="h-4 w-4" /> {t('All settings')}
       </Link>
 

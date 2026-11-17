@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Filter, Plus, SearchX } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Filter, Plus, SearchX } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { useToast } from '@/components/ui/toast'
@@ -19,8 +19,6 @@ import { WatchCard } from './WatchCard'
 import { WatchTableRow } from './WatchTableRow'
 import { BulkBar } from './BulkBar'
 import type { WatchActionHandlers } from './WatchActionsMenu'
-
-const PAGE_STEP = 60
 
 function patchWatchLocally(client: ReturnType<typeof useQueryClient>, uuid: string, patch: Partial<Watch>) {
   client.setQueriesData<WatchListResponse>({ queryKey: ['watches'] }, (old) => {
@@ -52,7 +50,9 @@ export function DashboardPage() {
     [params],
   )
 
-  const watchesQuery = useWatches(filters)
+  const pageSize = bootstrap.settings?.pagerSize ?? 50
+  const page = Math.max(1, Number(params.get('page')) || 1)
+  const watchesQuery = useWatches(filters, page, pageSize)
   const groupsQuery = useGroups()
   const settingsQuery = useSettings()
   const bulk = useBulkAction()
@@ -60,39 +60,39 @@ export function DashboardPage() {
   const deleteWatch = useDeleteWatch()
 
   const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [visible, setVisible] = useState(PAGE_STEP)
   const [pendingDelete, setPendingDelete] = useState<Watch | null>(null)
   const [pendingHistory, setPendingHistory] = useState<Watch | null>(null)
-  const sentinelRef = useRef<HTMLDivElement>(null)
 
   const items = watchesQuery.data?.items || []
   const total = watchesQuery.data?.total || 0
+  const totalPages = watchesQuery.data?.total_pages || 1
+  const currentPage = watchesQuery.data?.page || page
   const facets = watchesQuery.data?.facets
   const stats = watchesQuery.data?.stats || bootstrap.stats
 
   useEffect(() => {
-    setVisible(PAGE_STEP)
-  }, [filters.q, filters.tag, filters.status, filters.processor, filters.sort, filters.order])
-
-  useEffect(() => {
-    // Changing the view must not leave hidden watches selected and actionable.
+    // Changing the view or the page must not leave hidden watches selected and
+    // actionable from a bulk bar.
     setSelected(new Set())
-  }, [filters.q, filters.tag, filters.status, filters.processor])
+  }, [filters.q, filters.tag, filters.status, filters.processor, page])
+
+  const goToPage = useCallback(
+    (next: number) => {
+      const nextParams = new URLSearchParams(params)
+      if (next <= 1) nextParams.delete('page')
+      else nextParams.set('page', String(next))
+      setParams(nextParams, { replace: true })
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+    [params, setParams],
+  )
 
   useEffect(() => {
-    const node = sentinelRef.current
-    if (!node || visible >= items.length) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          setVisible((value) => Math.min(value + PAGE_STEP, items.length))
-        }
-      },
-      { rootMargin: '600px' },
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [visible, items.length])
+    // Deleting the last watch on a page can make the server clamp the page.
+    // Keep the URL and the pager in agreement with what was actually returned.
+    const clamped = watchesQuery.data?.page
+    if (clamped && clamped !== page) goToPage(clamped)
+  }, [watchesQuery.data?.page, page, goToPage])
 
   const updateFilters = useCallback(
     (patch: Partial<WatchFilters>) => {
@@ -104,7 +104,7 @@ export function DashboardPage() {
           next.set(key, String(value))
         }
       }
-      if ('q' in patch || 'tag' in patch || 'status' in patch || 'processor' in patch) {
+      if ('q' in patch || 'tag' in patch || 'status' in patch || 'processor' in patch || 'sort' in patch || 'order' in patch) {
         next.delete('page')
       }
       setParams(next, { replace: true })
@@ -301,6 +301,7 @@ export function DashboardPage() {
           </div>
         ) : (
           <>
+            <h2 className="sr-only">{t('Watches')}</h2>
             <div className="hidden overflow-hidden rounded-[20px] border border-border bg-surface shadow-card dark:shadow-card-dark lg:block">
               <table className="w-full table-fixed border-collapse text-left">
                 <thead className="border-b border-border bg-surface-2/70 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
@@ -337,7 +338,7 @@ export function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.slice(0, visible).map((watch) => (
+                  {items.map((watch) => (
                     <WatchTableRow
                       key={watch.uuid}
                       watch={watch}
@@ -352,7 +353,7 @@ export function DashboardPage() {
             </div>
 
             <div className="space-y-2 lg:hidden" role="list">
-              {items.slice(0, visible).map((watch, index) => (
+              {items.map((watch, index) => (
                 <WatchCard
                   key={watch.uuid}
                   watch={watch}
@@ -365,16 +366,47 @@ export function DashboardPage() {
               ))}
             </div>
 
-            <div ref={sentinelRef} className="flex flex-col items-center gap-2 py-3">
-              {visible < items.length ? (
-                <Button variant="secondary" onClick={() => setVisible((value) => value + PAGE_STEP)}>
-                  {t('Load more')}
-                </Button>
-              ) : (
-                <p className="text-xs text-muted">
-                  {t('Showing {shown} of {total}').replace('{shown}', String(items.length)).replace('{total}', String(total))}
-                </p>
-              )}
+            <div className="flex flex-col items-center gap-2 py-3 sm:flex-row sm:justify-between">
+              <p className="text-xs text-muted">
+                {pageSize > 0
+                  ? t('Showing {from}–{to} of {total}')
+                      .replace('{from}', String(total ? (currentPage - 1) * pageSize + 1 : 0))
+                      .replace('{to}', String(Math.min(currentPage * pageSize, total)))
+                      .replace('{total}', String(total))
+                  : t('Showing {shown} of {total}')
+                      .replace('{shown}', String(items.length))
+                      .replace('{total}', String(total))}
+              </p>
+
+              {pageSize > 0 && totalPages > 1 ? (
+                <nav className="flex items-center gap-2" aria-label={t('Pagination')}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage <= 1}
+                    aria-label={t('Previous page')}
+                  >
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                    <span className="hidden xs:inline">{t('Previous')}</span>
+                  </Button>
+                  <span className="min-w-[7rem] text-center text-xs font-medium text-muted" aria-live="polite">
+                    {t('Page {page} of {pages}')
+                      .replace('{page}', String(currentPage))
+                      .replace('{pages}', String(totalPages))}
+                  </span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage >= totalPages}
+                    aria-label={t('Next page')}
+                  >
+                    <span className="hidden xs:inline">{t('Next')}</span>
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </nav>
+              ) : null}
             </div>
           </>
         )}

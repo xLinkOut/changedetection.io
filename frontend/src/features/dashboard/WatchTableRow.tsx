@@ -117,7 +117,7 @@ export function WatchTableRow({
         </div>
       </td>
       <td className="w-32 px-2 py-2 text-xs text-muted">
-        {watch.restock ? <RestockLine watch={watch} compact /> : <span className="text-border-strong">—</span>}
+        {watch.restock ? <RestockLine watch={watch} compact /> : <span className="text-muted">—</span>}
       </td>
       <td className="w-24 whitespace-nowrap px-2 py-2 text-[11px] text-muted">
         {timeAgo(watch.last_checked, locale)}

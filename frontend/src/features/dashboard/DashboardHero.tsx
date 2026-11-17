@@ -97,7 +97,7 @@ export function DashboardHero({
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
               {t('Activity')}
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-teal/30 bg-teal/10 px-2 py-0.5 text-[10px] font-semibold text-teal">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-teal/30 bg-teal/10 px-2 py-0.5 text-[10px] font-semibold text-success">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal" />
               {state === 'live' ? t('Live') : t('Reconnecting')}
             </span>

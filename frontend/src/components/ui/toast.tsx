@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { useI18n } from '@/lib/i18n'
 
 type ToastTone = 'success' | 'error' | 'info' | 'warning'
 
@@ -40,6 +41,7 @@ const toneIcons: Record<ToastTone, typeof Info> = {
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n()
   const [items, setItems] = useState<ToastItem[]>([])
   const nextId = useRef(1)
 
@@ -94,8 +96,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => dismiss(item.id)}
-                className="-m-1 inline-flex h-8 w-8 items-center justify-center rounded-input hover:bg-black/5"
-                aria-label="Dismiss notification"
+                className="relative -m-1 inline-flex h-8 w-8 items-center justify-center rounded-input after:absolute after:-inset-1.5 hover:bg-black/5"
+                aria-label={t('Dismiss notification')}
               >
                 <X className="h-4 w-4" />
               </button>

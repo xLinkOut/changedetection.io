@@ -45,6 +45,7 @@ export function CommandPalette({
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
+  const restoreFocusRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebounced(term.trim()), 180)
@@ -52,7 +53,13 @@ export function CommandPalette({
   }, [term])
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      const target = restoreFocusRef.current
+      if (target && document.contains(target)) target.focus()
+      return
+    }
+    restoreFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
     setTerm('')
     setDebounced('')
     setActive(0)
@@ -131,7 +138,25 @@ export function CommandPalette({
         aria-label={t('Command palette')}
         className="signal-gradient-border relative w-full max-w-xl animate-rise overflow-hidden rounded-dialog border border-border bg-surface shadow-2xl"
         onKeyDown={(event) => {
-          if (event.key === 'Escape') {
+          if (event.key === 'Tab') {
+            // Keep keyboard focus inside this modal. The palette is hand-built,
+            // so it needs the same focus loop Radix dialogs provide.
+            const nodes = Array.from(
+              event.currentTarget.querySelectorAll<HTMLElement>(
+                'input, button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+              ),
+            )
+            if (!nodes.length) return
+            const first = nodes[0]
+            const last = nodes[nodes.length - 1]
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault()
+              last.focus()
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault()
+              first.focus()
+            }
+          } else if (event.key === 'Escape') {
             event.preventDefault()
             close()
           } else if (event.key === 'ArrowDown') {

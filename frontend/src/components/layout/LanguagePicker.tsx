@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dropdown, DropdownContent, DropdownItem, DropdownLabel, DropdownTrigger } from '@/components/ui/dropdown'
 
 export function LanguagePicker({ compact = false }: { compact?: boolean }) {
-  const { languages, locale, setLocale } = useI18n()
+  const { t, languages, locale, setLocale } = useI18n()
   const { refresh } = useAuth()
   const { toast } = useToast()
   const [busy, setBusy] = useState(false)
@@ -21,7 +21,7 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
       await setLocale(code)
       await refresh()
     } catch {
-      toast('Could not change language', { tone: 'error' })
+      toast(t('Could not change language'), { tone: 'error' })
     } finally {
       setBusy(false)
     }
@@ -33,7 +33,7 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
         <Button
           variant="ghost"
           size={compact ? 'icon' : 'md'}
-          aria-label="Language"
+          aria-label={t('Language')}
           disabled={busy}
         >
           <Languages className="h-5 w-5" aria-hidden="true" />
@@ -45,7 +45,7 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
         </Button>
       </DropdownTrigger>
       <DropdownContent>
-        <DropdownLabel>Language</DropdownLabel>
+        <DropdownLabel>{t('Language')}</DropdownLabel>
         {languages.map((language) => (
           <DropdownItem
             key={language.code}

@@ -56,7 +56,7 @@ export function ScreenshotTab({ watch }: { watch: WatchFull }) {
           href={source}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1 text-xs font-medium text-primary hover:underline"
         >
           <ExternalLink className="h-3.5 w-3.5" /> {t('Open image')}
         </a>

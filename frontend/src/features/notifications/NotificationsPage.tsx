@@ -67,10 +67,10 @@ export function NotificationsPage() {
             <p className="text-sm text-muted">{t('No notification services configured yet.')}</p>
           )}
           <div className="flex flex-wrap gap-2">
-            <Link to="/settings/notifications" className="inline-flex min-h-9 items-center text-sm font-medium text-primary hover:underline">
+            <Link to="/settings/notifications" className="inline-flex min-h-11 items-center text-sm font-medium text-primary hover:underline">
               {t('Edit notification settings')}
             </Link>
-            <Link to="/notifications/log" className="inline-flex min-h-9 items-center gap-1 text-sm font-medium text-muted hover:text-fg">
+            <Link to="/notifications/log" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-muted hover:text-fg">
               <ScrollText className="h-4 w-4" /> {t('Notification log')}
             </Link>
             <LegacyLink href="/settings/notifications/apprise" compact>{t('Apprise builder')}</LegacyLink>

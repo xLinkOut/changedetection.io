@@ -120,7 +120,7 @@ export function FilterBar({
               aria-checked={active}
               onClick={() => onChange({ status: option.value as WatchFilters['status'] })}
               className={cn(
-                'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium transition',
+                'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium transition',
                 active
                   ? 'signal-gradient border-transparent text-white shadow-glow'
                   : 'border-border bg-surface text-muted hover:border-border-strong hover:text-fg',
@@ -150,7 +150,7 @@ export function FilterBar({
           value={filters.tag || ''}
           onChange={(event) => onChange({ tag: event.target.value || undefined })}
           aria-label={t('Filter by group')}
-          className="h-9 w-auto min-w-[8rem] border-transparent bg-surface-2/70 py-1 text-xs"
+          className="h-11 w-auto min-w-[8rem] border-transparent bg-surface-2/70 py-1 text-xs md:h-9"
         >
           <option value="">{t('All groups')}</option>
           {groups.map((group) => (
@@ -169,7 +169,7 @@ export function FilterBar({
               value={filters.processor || ''}
               onChange={(event) => onChange({ processor: event.target.value || undefined })}
               aria-label={t('Filter by processor')}
-              className="h-9 w-auto min-w-[8rem] border-transparent bg-surface-2/70 py-1 text-xs"
+              className="h-11 w-auto min-w-[8rem] border-transparent bg-surface-2/70 py-1 text-xs md:h-9"
             >
               <option value="">{t('All processors')}</option>
               {processors.map((processor) => (
@@ -191,7 +191,7 @@ export function FilterBar({
             onChange({ sort, order: order as 'asc' | 'desc' })
           }}
           aria-label={t('Sort')}
-          className="h-9 w-auto min-w-[9rem] border-transparent bg-surface-2/70 py-1 text-xs"
+          className="h-11 w-auto min-w-[9rem] border-transparent bg-surface-2/70 py-1 text-xs md:h-9"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>

@@ -10,20 +10,21 @@
   --border: 227 224 242;
   --border-strong: 202 197 228;
   --text: 23 20 43;
-  --text-muted: 106 101 132;
+  --text-muted: 100 95 126;
   --primary: 83 71 206;
   --primary-hover: 66 55 181;
   --primary-contrast: 255 255 255;
   --violet: 136 124 253;
   --azure: 72 150 254;
   --teal: 22 200 199;
-  --success: 11 142 122;
+  --success: 10 122 105;
   --success-bg: 228 250 245;
   --warning: 166 84 9;
   --warning-bg: 255 246 228;
   --danger: 190 40 66;
+  --danger-contrast: 255 255 255;
   --danger-bg: 253 235 239;
-  --info: 31 108 224;
+  --info: 26 95 198;
   --diff-added-bg: 228 250 245;
   --diff-added-text: 8 112 97;
   --diff-removed-bg: 253 235 239;
@@ -55,6 +56,7 @@
   --warning: 251 191 36;
   --warning-bg: 48 34 8;
   --danger: 255 122 138;
+  --danger-contrast: 8 7 16;
   --danger-bg: 54 16 26;
   --info: 124 196 255;
   --diff-added-bg: 8 45 41;
@@ -210,13 +212,20 @@
     min-height: 44px;
   }
 
-  /* The brand gradient: indigo → violet → azure → teal */
-  .signal-gradient {
+  /* The bright brand gradient: decorative marks, aurora and traces. */
+  .brand-gradient {
     background-image: linear-gradient(120deg, #5347ce 0%, #887cfd 38%, #4896fe 72%, #16c8c7 100%);
   }
 
+  /* Text-bearing gradients use darker stops so white labels and gradient text
+     stay above WCAG AA on the full sweep. Same indigo → violet → azure → teal
+     sequence, lower luminance. */
+  .signal-gradient {
+    background-image: linear-gradient(120deg, #5347ce 0%, #6555d6 38%, #2a6dbf 72%, #0b7f7d 100%);
+  }
+
   .signal-gradient-text {
-    background-image: linear-gradient(105deg, #5347ce 0%, #7c6bf7 40%, #4896fe 72%, #16c8c7 100%);
+    background-image: linear-gradient(105deg, #5347ce 0%, #6555d6 40%, #2a6dbf 72%, #0b7f7d 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

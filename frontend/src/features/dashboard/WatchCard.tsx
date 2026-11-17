@@ -179,6 +179,7 @@ export function WatchCard({
 
   return (
     <article
+      role="listitem"
       className={cn(
         'pulse-card pulse-card-hover signal-spine group relative cursor-pointer p-3 transition-shadow md:p-3.5',
         selected && 'ring-2 ring-primary/60',
@@ -191,7 +192,7 @@ export function WatchCard({
     >
       <div className="flex items-start gap-2.5 pl-1.5">
         <label
-          className="-m-2 flex min-h-11 w-8 shrink-0 cursor-pointer items-center justify-center rounded-input"
+          className="-m-2 flex min-h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-input"
           onClick={(event) => event.stopPropagation()}
         >
           <input
@@ -211,7 +212,7 @@ export function WatchCard({
               <Link
                 to={`/watches/${watch.uuid}/changes`}
                 onClick={(event) => event.stopPropagation()}
-                className="line-clamp-2 font-display text-[15px] font-semibold leading-5 text-fg transition hover:text-primary"
+                className="block min-h-11 py-2 line-clamp-2 font-display text-[15px] font-semibold leading-5 text-fg transition hover:text-primary"
               >
                 {watch.title || watch.url}
               </Link>

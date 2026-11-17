@@ -138,7 +138,7 @@ export function AppShell() {
     <div className="relative min-h-[100dvh] bg-bg">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-input focus:bg-surface focus:px-3 focus:py-2 focus:text-sm focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-input focus:bg-surface focus:px-3 focus:text-sm focus:shadow-lg"
       >
         {t('Skip to content')}
       </a>
@@ -162,7 +162,7 @@ export function AppShell() {
           <PulseMark className="h-9 w-9" glow />
           <div className="min-w-0">
             <div className="font-display text-[17px] font-semibold tracking-[-0.02em]">Pulse</div>
-            <div className="truncate text-[10px] font-medium uppercase tracking-[0.18em] text-white/40">
+            <div className="truncate text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">
               changedetection.io
             </div>
           </div>
@@ -179,7 +179,7 @@ export function AppShell() {
         </div>
 
         <nav className="relative flex-1 overflow-y-auto px-3 pt-1" aria-label={t('Main navigation')}>
-          <p className="px-3 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+          <p className="px-3 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
             {t('Monitor')}
           </p>
           {primaryNav.map((item) => (
@@ -198,7 +198,7 @@ export function AppShell() {
               }
             />
           ))}
-          <p className="px-3 pb-1.5 pt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+          <p className="px-3 pb-1.5 pt-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
             {t('Tools')}
           </p>
           {secondaryNav.map((item) => (
@@ -209,10 +209,10 @@ export function AppShell() {
         <div className="relative space-y-3 p-3">
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] p-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/65">
                 {t('Signal')}
               </span>
-              <span className="inline-flex items-center gap-1.5 text-[10px] text-white/45">
+              <span className="inline-flex items-center gap-1.5 text-[10px] text-white/65">
                 <span
                   className={cn(
                     'h-1.5 w-1.5 rounded-full',
@@ -246,11 +246,11 @@ export function AppShell() {
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2 text-white/70">
               <div>
-                <p className="text-[9px] uppercase tracking-[0.14em] text-white/35">{t('Checking now')}</p>
+                <p className="text-[9px] uppercase tracking-[0.14em] text-white/55">{t('Checking now')}</p>
                 <p className="display-number text-lg text-white">{stats?.checking_now ?? 0}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-[0.14em] text-white/35">{t('Queue')}</p>
+                <p className="text-[9px] uppercase tracking-[0.14em] text-white/55">{t('Queue')}</p>
                 <p className="display-number text-lg text-white">{stats?.queue_size ?? 0}</p>
               </div>
             </div>
@@ -260,12 +260,12 @@ export function AppShell() {
             <ConnectionIndicator tone="dark" />
             <a
               href={`${bootstrap.basePath || ''}/`}
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-input px-2 text-[11px] text-white/45 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-input px-2 text-[11px] text-white/65 transition hover:bg-white/10 hover:text-white"
             >
               <ExternalLink className="h-3 w-3" aria-hidden="true" /> {t('Classic UI')}
             </a>
           </div>
-          <p className="px-1 text-[10px] text-white/25">Pulse {bootstrap.version}</p>
+          <p className="px-1 text-[10px] text-white/50">Pulse {bootstrap.version}</p>
         </div>
       </aside>
 
@@ -374,7 +374,7 @@ function SidebarLink({
             <span className="signal-gradient absolute bottom-2.5 left-0 top-2.5 w-[3px] rounded-r-full" />
           ) : null}
           <Icon
-            className={cn('h-[18px] w-[18px] transition', isActive ? 'text-white' : 'text-white/45 group-hover:text-white/80')}
+            className={cn('h-[18px] w-[18px] transition', isActive ? 'text-white' : 'text-white/65 group-hover:text-white/80')}
             aria-hidden="true"
           />
           <span className="flex-1">{label}</span>

@@ -24,7 +24,7 @@ export function LegacyLink({
     <a
       href={url}
       className={cn(
-        'inline-flex min-h-9 items-center gap-1.5 text-sm font-medium text-muted hover:text-fg',
+        'inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-muted hover:text-fg',
         className,
       )}
     >

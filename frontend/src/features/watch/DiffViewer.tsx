@@ -1,6 +1,7 @@
 import type { DiffPart, SideBySideRow } from '@/lib/diff'
 import { buildSideBySide, type DiffMode } from '@/lib/diff'
 import { cn } from '@/lib/cn'
+import { useI18n } from '@/lib/i18n'
 
 function splitLines(value: string): string[] {
   if (!value) return []
@@ -10,6 +11,7 @@ function splitLines(value: string): string[] {
 }
 
 function UnifiedLines({ parts }: { parts: DiffPart[] }) {
+  const { t } = useI18n()
   let oldNumber = 1
   let newNumber = 1
   const rows: { oldNo?: number; newNo?: number; sign: string; text: string; kind: string }[] = []
@@ -27,7 +29,7 @@ function UnifiedLines({ parts }: { parts: DiffPart[] }) {
   }
 
   return (
-    <div role="document" aria-label="Text differences" className="min-w-0 divide-y divide-border/60">
+    <div role="document" aria-label={t('Text differences')} className="min-w-0 divide-y divide-border/60">
       {rows.map((row, index) => (
         <div
           key={index}
@@ -55,10 +57,11 @@ function UnifiedLines({ parts }: { parts: DiffPart[] }) {
 }
 
 function InlineDiff({ parts }: { parts: DiffPart[] }) {
+  const { t } = useI18n()
   return (
     <pre
       role="document"
-      aria-label="Text differences"
+      aria-label={t('Text differences')}
       className="whitespace-pre-wrap break-words p-3 font-mono text-[13px] leading-5"
       style={{ fontVariantLigatures: 'none' }}
     >
@@ -78,8 +81,9 @@ function InlineDiff({ parts }: { parts: DiffPart[] }) {
 }
 
 function SplitView({ rows }: { rows: SideBySideRow[] }) {
+  const { t } = useI18n()
   return (
-    <div role="document" aria-label="Side-by-side text differences" className="min-w-0">
+    <div role="document" aria-label={t('Side-by-side text differences')} className="min-w-0">
       <div className="grid grid-cols-2 border-b border-border bg-surface-2 text-[11px] font-semibold uppercase tracking-wide text-muted">
         <div className="border-r border-border px-3 py-1.5">Before</div>
         <div className="px-3 py-1.5">After</div>

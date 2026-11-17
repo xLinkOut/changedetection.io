@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n'
 import { useQuickAdd } from '@/lib/queries'
 import { useToast } from '@/components/ui/toast'
 import { Button } from '@/components/ui/button'
-import { Checkbox, Input, Label, Select } from '@/components/ui/input'
+import { Checkbox, Input, Label, Select, Textarea } from '@/components/ui/input'
 import { cn } from '@/lib/cn'
 import { LegacyLink } from '@/components/legacy/LegacyLink'
 
@@ -26,6 +26,7 @@ export function QuickAdd({
   const [advanced, setAdvanced] = useState(large)
   const [processor, setProcessor] = useState('')
   const [tags, setTags] = useState('')
+  const [llmIntent, setLlmIntent] = useState('')
   const [paused, setPaused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -44,6 +45,7 @@ export function QuickAdd({
           .map((tag) => tag.trim())
           .filter(Boolean),
         paused: paused || undefined,
+        llm_intent: llmIntent.trim() || undefined,
       })
       toast(t('Watch added'), {
         description: watch.title || watch.url,
@@ -51,6 +53,7 @@ export function QuickAdd({
       })
       setUrl('')
       setTags('')
+      setLlmIntent('')
       setPaused(false)
       if (!large) setAdvanced(false)
     } catch (error) {
@@ -150,6 +153,20 @@ export function QuickAdd({
               placeholder={t('deals, electronics')}
             />
           </div>
+          {bootstrap.features?.llm ? (
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="quick-add-llm-intent">{t('What matters — when to notify me')}</Label>
+              <Textarea
+                id="quick-add-llm-intent"
+                value={llmIntent}
+                onChange={(event) => setLlmIntent(event.target.value)}
+                rows={3}
+                placeholder={t(
+                  'e.g. Notify me when products go in/out of stock, lead times change by more than a week, or new product variants appear. Skip review additions.',
+                )}
+              />
+            </div>
+          ) : null}
           <Checkbox
             label={t('Add paused')}
             description={t('Save the watch without checking it yet.')}

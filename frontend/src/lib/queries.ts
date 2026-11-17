@@ -22,9 +22,9 @@ export interface WatchFilters {
   order?: 'asc' | 'desc'
 }
 
-export function useWatches(filters: WatchFilters) {
+export function useWatches(filters: WatchFilters, page = 1, perPage = 0) {
   return useQuery({
-    queryKey: ['watches', filters],
+    queryKey: ['watches', filters, page, perPage],
     queryFn: () =>
       apiFetch<WatchListResponse>(
         `/watches${buildQuery({
@@ -34,6 +34,8 @@ export function useWatches(filters: WatchFilters) {
           processor: filters.processor,
           sort: filters.sort,
           order: filters.order,
+          page: perPage > 0 ? page : undefined,
+          per_page: perPage > 0 ? perPage : undefined,
         })}`,
       ),
     staleTime: 30_000,
@@ -150,6 +152,7 @@ export function useQuickAdd() {
       tags?: string[]
       paused?: boolean
       title?: string
+      llm_intent?: string
     }) => apiFetch<WatchFull>('/watches', { method: 'POST', body: payload }),
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ['watches'] })

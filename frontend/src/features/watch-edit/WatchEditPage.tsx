@@ -182,7 +182,7 @@ export function WatchEditPage() {
   return (
     <div className="mx-auto max-w-5xl pb-48 lg:pb-24">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-        <Link to={`/watches/${watch.uuid}/changes`} className="inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
+        <Link to={`/watches/${watch.uuid}/changes`} className="inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-fg">
           <ArrowLeft className="h-4 w-4" /> {t('Back to watch')}
         </Link>
         {settings ? <span className="text-[11px] text-muted">Pulse {settings.info.version}</span> : null}

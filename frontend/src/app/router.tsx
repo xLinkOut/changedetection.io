@@ -25,6 +25,7 @@ export function AppRoutes() {
       <Route path="/watches/:uuid/screenshot" element={<WatchDetailPage tab="screenshot" />} />
       <Route path="/watches/:uuid/error" element={<WatchDetailPage tab="error" />} />
       <Route path="/watches/:uuid/price" element={<WatchDetailPage tab="price" />} />
+      <Route path="/watches/:uuid/extract" element={<WatchDetailPage tab="extract" />} />
       <Route path="/watches/:uuid/edit" element={<WatchEditPage />} />
       <Route path="/watches/:uuid/edit/:section" element={<WatchEditPage />} />
       <Route path="/groups" element={<GroupsPage />} />

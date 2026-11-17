@@ -170,7 +170,7 @@ export function GeneralSettings({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="mb-2 text-sm font-semibold">{t('Default check interval')}</h3>
+        <h2 className="mb-2 text-sm font-semibold">{t('Default check interval')}</h2>
         <div className="grid grid-cols-5 gap-1.5">
           {(['weeks', 'days', 'hours', 'minutes', 'seconds'] as const).map((part) => (
             <label key={part} className="block">
@@ -198,7 +198,7 @@ export function GeneralSettings({
       </div>
 
       <div>
-        <h3 className="mb-2 text-sm font-semibold">{t('Default schedule')}</h3>
+        <h2 className="mb-2 text-sm font-semibold">{t('Default schedule')}</h2>
         <ScheduleEditor
           value={schedule}
           timezones={timezones}
@@ -273,9 +273,9 @@ export function GeneralSettings({
       </div>
 
       <div className="rounded-input border border-border p-3">
-        <h3 className="flex items-center gap-1.5 text-sm font-semibold">
+        <h2 className="flex items-center gap-1.5 text-sm font-semibold">
           <KeyRound className="h-4 w-4" /> {t('Password protection')}
-        </h3>
+        </h2>
         {passwordLocked ? (
           <p className="mt-1 text-xs text-muted">
             {t('The password is locked by the SALTED_PASS environment variable.')}
@@ -299,7 +299,7 @@ export function GeneralSettings({
                   <button
                     type="button"
                     onClick={() => setShow((current) => !current)}
-                    className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted"
+                    className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-muted"
                     aria-label={show ? t('Hide password') : t('Show password')}
                   >
                     {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -385,7 +385,7 @@ export function FetchingSettings({
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold">{t('Default User-Agent overrides')}</h3>
+        <h2 className="text-sm font-semibold">{t('Default User-Agent overrides')}</h2>
         <TextField id="settings-ua-requests" label={t('Plaintext requests')} value={ua.html_requests || ''} onChange={(next) => onChange({ ...value, default_ua: { ...ua, html_requests: next || null } })} placeholder="<default>" />
         <TextField id="settings-ua-webdriver" label={t('Chrome requests')} value={ua.html_webdriver || ''} onChange={(next) => onChange({ ...value, default_ua: { ...ua, html_webdriver: next || null } })} placeholder="<default>" />
       </div>
@@ -436,9 +436,9 @@ function AppearanceSettings() {
   return (
     <div className="space-y-4 rounded-input border border-border bg-surface-2/40 p-3.5">
       <div>
-        <h3 className="flex items-center gap-1.5 text-sm font-semibold">
+        <h2 className="flex items-center gap-1.5 text-sm font-semibold">
           <Sun className="h-4 w-4" aria-hidden="true" /> {t('Appearance')}
-        </h3>
+        </h2>
         <p className="mt-0.5 text-xs text-muted">
           {t('Saved in this browser. It does not change the classic interface.')}
         </p>
@@ -864,7 +864,7 @@ export function ProxiesSettings({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="mb-1 text-sm font-semibold">{t('Extra proxies')}</h3>
+        <h2 className="mb-1 text-sm font-semibold">{t('Extra proxies')}</h2>
         <p className="mb-2 text-xs text-muted">{t('HTTP, HTTPS or SOCKS5. Name and URL are both required for a row to be saved.')}</p>
         <div className="space-y-2">
           {value.extra_proxies.map((row, index) => (
@@ -883,7 +883,7 @@ export function ProxiesSettings({
       </div>
 
       <div>
-        <h3 className="mb-1 text-sm font-semibold">{t('Extra browsers')}</h3>
+        <h2 className="mb-1 text-sm font-semibold">{t('Extra browsers')}</h2>
         <p className="mb-2 text-xs text-muted">{t('WebSocket endpoints such as a remote Chrome or Bright Data browser.')}</p>
         <div className="space-y-2">
           {value.extra_browsers.map((row, index) => (
@@ -955,7 +955,7 @@ export function BackupsSettings() {
     <div className="space-y-5 p-4 md:p-5">
       <div>
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold">{t('Backups')}</h3>
+          <h2 className="text-sm font-semibold">{t('Backups')}</h2>
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" onClick={() => query.refetch()} loading={query.isFetching}>
               <RefreshCw className="h-4 w-4" /> {t('Refresh')}
@@ -980,7 +980,7 @@ export function BackupsSettings() {
                 </div>
                 <a
                   href={`/api/v2/backups/${encodeURIComponent(backup.filename)}/download`}
-                  className="inline-flex min-h-9 items-center gap-1 rounded-input border border-border-strong px-2 text-xs font-medium hover:bg-surface-2"
+                  className="inline-flex min-h-11 items-center gap-1 rounded-input border border-border-strong px-2 text-xs font-medium hover:bg-surface-2"
                 >
                   <Download className="h-3.5 w-3.5" /> {t('Download')}
                 </a>
@@ -996,12 +996,13 @@ export function BackupsSettings() {
       </div>
 
       <div className="rounded-input border border-border p-3">
-        <h3 className="mb-2 text-sm font-semibold">{t('Restore a backup')}</h3>
+        <h2 className="mb-2 text-sm font-semibold">{t('Restore a backup')}</h2>
         <input
           type="file"
           accept=".zip"
+          aria-label={t('Choose a backup file')}
           onChange={(event) => setFile(event.target.files?.[0] || null)}
-          className="block w-full text-sm text-muted file:mr-3 file:rounded-input file:border-0 file:bg-surface-2 file:px-3 file:py-2 file:text-sm file:font-medium file:text-fg"
+          className="block min-h-11 w-full text-sm text-muted file:mr-3 file:rounded-input file:border-0 file:bg-surface-2 file:px-3 file:py-3 file:text-sm file:font-medium file:text-fg"
         />
         <div className="mt-2 grid gap-1 sm:grid-cols-3">
           <Checkbox label={t('Include groups')} checked={includeGroups} onChange={(event) => setIncludeGroups(event.target.checked)} />

@@ -175,7 +175,8 @@ export function ChangesTab({ watch, history }: { watch: WatchFull; history: Hist
 
             <a
               href={downloadHref}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-2 text-sm font-medium text-muted hover:bg-surface-2 hover:text-fg"
+              aria-label={t('Download patch')}
+              className="inline-flex min-h-11 w-11 items-center justify-center gap-1.5 rounded-input px-2 text-sm font-medium text-muted hover:bg-surface-2 hover:text-fg sm:w-auto sm:justify-start"
             >
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">{t('Download patch')}</span>

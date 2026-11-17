@@ -16,7 +16,7 @@ export function PulseMark({
   return (
     <span
       className={cn(
-        'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[13px] signal-gradient text-white',
+        'relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[13px] brand-gradient text-white',
         glow && 'shadow-glow',
         className || 'h-8 w-8',
       )}

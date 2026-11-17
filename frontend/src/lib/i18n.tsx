@@ -128,8 +128,18 @@ export function I18nProvider({
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }
 
+const FALLBACK: I18nContextValue = {
+  locale: 'en_GB',
+  languages: [],
+  ready: true,
+  setLocale: async () => undefined,
+  t: (message) => message,
+  tn: (singular, plural, count) => interpolate(count === 1 ? singular : plural, { count }),
+  tf: (message, values) => interpolate(message, values),
+}
+
 export function useI18n() {
-  const context = useContext(I18nContext)
-  if (!context) throw new Error('useI18n must be used inside I18nProvider')
-  return context
+  // Components such as the bootstrap error screen render before the locale
+  // catalog exists; English is the correct fallback there.
+  return useContext(I18nContext) || FALLBACK
 }

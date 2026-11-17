@@ -15,6 +15,8 @@ import {
   CircleDollarSign,
   MoreVertical,
   Clipboard,
+  FileSpreadsheet,
+  Share2,
   XCircle,
 } from 'lucide-react'
 import { apiBase, apiFetch } from '@/lib/api'
@@ -35,9 +37,11 @@ import { ChangesTab } from './ChangesTab'
 import { PreviewTab } from './PreviewTab'
 import { ScreenshotTab } from './ScreenshotTab'
 import { ErrorTab } from './ErrorTab'
+import { ExtractTab } from './ExtractTab'
 import { PriceTab } from './PriceTab'
+import { ShareWatchDialog } from './ShareWatchDialog'
 
-export type WatchTab = 'changes' | 'preview' | 'screenshot' | 'error' | 'price'
+export type WatchTab = 'changes' | 'preview' | 'screenshot' | 'error' | 'price' | 'extract'
 
 export function WatchDetailPage({ tab }: { tab: WatchTab }) {
   const { uuid } = useParams<{ uuid: string }>()
@@ -52,6 +56,8 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
   const deleteWatch = useDeleteWatch()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const moreButtonRef = useRef<HTMLButtonElement>(null)
   const markedViewed = useRef<string | null>(null)
 
   const recheck = useMutation({
@@ -113,6 +119,7 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
     ...(watch.processor === 'restock_diff'
       ? [{ value: 'price', label: t('Price'), icon: <CircleDollarSign className="h-4 w-4" /> }]
       : []),
+    { value: 'extract', label: t('Extract'), icon: <FileSpreadsheet className="h-4 w-4" /> },
   ]
 
   const screenshotUrl = `${apiBase()}/watches/${watch.uuid}/screenshot?v=${watch.last_checked}`
@@ -120,7 +127,7 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
   return (
     <div className="space-y-3">
       <div>
-        <Link to="/" className="mb-2 inline-flex min-h-8 items-center gap-1 text-sm text-muted hover:text-fg">
+        <Link to="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-fg">
           <ArrowLeft className="h-4 w-4" /> {t('All watches')}
         </Link>
 
@@ -132,7 +139,7 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
                 href={safeHref(watch.url)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-primary hover:underline"
+                className="inline-flex min-h-11 items-center gap-1 text-primary hover:underline"
               >
                 {hostFromUrl(watch.url)} <ExternalLink className="h-3 w-3" />
               </a>
@@ -153,7 +160,7 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
               </Button>
               <Dropdown>
                 <DropdownTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label={t('More actions')}>
+                  <Button ref={moreButtonRef} variant="ghost" size="icon" aria-label={t('More actions')}>
                     <MoreVertical className="h-5 w-5" />
                   </Button>
                 </DropdownTrigger>
@@ -182,6 +189,11 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
                   >
                     <Clipboard className="mr-2 inline h-4 w-4" /> {t('Clone watch')}
                   </DropdownItem>
+                  {bootstrap.features?.shareWatch ? (
+                    <DropdownItem onSelect={() => setShareOpen(true)}>
+                      <Share2 className="mr-2 inline h-4 w-4" /> {t('Share this watch')}
+                    </DropdownItem>
+                  ) : null}
                   <DropdownItem
                     onSelect={() =>
                       window.open(
@@ -250,6 +262,8 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
         {tab === 'error' ? <ErrorTab uuid={watch.uuid} screenshotUrl={screenshotUrl} /> : null}
 
         {tab === 'price' ? <PriceTab uuid={watch.uuid} /> : null}
+
+        {tab === 'extract' ? <ExtractTab watch={watch} /> : null}
       </div>
 
       <p className="px-1 text-[11px] text-muted">
@@ -274,6 +288,13 @@ export function WatchDetailPage({ tab }: { tab: WatchTab }) {
             toast(error instanceof Error ? error.message : t('Could not delete watch'), { tone: 'error' })
           }
         }}
+      />
+
+      <ShareWatchDialog
+        watch={watch}
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        returnFocusRef={moreButtonRef}
       />
 
       <ConfirmDialog

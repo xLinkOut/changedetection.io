@@ -38,9 +38,32 @@ export function Tabs({
             type="button"
             role="tab"
             aria-selected={active}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(tab.value)}
+            onKeyDown={(event) => {
+              const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End']
+              if (!keys.includes(event.key)) return
+              event.preventDefault()
+              const nodes = Array.from(
+                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') || [],
+              )
+              const current = nodes.indexOf(event.currentTarget)
+              const next =
+                event.key === 'Home'
+                  ? 0
+                  : event.key === 'End'
+                    ? nodes.length - 1
+                    : event.key === 'ArrowRight'
+                      ? (current + 1) % nodes.length
+                      : (current - 1 + nodes.length) % nodes.length
+              const node = nodes[next]
+              if (node) {
+                node.focus()
+                onChange(tabs[next].value)
+              }
+            }}
             className={cn(
-              'relative inline-flex min-h-12 shrink-0 items-center gap-1.5 px-3.5 text-sm font-medium transition',
+              'relative inline-flex min-h-12 min-w-11 shrink-0 items-center justify-center gap-1.5 px-3.5 text-sm font-medium transition',
               active ? 'text-fg' : 'text-muted hover:text-fg',
             )}
           >
@@ -93,7 +116,30 @@ export function SegmentedControl({
             type="button"
             role="radio"
             aria-checked={active}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(option.value)}
+            onKeyDown={(event) => {
+              const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End']
+              if (!keys.includes(event.key)) return
+              event.preventDefault()
+              const nodes = Array.from(
+                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]') || [],
+              )
+              const current = nodes.indexOf(event.currentTarget)
+              const next =
+                event.key === 'Home'
+                  ? 0
+                  : event.key === 'End'
+                    ? nodes.length - 1
+                    : event.key === 'ArrowRight'
+                      ? (current + 1) % nodes.length
+                      : (current - 1 + nodes.length) % nodes.length
+              const node = nodes[next]
+              if (node) {
+                node.focus()
+                onChange(options[next].value)
+              }
+            }}
             className={cn(
               'inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors',
               active

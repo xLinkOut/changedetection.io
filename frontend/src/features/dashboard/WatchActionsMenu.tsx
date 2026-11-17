@@ -113,14 +113,15 @@ export function WatchQuickActions({
 }
 
 export function WatchOpenLink({ watch }: { watch: Watch }) {
+  const { t } = useI18n()
   return (
     <a
       href={safeHref(watch.url)}
       target="_blank"
       rel="noopener noreferrer"
       onClick={(event) => event.stopPropagation()}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-input text-muted hover:bg-surface-2 hover:text-fg"
-      aria-label="Open the watched page"
+      className="relative inline-flex h-8 w-8 items-center justify-center rounded-input text-muted after:absolute after:-inset-1.5 hover:bg-surface-2 hover:text-fg"
+      aria-label={t('Open the watched page')}
     >
       <ExternalLink className="h-3.5 w-3.5" />
     </a>

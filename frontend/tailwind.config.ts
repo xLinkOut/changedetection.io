@@ -24,6 +24,7 @@ export default {
         warning: 'rgb(var(--warning) / <alpha-value>)',
         'warning-bg': 'rgb(var(--warning-bg) / <alpha-value>)',
         danger: 'rgb(var(--danger) / <alpha-value>)',
+        'danger-contrast': 'rgb(var(--danger-contrast) / <alpha-value>)',
         'danger-bg': 'rgb(var(--danger-bg) / <alpha-value>)',
         info: 'rgb(var(--info) / <alpha-value>)',
         'diff-added-bg': 'rgb(var(--diff-added-bg) / <alpha-value>)',

@@ -169,7 +169,7 @@ export function ImportPage() {
         <CardContent className="flex flex-wrap gap-3">
           <LegacyLink href="/imports/import#xlsx">{t('XLSX import')}</LegacyLink>
           <LegacyLink href="/imports/import#distill-io">{t('Distill.io import')}</LegacyLink>
-          <Link to="/settings/backups" className="inline-flex min-h-9 items-center text-sm font-medium text-muted hover:text-fg">
+          <Link to="/settings/backups" className="inline-flex min-h-11 items-center text-sm font-medium text-muted hover:text-fg">
             {t('Restore a backup')}
           </Link>
         </CardContent>

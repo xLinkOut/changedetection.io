@@ -55,14 +55,14 @@ export function LoginPage() {
           <PulseMark className="h-10 w-10" animated glow />
           <div>
             <p className="font-display text-lg font-semibold tracking-[-0.02em]">Pulse</p>
-            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/40">
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/60">
               changedetection.io
             </p>
           </div>
         </div>
 
         <div className="relative max-w-lg">
-          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/45">
+          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/60">
             <Waves className="h-3.5 w-3.5" aria-hidden="true" />
             {t('Signal, not noise')}
           </p>
@@ -92,9 +92,9 @@ export function LoginPage() {
               ))}
             </div>
             <div className="ml-2 shrink-0 text-right">
-              <p className="text-[9px] uppercase tracking-[0.2em] text-white/35">{t('Stream')}</p>
+              <p className="text-[9px] uppercase tracking-[0.2em] text-white/60">{t('Stream')}</p>
               <p className="font-display text-sm font-semibold text-white/80">SSE</p>
-              <p className="mt-2 text-[9px] uppercase tracking-[0.2em] text-white/35">{t('State')}</p>
+              <p className="mt-2 text-[9px] uppercase tracking-[0.2em] text-white/60">{t('State')}</p>
               <p className="inline-flex items-center gap-1.5 font-display text-sm font-semibold text-[#16C8C7]">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#16C8C7]" />
                 Live
@@ -103,7 +103,7 @@ export function LoginPage() {
           </div>
         </div>
 
-        <div className="relative flex flex-wrap gap-x-6 gap-y-2 text-[11px] text-white/40">
+        <div className="relative flex flex-wrap gap-x-6 gap-y-2 text-[11px] text-white/60">
           <span className="inline-flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
             {t('Session-protected')}

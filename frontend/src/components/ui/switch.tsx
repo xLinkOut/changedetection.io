@@ -5,6 +5,7 @@ export function Switch({
   checked,
   onCheckedChange,
   label,
+  ariaLabel,
   description,
   disabled,
   id,
@@ -12,6 +13,7 @@ export function Switch({
   checked: boolean
   onCheckedChange: (checked: boolean) => void
   label?: string
+  ariaLabel?: string
   description?: string
   disabled?: boolean
   id?: string
@@ -22,8 +24,9 @@ export function Switch({
       checked={checked}
       onCheckedChange={onCheckedChange}
       disabled={disabled}
+      aria-label={ariaLabel || label}
       className={cn(
-        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors',
+        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors before:absolute before:-inset-y-2.5 before:inset-x-0 before:content-[""]',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
         checked ? 'bg-primary' : 'bg-border-strong',
         disabled && 'cursor-not-allowed opacity-50',
