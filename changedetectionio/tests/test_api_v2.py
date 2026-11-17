@@ -49,6 +49,7 @@ def test_v2_watch_lifecycle(client, live_server, datastore_path):
                 'title': 'V2 test',
                 'tags': ['v2 group'],
                 'paused': True,
+                'llm_intent': 'Alert me when the price drops',
             }
         ),
         headers=headers,
@@ -58,6 +59,7 @@ def test_v2_watch_lifecycle(client, live_server, datastore_path):
     uuid = watch['uuid']
     assert watch['title'] == 'V2 test'
     assert watch['tags'][0]['title'] == 'v2 group'
+    assert watch['llm_intent'] == 'Alert me when the price drops'
 
     listing = client.get('/api/v2/watches').get_json()
     assert listing['total'] == 1
@@ -266,3 +268,134 @@ def test_sse_broker_replay_and_gap():
     event = subscriber.get(timeout=1)
     assert event[1] == 'four'
     broker.unsubscribe(subscriber)
+
+
+def test_v2_extract_csv_and_share_watch(client, live_server, datastore_path, monkeypatch):
+    headers = _json_headers(client)
+    datastore = live_server.app.config['DATASTORE']
+    uuid = datastore.add_watch(
+        url='https://example.com/extract-test',
+        extras={'title': 'Extract test', 'paused': True},
+    )
+    watch = datastore.data['watching'][uuid]
+    watch.save_history_blob('Price: 10 EUR\nOther line', 1700000000, 'first')
+    watch.save_history_blob('Price: 12 EUR\nOther line', 1700000060, 'second')
+
+    # Invalid patterns are field errors, not a 500.
+    response = client.post(
+        f'/api/v2/watches/{uuid}/extract',
+        data=json.dumps({'regex': '('}),
+        headers=headers,
+    )
+    assert response.status_code == 400
+    assert response.get_json()['code'] == 'invalid_regex'
+    assert 'regex' in response.get_json()['fields']
+
+    response = client.post(
+        f'/api/v2/watches/{uuid}/extract',
+        data=json.dumps({'regex': r'Price: (\d+) EUR'}),
+        headers=headers,
+    )
+    assert response.status_code == 200, response.get_data(as_text=True)
+    preview = response.get_json()
+    assert preview['snapshot_count'] == 2
+    assert preview['match_count'] == 2
+    assert preview['columns'][0] == 'Epoch seconds'
+    assert preview['rows'][-1][2] == '12'
+    assert preview['truncated'] is False
+
+    response = client.get(f'/api/v2/watches/{uuid}/extract?regex=Price%3A+%28%5Cd%2B%29+EUR')
+    assert response.status_code == 200
+    assert response.content_type.startswith('text/csv')
+    assert b'Epoch seconds' in response.data
+    assert b'12' in response.data
+
+    response = client.post(
+        f'/api/v2/watches/{uuid}/extract',
+        data=json.dumps({'regex': 'not-present-anywhere'}),
+        headers=headers,
+    )
+    assert response.status_code == 200
+    assert response.get_json()['match_count'] == 0
+    assert client.get(f'/api/v2/watches/{uuid}/extract?regex=not-present-anywhere').status_code == 404
+
+    # Sharing is opt-in.
+    response = client.post(f'/api/v2/watches/{uuid}/share', headers=headers)
+    assert response.status_code == 403
+    assert response.get_json()['code'] == 'share_disabled'
+
+    client.put(
+        '/api/v2/settings',
+        data=json.dumps({'ui': {'use_share_watch': True}}),
+        headers=headers,
+    )
+
+    captured = {}
+
+    class FakeShareResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {'share_key': 'test-share-key'}
+
+    def fake_request(**kwargs):
+        captured.update(kwargs)
+        return FakeShareResponse()
+
+    monkeypatch.setattr('requests.request', fake_request)
+
+    response = client.post(f'/api/v2/watches/{uuid}/share', headers=headers)
+    assert response.status_code == 200, response.get_data(as_text=True)
+    assert response.get_json()['url'] == 'https://changedetection.io/share/test-share-key'
+    assert captured['url'] == 'https://changedetection.io/share/share'
+
+    shared = json.loads(captured['data']['watch'])
+    assert 'history' not in shared
+    assert 'uuid' not in shared
+    assert not shared.get('last_checked')
+    assert not shared.get('last_changed')
+    assert not any(key.startswith('notification_') for key in shared)
+
+    # A share server failure is reported as a gateway error, not a crash.
+    def failing_request(**kwargs):
+        raise OSError('no route to host')
+
+    monkeypatch.setattr('requests.request', failing_request)
+    response = client.post(f'/api/v2/watches/{uuid}/share', headers=headers)
+    assert response.status_code == 502
+    assert response.get_json()['code'] == 'share_failed'
+
+    client.put(
+        '/api/v2/settings',
+        data=json.dumps({'ui': {'use_share_watch': False}}),
+        headers=headers,
+    )
+    datastore.delete(uuid)
+
+
+def test_v2_watch_pagination(client, live_server):
+    datastore = live_server.app.config['DATASTORE']
+    for index in range(3):
+        datastore.add_watch(
+            url=f'https://example.com/page-{index}',
+            extras={'title': f'Page {index}', 'paused': True},
+        )
+
+    first = client.get('/api/v2/watches?per_page=2&page=1').get_json()
+    assert first['total'] == 3
+    assert first['total_pages'] == 2
+    assert first['page'] == 1
+    assert len(first['items']) == 2
+
+    second = client.get('/api/v2/watches?per_page=2&page=2').get_json()
+    assert second['page'] == 2
+    assert len(second['items']) == 1
+
+    # A page past the end returns the last page, never a misleading empty list.
+    clamped = client.get('/api/v2/watches?per_page=2&page=99').get_json()
+    assert clamped['page'] == 2
+    assert len(clamped['items']) == 1
+
+    for uuid in list(datastore.data['watching']):
+        datastore.delete(uuid)

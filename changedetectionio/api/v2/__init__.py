@@ -65,6 +65,9 @@ BACKUP_FILENAME_FORMAT = 'changedetection-backup-{}.zip'
 BACKUP_FILENAME_RE = re.compile(r'^changedetection-backup-\d+\.zip$')
 MAX_IMPORT_URLS = 5000
 MAX_RESTORE_UPLOAD_BYTES = int(os.getenv('MAX_RESTORE_UPLOAD_MB', 256)) * 1024 * 1024
+MAX_EXTRACT_REGEX_LENGTH = 500
+EXTRACT_PREVIEW_ROWS = 50
+SHARE_SERVER_URL = 'https://changedetection.io/share/share'
 
 
 def _uuid_like(value: str) -> bool:
@@ -126,6 +129,81 @@ def _emit(name, **kwargs):
         signal(name).send(**kwargs)
     except Exception:
         logger.exception(f'v2: could not emit signal {name}')
+
+
+def _extract_regex(value):
+    """Validate the user's pattern before it is run over every snapshot."""
+    regex = str(value or '').strip()
+    if not regex:
+        raise ApiV2Error(
+            'Enter a regular expression',
+            400,
+            fields={'regex': ['Enter a regular expression']},
+            code='invalid_regex',
+        )
+    if len(regex) > MAX_EXTRACT_REGEX_LENGTH:
+        message = f'The regular expression is too long (max {MAX_EXTRACT_REGEX_LENGTH} characters)'
+        raise ApiV2Error(message, 400, fields={'regex': [message]}, code='invalid_regex')
+    try:
+        re.compile(regex)
+    except re.error as error:
+        message = f"RegEx '{regex}' is not a valid regular expression."
+        raise ApiV2Error(
+            message,
+            400,
+            fields={'regex': [str(error) or message]},
+            code='invalid_regex',
+        ) from error
+    return regex
+
+
+def _extract_report_preview(watch, filename, preview_rows=EXTRACT_PREVIEW_ROWS):
+    """Parse the generated report just far enough to preview and count it."""
+    import csv
+
+    path = os.path.join(watch.data_dir, filename)
+    columns, rows = [], []
+    count = 0
+    with open(path, encoding='utf-8', errors='replace', newline='') as handle:
+        reader = csv.reader(handle)
+        for index, row in enumerate(reader):
+            if index == 0:
+                columns = row
+                continue
+            count += 1
+            if len(rows) < preview_rows:
+                rows.append(row)
+    return {
+        'columns': columns,
+        'rows': rows,
+        'match_count': count,
+        'truncated': count > len(rows),
+    }
+
+
+def _share_watch_payload(datastore, watch):
+    """The same trimmed, privacy-safe body the classic share button sends."""
+    import json
+    from copy import deepcopy
+
+    shared = deepcopy(watch)
+    if shared.get('history'):
+        del shared['history']
+
+    for key in list(shared.keys()):
+        if key.startswith('notification_'):
+            del shared[key]
+    for key in ('uuid', 'last_checked', 'last_changed'):
+        if shared.get(key):
+            del shared[key]
+
+    shared['ignore_text'] = list(shared.get('ignore_text') or []) + list(
+        datastore.data['settings']['application'].get('global_ignore_text') or []
+    )
+    shared['subtractive_selectors'] = list(shared.get('subtractive_selectors') or []) + list(
+        datastore.data['settings']['application'].get('global_subtractive_selectors') or []
+    )
+    return json.dumps(shared)
 
 
 def _backup_list(datastore):
@@ -354,9 +432,12 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
         page = max(1, request.args.get('page', type=int, default=1))
         total = len(watches)
         if per_page and per_page > 0:
+            total_pages = max(1, (total + per_page - 1) // per_page)
+            # Asking for a page past the end returns the last page instead of a
+            # confusing empty list (deleting watches can shrink the result set).
+            page = min(page, total_pages)
             start = (page - 1) * per_page
             page_watches = watches[start:start + per_page]
-            total_pages = max(1, (total + per_page - 1) // per_page)
         else:
             page_watches = watches
             total_pages = 1
@@ -906,6 +987,113 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
         response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         response.headers['Content-Disposition'] = f'attachment; filename="watch-{uuid}.patch"'
         return response
+
+    @bp.route('/watches/<uuid>/extract', methods=['POST'])
+    @login_required_json
+    def extract_watch_history(uuid):
+        """Preview a regex run over every snapshot, without downloading the CSV."""
+        watch = watch_or_404(uuid)
+        body = request.get_json(silent=True) or {}
+        regex = _extract_regex(body.get('regex'))
+
+        filename = watch.extract_regex_from_all_history(regex)
+        if not filename:
+            return jsonify(
+                {
+                    'regex': regex,
+                    'snapshot_count': len(watch.history),
+                    'match_count': 0,
+                    'columns': [],
+                    'rows': [],
+                    'truncated': False,
+                }
+            )
+
+        try:
+            preview = _extract_report_preview(watch, filename)
+        except OSError as error:
+            logger.error(f'v2: could not read extract report for {uuid}: {error}')
+            raise ApiV2Error('Could not read the extracted CSV', 500) from error
+
+        return jsonify(
+            {
+                'regex': regex,
+                'snapshot_count': len(watch.history),
+                **preview,
+            }
+        )
+
+    @bp.route('/watches/<uuid>/extract', methods=['GET'])
+    @login_required_json
+    def download_watch_history_csv(uuid):
+        """Download the CSV; it is generated again from the current history."""
+        watch = watch_or_404(uuid)
+        regex = _extract_regex(request.args.get('regex'))
+
+        filename = watch.extract_regex_from_all_history(regex)
+        if not filename:
+            raise ApiV2Error(
+                'No matches found while scanning all of the watch history for that RegEx.',
+                404,
+                code='no_matches',
+            )
+
+        response = make_response(
+            send_from_directory(directory=watch.data_dir, path=filename, as_attachment=True)
+        )
+        response.headers['Content-Type'] = 'text/csv; charset=utf-8'
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        return response
+
+    @bp.route('/watches/<uuid>/share', methods=['POST'])
+    @login_required_json
+    def share_watch(uuid):
+        """Upload a trimmed watch configuration and return the public import link.
+
+        This uses the same changedetection.io share service as the classic UI: the
+        returned link can be imported by any changedetection.io instance.
+        """
+        if not datastore.data['settings']['application'].get('ui', {}).get('use_share_watch'):
+            raise ApiV2Error(
+                'Watch sharing is disabled in settings',
+                403,
+                code='share_disabled',
+            )
+
+        watch = watch_or_404(uuid)
+        payload = _share_watch_payload(datastore, watch)
+
+        import requests
+
+        try:
+            response = requests.request(
+                method='POST',
+                data={'watch': payload},
+                url=SHARE_SERVER_URL,
+                headers={'App-Guid': datastore.data['app_guid']},
+                timeout=30,
+            )
+            response.raise_for_status()
+            share_key = (response.json() or {}).get('share_key')
+            if not share_key:
+                raise ValueError('The share server did not return a link')
+        except Exception as error:
+            logger.error(f'v2: could not share watch {uuid}: {error}')
+            raise ApiV2Error(
+                'Could not share this watch. The share server could not be reached.',
+                502,
+                code='share_failed',
+            ) from error
+
+        return jsonify(
+            {
+                'uuid': uuid,
+                'share_key': share_key,
+                'url': f'https://changedetection.io/share/{share_key}',
+            }
+        )
 
     # ------------------------------------------------------------------
     # AI change summary
