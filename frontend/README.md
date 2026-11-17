@@ -56,8 +56,9 @@ a Node build stage.
 
 - `⌘K` / `Ctrl+K`: command palette, searches watches on the server and jumps to
   screens. Arrow keys move, Enter opens, Escape closes, Tab stays inside.
-- The dashboard banner has a 44px close button and remembers its collapsed
-  state in this browser; the collapsed strip keeps the live counts visible.
+- The dashboard banner starts collapsed, has a 44px close button and remembers
+  the choice in this browser; the collapsed strip keeps the live counts
+  visible, and the URL + Watch card remains between banner and filters.
 - Watch tabs and segmented controls support Left/Right/Home/End with roving
   tabindex; dialogs return focus to the trigger.
 - Every screen is audited for accessible names, labels, heading order, focus

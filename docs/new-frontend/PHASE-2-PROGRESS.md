@@ -61,9 +61,10 @@ Old UI: **untouched and fully available**.
   validation, empty and error states.
 - Share watch dialog (when enabled in Settings → Interface): uploads the
   trimmed configuration and shows a copyable import link.
-- Collapsible dashboard banner: the hero and quick-add collapse to a slim live
-  summary strip; the preference is remembered per browser and focus moves to
-  the expand/collapse control.
+- Collapsible banner, collapsed by default: the hero becomes a slim live
+  summary strip; the URL + Watch card stays visible between banner and filters.
+  The preference is remembered per browser and focus moves to the
+  expand/collapse control.
 - Watch edit: General, Request, Filters & Triggers, Conditions, Notifications,
   AI, Restock & Price, Stats. Live filter preview, condition verification,
   notification test, field errors, unsaved-changes guard, danger zone.
