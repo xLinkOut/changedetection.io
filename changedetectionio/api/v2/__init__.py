@@ -165,6 +165,14 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
             raise ApiV2Error(f'No watch exists with the UUID of {uuid}', 404, code='watch_not_found')
         return watch
 
+    def _error_text(watch):
+        """Processor errors live in last_error; HTTP/fetch errors in last-error.txt."""
+        text = watch.get_error_text()
+        if text:
+            return text
+        stored = watch.get('last_error')
+        return stored if isinstance(stored, str) else ''
+
     def tag_or_404(uuid):
         tag = datastore.data['settings']['application'].get('tags', {}).get(uuid)
         if not tag:
@@ -759,7 +767,7 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
                 'triggered_lines': triggered,
                 'ignored_lines': ignored,
                 'blocked_lines': blocked,
-                'error_text': watch.get_error_text() or '',
+                'error_text': _error_text(watch),
                 'has_error_screenshot': bool(watch.get_error_snapshot()),
                 'has_screenshot': bool(watch.get_screenshot()),
                 'capabilities': json_safe(capabilities),
@@ -845,8 +853,8 @@ def construct_blueprint(datastore, update_q):  # noqa: C901 - route registration
         return jsonify(
             {
                 'uuid': uuid,
-                'last_error': watch.get('last_error') or False,
-                'error_text': watch.get_error_text() or '',
+                'last_error': bool(watch.get('last_error')),
+                'error_text': _error_text(watch),
                 'last_notification_error': watch.get('last_notification_error') or False,
                 'has_error_screenshot': bool(watch.get_error_snapshot()),
             }

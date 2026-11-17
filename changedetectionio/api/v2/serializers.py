@@ -32,8 +32,8 @@ def json_safe(value):
 def _auto_colour(title: str) -> str:
     """Stable, readable fallback colour for groups without a custom colour."""
     palette = (
-        '#2563eb', '#7c3aed', '#db2777', '#dc2626', '#ea580c',
-        '#ca8a04', '#16a34a', '#0d9488', '#0891b2', '#4f46e5',
+        '#5347CE', '#887CFD', '#4896FE', '#16C8C7', '#6E5CF0',
+        '#3E82F0', '#2BB8C4', '#7A6BF5', '#5B8DEF', '#20B8B0',
     )
     digest = hashlib.sha256((title or '').encode('utf-8')).digest()
     return palette[digest[0] % len(palette)]
